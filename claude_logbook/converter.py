@@ -107,7 +107,7 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
         f"    <title>{title}</title>",
         "    <style>",
         "        body {",
-        "            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;",
+        "            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Ubuntu Mono', 'Cascadia Code', 'Menlo', 'Consolas', monospace;",
         "            line-height: 1.5;",
         "            max-width: 1200px;",
         "            margin: 0 auto;",
