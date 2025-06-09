@@ -138,6 +138,11 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
         "            background-color: #f3e5f5;",
         "            border-left-color: #9c27b0;",
         "        }",
+        "        .duplicate-collapsed {",
+        "            background-color: #fff3cd;",
+        "            border-left-color: #ffc107;",
+        "            opacity: 0.7;",
+        "        }",
         "        .header {",
         "            font-weight: 600;",
         "            margin-bottom: 8px;",
@@ -153,6 +158,12 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
         "        .content {",
         "            white-space: pre-wrap;",
         "            word-wrap: break-word;",
+        "        }",
+        "        .duplicate-note {",
+        "            font-style: italic;",
+        "            color: #856404;",
+        "            font-size: 0.9em;",
+        "            margin-top: 8px;",
         "        }",
         "        h1 {",
         "            text-align: center;",
@@ -179,6 +190,7 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
     ]
     
     current_session = None
+    last_message_content = None
     
     for message in messages:
         message_type = message.get("type", "unknown")
@@ -187,18 +199,7 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
         if message_type != "user":
             continue
             
-        # Check if we're in a new session
-        source_file = message.get("_source_file", "unknown")
-        if current_session != source_file:
-            if current_session is not None:  # Don't add divider before first session
-                html_parts.append(f"    <div class='session-divider'>Session: {source_file}</div>")
-            else:
-                html_parts.append(f"    <div class='session-divider'>Session: {source_file}</div>")
-            current_session = source_file
-            
-        timestamp = message.get("timestamp", "")
-        
-        # Extract message content
+        # Extract message content first to check for duplicates
         message_content = message.get("message", {})
         if isinstance(message_content, dict):
             content = message_content.get("content", "")
@@ -212,18 +213,46 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
         # Filter out system messages
         if is_system_message(text_content, message_content):
             continue
+        
+        # Check if we're in a new session
+        source_file = message.get("_source_file", "unknown")
+        is_new_session = current_session != source_file
+        
+        # Check for duplicate message at session boundary
+        is_duplicate = (is_new_session and 
+                       last_message_content is not None and 
+                       text_content.strip() == last_message_content.strip())
+        
+        if is_new_session:
+            if current_session is not None:  # Don't add divider before first session
+                html_parts.append(f"    <div class='session-divider'>Session: {source_file}</div>")
+            else:
+                html_parts.append(f"    <div class='session-divider'>Session: {source_file}</div>")
+            current_session = source_file
             
+        timestamp = message.get("timestamp", "")
         formatted_timestamp = format_timestamp(timestamp) if timestamp else ""
         
+        # Determine CSS class and content based on duplicate status
+        css_class = f"{message_type}"
+        content_html = text_content
+        
+        if is_duplicate:
+            css_class += " duplicate-collapsed"
+            content_html = f"<div class='duplicate-note'>(Duplicate from previous session - collapsed)</div>"
+        
         html_parts.extend([
-            f"    <div class='message {message_type}'>",
+            f"    <div class='message {css_class}'>",
             "        <div class='header'>",
             f"            <span>{message_type.title()}</span>",
             f"            <span class='timestamp'>{formatted_timestamp}</span>",
             "        </div>",
-            f"        <div class='content'>{text_content}</div>",
+            f"        <div class='content'>{content_html}</div>",
             "    </div>",
         ])
+        
+        # Update last message content for duplicate detection
+        last_message_content = text_content
     
     html_parts.extend([
         "</body>",
