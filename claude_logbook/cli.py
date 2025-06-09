@@ -10,8 +10,27 @@ import click
 from .converter import convert_jsonl_to_html
 
 
+def convert_project_path_to_claude_dir(input_path: Path) -> Path:
+    """Convert a project path to the corresponding directory in ~/.claude/projects/."""
+    # Get the real path to resolve any symlinks
+    real_path = input_path.resolve()
+    
+    # Convert the path to the expected format: replace slashes with hyphens
+    path_parts = real_path.parts
+    if path_parts[0] == '/':
+        path_parts = path_parts[1:]  # Remove leading slash
+    
+    # Join with hyphens instead of slashes, prepend with dash
+    claude_project_name = '-' + '-'.join(path_parts)
+    
+    # Construct the path in ~/.claude/projects/
+    claude_projects_dir = Path.home() / '.claude' / 'projects' / claude_project_name
+    
+    return claude_projects_dir
+
+
 @click.command()
-@click.argument('input_path', type=click.Path(exists=True, path_type=Path))
+@click.argument('input_path', type=click.Path(path_type=Path))
 @click.option(
     '-o', '--output', 
     type=click.Path(path_type=Path),
@@ -25,9 +44,18 @@ from .converter import convert_jsonl_to_html
 def main(input_path: Path, output: Optional[Path], open_browser: bool) -> None:
     """Convert Claude transcript JSONL files to HTML.
     
-    INPUT_PATH: Path to a Claude transcript JSONL file or directory containing JSONL files
+    INPUT_PATH: Path to a Claude transcript JSONL file, directory containing JSONL files, or project path to convert to ~/.claude/projects/
     """
     try:
+        # If the input path doesn't exist, try converting it to a Claude projects directory
+        if not input_path.exists():
+            claude_path = convert_project_path_to_claude_dir(input_path)
+            if claude_path.exists():
+                click.echo(f"Converting project path {input_path} to {claude_path}")
+                input_path = claude_path
+            else:
+                raise FileNotFoundError(f"Neither {input_path} nor {claude_path} exists")
+        
         output_path = convert_jsonl_to_html(input_path, output)
         if input_path.is_file():
             click.echo(f"Successfully converted {input_path} to {output_path}")
