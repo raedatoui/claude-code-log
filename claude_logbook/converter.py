@@ -54,15 +54,11 @@ def filter_messages_by_date(messages: List[Dict[str, Any]], from_date: Optional[
         from_dt = dateparser.parse(from_date)
         if not from_dt:
             raise ValueError(f"Could not parse from-date: {from_date}")
-        # Set to start of day
-        from_dt = from_dt.replace(hour=0, minute=0, second=0, microsecond=0)
     
     if to_date:
         to_dt = dateparser.parse(to_date)
         if not to_dt:
             raise ValueError(f"Could not parse to-date: {to_date}")
-        # Set to end of day
-        to_dt = to_dt.replace(hour=23, minute=59, second=59, microsecond=999999)
     
     filtered_messages = []
     for message in messages:

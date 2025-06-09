@@ -44,12 +44,12 @@ def convert_project_path_to_claude_dir(input_path: Path) -> Path:
 @click.option(
     '--from-date',
     type=str,
-    help='Filter messages from this date (supports natural language like "today", "yesterday", "last week")'
+    help='Filter messages from this date/time (e.g., "2 hours ago", "yesterday", "2025-06-08")'
 )
 @click.option(
     '--to-date',
     type=str,
-    help='Filter messages up to this date (supports natural language like "today", "yesterday", "last week")'
+    help='Filter messages up to this date/time (e.g., "1 hour ago", "today", "2025-06-08 15:00")'
 )
 def main(input_path: Path, output: Optional[Path], open_browser: bool, from_date: Optional[str], to_date: Optional[str]) -> None:
     """Convert Claude transcript JSONL files to HTML.
