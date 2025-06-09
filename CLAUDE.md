@@ -12,6 +12,7 @@ This tool processes Claude Code transcript files (stored as JSONL) and generates
 - **Chronological Ordering**: All messages sorted by timestamp across sessions
 - **Session Demarcation**: Clear visual separators between different transcript sessions
 - **User-Focused**: Shows only user messages by default (assistant responses filtered out)
+- **Date Range Filtering**: Filter messages by date range using natural language (e.g., "today", "yesterday", "last week")
 - **Space-Efficient Layout**: Compact design optimized for content density
 - **CLI Interface**: Simple command-line tool using Click
 
@@ -29,6 +30,12 @@ claude-logbook /path/to/directory -o combined_transcripts.html
 
 # Open in browser after conversion
 claude-logbook /path/to/directory --open-browser
+
+# Filter by date range (supports natural language)
+claude-logbook /path/to/directory --from-date "yesterday" --to-date "today"
+claude-logbook /path/to/directory --from-date "last week"
+claude-logbook /path/to/directory --to-date "2025-06-01"
+claude-logbook /path/to/directory --from-date "3 days ago" --to-date "yesterday"
 ```
 
 ## File Structure
@@ -42,8 +49,8 @@ claude-logbook /path/to/directory --open-browser
 The project uses:
 - Python 3.12+
 - Click for CLI
+- dateparser for natural language date parsing
 - Standard library for JSON/HTML processing
-- Minimal dependencies for portability
 
 ## Testing
 
