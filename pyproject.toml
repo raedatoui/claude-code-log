@@ -1,11 +1,16 @@
 [project]
 name = "claude-logbook"
 version = "0.1.0"
-description = "TODO: project description"
+description = "Convert Claude transcript JSONL files to HTML"
 readme = "README.md"
 requires-python = ">=3.12"
 license = {text = "MIT"}
-dependencies = []
+dependencies = [
+    "click>=8.0.0",
+]
+
+[project.scripts]
+claude-logbook = "claude_logbook.cli:main"
 
 [build-system]
 requires = ["hatchling"]
