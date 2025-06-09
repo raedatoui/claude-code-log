@@ -79,7 +79,7 @@ def main(input_path: Path, output: Optional[Path], open_browser: bool, from_date
                 # Original path doesn't exist and conversion failed
                 raise FileNotFoundError(f"Neither {input_path} nor {claude_path} exists")
         
-        output_path = convert_jsonl_to_html(input_path, output)
+        output_path = convert_jsonl_to_html(input_path, output, from_date, to_date)
         if input_path.is_file():
             click.echo(f"Successfully converted {input_path} to {output_path}")
         else:
