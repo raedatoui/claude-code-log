@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 from datetime import datetime
+import dateparser
 
 
 def extract_text_content(content: Any) -> str:
@@ -30,6 +31,62 @@ def format_timestamp(timestamp_str: str) -> str:
         return dt.strftime("%Y-%m-%d %H:%M:%S")
     except (ValueError, AttributeError):
         return timestamp_str
+
+
+def parse_timestamp(timestamp_str: str) -> Optional[datetime]:
+    """Parse ISO timestamp to datetime object."""
+    try:
+        return datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
+    except (ValueError, AttributeError):
+        return None
+
+
+def filter_messages_by_date(messages: List[Dict[str, Any]], from_date: Optional[str], to_date: Optional[str]) -> List[Dict[str, Any]]:
+    """Filter messages based on date range."""
+    if not from_date and not to_date:
+        return messages
+    
+    # Parse the date strings using dateparser
+    from_dt = None
+    to_dt = None
+    
+    if from_date:
+        from_dt = dateparser.parse(from_date)
+        if not from_dt:
+            raise ValueError(f"Could not parse from-date: {from_date}")
+        # Set to start of day
+        from_dt = from_dt.replace(hour=0, minute=0, second=0, microsecond=0)
+    
+    if to_date:
+        to_dt = dateparser.parse(to_date)
+        if not to_dt:
+            raise ValueError(f"Could not parse to-date: {to_date}")
+        # Set to end of day
+        to_dt = to_dt.replace(hour=23, minute=59, second=59, microsecond=999999)
+    
+    filtered_messages = []
+    for message in messages:
+        timestamp_str = message.get("timestamp", "")
+        if not timestamp_str:
+            continue
+            
+        message_dt = parse_timestamp(timestamp_str)
+        if not message_dt:
+            continue
+            
+        # Convert to naive datetime for comparison (dateparser returns naive datetimes)
+        if message_dt.tzinfo:
+            message_dt = message_dt.replace(tzinfo=None)
+            
+        # Check if message falls within date range
+        if from_dt and message_dt < from_dt:
+            continue
+        if to_dt and message_dt > to_dt:
+            continue
+            
+        filtered_messages.append(message)
+    
+    return filtered_messages
 
 
 def load_transcript(jsonl_path: Path) -> List[Dict[str, Any]]:
@@ -262,7 +319,7 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
     return "\n".join(html_parts)
 
 
-def convert_jsonl_to_html(input_path: Path, output_path: Optional[Path] = None) -> Path:
+def convert_jsonl_to_html(input_path: Path, output_path: Optional[Path] = None, from_date: Optional[str] = None, to_date: Optional[str] = None) -> Path:
     """Convert JSONL transcript(s) to HTML file."""
     if not input_path.exists():
         raise FileNotFoundError(f"Input path not found: {input_path}")
@@ -279,6 +336,19 @@ def convert_jsonl_to_html(input_path: Path, output_path: Optional[Path] = None) 
             output_path = input_path / "combined_transcripts.html"
         messages = load_directory_transcripts(input_path)
         title = f"Claude Transcripts - {input_path.name}"
+    
+    # Apply date filtering
+    messages = filter_messages_by_date(messages, from_date, to_date)
+    
+    # Update title to include date range if specified
+    if from_date or to_date:
+        date_range_parts = []
+        if from_date:
+            date_range_parts.append(f"from {from_date}")
+        if to_date:
+            date_range_parts.append(f"to {to_date}")
+        date_range_str = " ".join(date_range_parts)
+        title += f" ({date_range_str})"
     
     html_content = generate_html(messages, title)
     output_path.write_text(html_content, encoding='utf-8')

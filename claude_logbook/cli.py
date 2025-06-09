@@ -41,19 +41,42 @@ def convert_project_path_to_claude_dir(input_path: Path) -> Path:
     is_flag=True,
     help='Open the generated HTML file in the default browser'
 )
-def main(input_path: Path, output: Optional[Path], open_browser: bool) -> None:
+@click.option(
+    '--from-date',
+    type=str,
+    help='Filter messages from this date (supports natural language like "today", "yesterday", "last week")'
+)
+@click.option(
+    '--to-date',
+    type=str,
+    help='Filter messages up to this date (supports natural language like "today", "yesterday", "last week")'
+)
+def main(input_path: Path, output: Optional[Path], open_browser: bool, from_date: Optional[str], to_date: Optional[str]) -> None:
     """Convert Claude transcript JSONL files to HTML.
     
     INPUT_PATH: Path to a Claude transcript JSONL file, directory containing JSONL files, or project path to convert to ~/.claude/projects/
     """
     try:
-        # If the input path doesn't exist, try converting it to a Claude projects directory
+        # Check if we should convert to Claude projects directory
+        should_convert = False
+        
         if not input_path.exists():
+            # Path doesn't exist, try conversion
+            should_convert = True
+        elif input_path.is_dir():
+            # Path exists and is a directory, check if it has JSONL files
+            jsonl_files = list(input_path.glob("*.jsonl"))
+            if len(jsonl_files) == 0:
+                # No JSONL files found, try conversion
+                should_convert = True
+        
+        if should_convert:
             claude_path = convert_project_path_to_claude_dir(input_path)
             if claude_path.exists():
                 click.echo(f"Converting project path {input_path} to {claude_path}")
                 input_path = claude_path
-            else:
+            elif not input_path.exists():
+                # Original path doesn't exist and conversion failed
                 raise FileNotFoundError(f"Neither {input_path} nor {claude_path} exists")
         
         output_path = convert_jsonl_to_html(input_path, output)
