@@ -14,52 +14,59 @@ def convert_project_path_to_claude_dir(input_path: Path) -> Path:
     """Convert a project path to the corresponding directory in ~/.claude/projects/."""
     # Get the real path to resolve any symlinks
     real_path = input_path.resolve()
-    
+
     # Convert the path to the expected format: replace slashes with hyphens
     path_parts = real_path.parts
-    if path_parts[0] == '/':
+    if path_parts[0] == "/":
         path_parts = path_parts[1:]  # Remove leading slash
-    
+
     # Join with hyphens instead of slashes, prepend with dash
-    claude_project_name = '-' + '-'.join(path_parts)
-    
+    claude_project_name = "-" + "-".join(path_parts)
+
     # Construct the path in ~/.claude/projects/
-    claude_projects_dir = Path.home() / '.claude' / 'projects' / claude_project_name
-    
+    claude_projects_dir = Path.home() / ".claude" / "projects" / claude_project_name
+
     return claude_projects_dir
 
 
 @click.command()
-@click.argument('input_path', type=click.Path(path_type=Path))
+@click.argument("input_path", type=click.Path(path_type=Path))
 @click.option(
-    '-o', '--output', 
+    "-o",
+    "--output",
     type=click.Path(path_type=Path),
-    help='Output HTML file path (default: input file with .html extension or combined_transcripts.html for directories)'
+    help="Output HTML file path (default: input file with .html extension or combined_transcripts.html for directories)",
 )
 @click.option(
-    '--open-browser', 
+    "--open-browser",
     is_flag=True,
-    help='Open the generated HTML file in the default browser'
+    help="Open the generated HTML file in the default browser",
 )
 @click.option(
-    '--from-date',
+    "--from-date",
     type=str,
-    help='Filter messages from this date/time (e.g., "2 hours ago", "yesterday", "2025-06-08")'
+    help='Filter messages from this date/time (e.g., "2 hours ago", "yesterday", "2025-06-08")',
 )
 @click.option(
-    '--to-date',
+    "--to-date",
     type=str,
-    help='Filter messages up to this date/time (e.g., "1 hour ago", "today", "2025-06-08 15:00")'
+    help='Filter messages up to this date/time (e.g., "1 hour ago", "today", "2025-06-08 15:00")',
 )
-def main(input_path: Path, output: Optional[Path], open_browser: bool, from_date: Optional[str], to_date: Optional[str]) -> None:
+def main(
+    input_path: Path,
+    output: Optional[Path],
+    open_browser: bool,
+    from_date: Optional[str],
+    to_date: Optional[str],
+) -> None:
     """Convert Claude transcript JSONL files to HTML.
-    
+
     INPUT_PATH: Path to a Claude transcript JSONL file, directory containing JSONL files, or project path to convert to ~/.claude/projects/
     """
     try:
         # Check if we should convert to Claude projects directory
         should_convert = False
-        
+
         if not input_path.exists():
             # Path doesn't exist, try conversion
             should_convert = True
@@ -69,7 +76,7 @@ def main(input_path: Path, output: Optional[Path], open_browser: bool, from_date
             if len(jsonl_files) == 0:
                 # No JSONL files found, try conversion
                 should_convert = True
-        
+
         if should_convert:
             claude_path = convert_project_path_to_claude_dir(input_path)
             if claude_path.exists():
@@ -77,18 +84,22 @@ def main(input_path: Path, output: Optional[Path], open_browser: bool, from_date
                 input_path = claude_path
             elif not input_path.exists():
                 # Original path doesn't exist and conversion failed
-                raise FileNotFoundError(f"Neither {input_path} nor {claude_path} exists")
-        
+                raise FileNotFoundError(
+                    f"Neither {input_path} nor {claude_path} exists"
+                )
+
         output_path = convert_jsonl_to_html(input_path, output, from_date, to_date)
         if input_path.is_file():
             click.echo(f"Successfully converted {input_path} to {output_path}")
         else:
             jsonl_count = len(list(input_path.glob("*.jsonl")))
-            click.echo(f"Successfully combined {jsonl_count} transcript files from {input_path} to {output_path}")
-        
+            click.echo(
+                f"Successfully combined {jsonl_count} transcript files from {input_path} to {output_path}"
+            )
+
         if open_browser:
             click.launch(str(output_path))
-            
+
     except FileNotFoundError as e:
         click.echo(f"Error: {e}", err=True)
         sys.exit(1)
@@ -97,5 +108,5 @@ def main(input_path: Path, output: Optional[Path], open_browser: bool, from_date
         sys.exit(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
