@@ -90,7 +90,9 @@ class TestContentExtraction:
         """Test extracting text content from list with no text items."""
         content_items = [
             ToolUseContent(type="tool_use", id="tool_1", name="TestTool", input={}),
-            ToolResultContent(type="tool_result", tool_use_id="tool_1", content="result"),
+            ToolResultContent(
+                type="tool_result", tool_use_id="tool_1", content="result"
+            ),
         ]
         result = extract_text_content(content_items)
         assert result == ""
@@ -102,19 +104,19 @@ class TestCommandExtraction:
     def test_extract_command_info_complete(self):
         """Test extracting complete command information."""
         text = '<command-message>Testing...</command-message>\n<command-name>test-cmd</command-name>\n<command-args>--verbose</command-args>\n<command-contents>{"type": "text", "text": "Test content"}</command-contents>'
-        
+
         command_name, command_args, command_contents = extract_command_info(text)
-        
+
         assert command_name == "test-cmd"
         assert command_args == "--verbose"
         assert command_contents == "Test content"
 
     def test_extract_command_info_missing_parts(self):
         """Test extracting command info with missing parts."""
-        text = '<command-name>minimal-cmd</command-name>'
-        
+        text = "<command-name>minimal-cmd</command-name>"
+
         command_name, command_args, command_contents = extract_command_info(text)
-        
+
         assert command_name == "minimal-cmd"
         assert command_args == ""
         assert command_contents == ""
@@ -122,9 +124,9 @@ class TestCommandExtraction:
     def test_extract_command_info_no_command(self):
         """Test extracting command info from non-command text."""
         text = "This is just regular text with no command tags"
-        
+
         command_name, command_args, command_contents = extract_command_info(text)
-        
+
         assert command_name == "system"
         assert command_args == ""
         assert command_contents == ""
@@ -132,11 +134,13 @@ class TestCommandExtraction:
     def test_extract_command_info_malformed_json(self):
         """Test extracting command contents with malformed JSON."""
         text = '<command-name>bad-json</command-name>\n<command-contents>{"invalid": json</command-contents>'
-        
+
         command_name, command_args, command_contents = extract_command_info(text)
-        
+
         assert command_name == "bad-json"
-        assert command_contents == '{"invalid": json'  # Raw text when JSON parsing fails
+        assert (
+            command_contents == '{"invalid": json'
+        )  # Raw text when JSON parsing fails
 
 
 class TestHtmlEscaping:
@@ -146,7 +150,7 @@ class TestHtmlEscaping:
         """Test escaping basic HTML characters."""
         text = '<script>alert("xss")</script>'
         result = escape_html(text)
-        assert result == '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;'
+        assert result == "&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;"
 
     def test_escape_html_ampersand(self):
         """Test escaping ampersands."""
@@ -197,7 +201,7 @@ class TestSystemMessageDetection:
 
     def test_is_system_message_command_message_not_filtered(self):
         """Test that command messages are not filtered as system messages."""
-        text = '<command-message>init is analyzing your codebase…</command-message>\n<command-name>init</command-name>'
+        text = "<command-message>init is analyzing your codebase…</command-message>\n<command-name>init</command-name>"
         assert is_system_message(text) is False
 
 
@@ -217,7 +221,7 @@ class TestEdgeCases:
     def test_extract_command_info_empty_string(self):
         """Test extracting command info from empty string."""
         command_name, command_args, command_contents = extract_command_info("")
-        
+
         assert command_name == "system"
         assert command_args == ""
         assert command_contents == ""

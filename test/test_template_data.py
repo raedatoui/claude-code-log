@@ -26,7 +26,7 @@ class TestTemplateMessage:
             css_class="user",
             source_file="test_session",
         )
-        
+
         assert msg.type == "user"
         assert msg.content_html == "<p>Test content</p>"
         assert msg.formatted_timestamp == "2025-06-14 10:00:00"
@@ -42,7 +42,7 @@ class TestTemplateMessage:
             ("system", "System"),
             ("summary", "Summary"),
         ]
-        
+
         for msg_type, expected_display in test_cases:
             msg = TemplateMessage(
                 message_type=msg_type,
@@ -66,9 +66,9 @@ class TestTemplateProject:
             "message_count": 15,
             "last_modified": 1700000000.0,
         }
-        
+
         project = TemplateProject(project_data)
-        
+
         assert project.name == "test-project"
         assert project.html_file == "test-project/combined_transcripts.html"
         assert project.jsonl_count == 3
@@ -85,9 +85,9 @@ class TestTemplateProject:
             "message_count": 8,
             "last_modified": 1700000100.0,
         }
-        
+
         project = TemplateProject(project_data)
-        
+
         assert project.name == "-user-workspace-my-app"
         assert project.display_name == "user/workspace/my/app"
         assert project.formatted_date == "2023-11-14 22:15"
@@ -101,9 +101,9 @@ class TestTemplateProject:
             "message_count": 5,
             "last_modified": 1700000200.0,
         }
-        
+
         project = TemplateProject(project_data)
-        
+
         assert project.display_name == "simple-project-name"
 
 
@@ -132,9 +132,9 @@ class TestTemplateSummary:
                 "last_modified": 1700000200.0,
             },
         ]
-        
+
         summary = TemplateSummary(project_summaries)
-        
+
         assert summary.total_projects == 3
         assert summary.total_jsonl == 6  # 3 + 2 + 1
         assert summary.total_messages == 35  # 15 + 8 + 12
@@ -142,7 +142,7 @@ class TestTemplateSummary:
     def test_template_summary_empty_list(self):
         """Test TemplateSummary with empty project list."""
         summary = TemplateSummary([])
-        
+
         assert summary.total_projects == 0
         assert summary.total_jsonl == 0
         assert summary.total_messages == 0
@@ -153,20 +153,22 @@ class TestDataWithTestFiles:
 
     def test_representative_messages_data_structure(self):
         """Test that representative messages generate proper template data."""
-        test_data_path = Path(__file__).parent / "test_data" / "representative_messages.jsonl"
-        
+        test_data_path = (
+            Path(__file__).parent / "test_data" / "representative_messages.jsonl"
+        )
+
         messages = load_transcript(test_data_path)
         html = generate_html(messages, "Test Transcript")
-        
+
         # Verify the data loaded correctly
         assert len(messages) > 0
-        
+
         # Check that different message types are present
         message_types = {msg.type for msg in messages}
         assert "user" in message_types
         assert "assistant" in message_types
         assert "summary" in message_types
-        
+
         # Verify HTML structure
         assert "<!DOCTYPE html>" in html
         assert "<title>Test Transcript</title>" in html
@@ -177,39 +179,39 @@ class TestDataWithTestFiles:
     def test_edge_cases_data_structure(self):
         """Test that edge cases data generates proper template data."""
         test_data_path = Path(__file__).parent / "test_data" / "edge_cases.jsonl"
-        
+
         messages = load_transcript(test_data_path)
         html = generate_html(messages, "Edge Cases")
-        
+
         # Verify the data loaded correctly
         assert len(messages) > 0
-        
+
         # Check that HTML handles edge cases properly
         assert "<!DOCTYPE html>" in html
         assert "<title>Edge Cases</title>" in html
-        
+
         # Check that special characters are handled
         assert "café" in html or "caf&eacute;" in html
         assert "🎉" in html  # Emoji should be preserved
-        
+
         # Check that tool content is rendered
         assert "tool-use" in html or "tool-result" in html
 
     def test_multi_session_data_structure(self):
         """Test that multiple sessions generate proper session dividers."""
         test_data_dir = Path(__file__).parent / "test_data"
-        
+
         # Load from directory to get multiple sessions
         messages = load_directory_transcripts(test_data_dir)
         html = generate_html(messages, "Multi Session Test")
-        
+
         # Verify session dividers are present
         session_divider_count = html.count("session-divider")
         assert session_divider_count > 0, "Should have at least one session divider"
-        
+
         # Check that messages from different files are included
         assert len(messages) > 0
-        
+
         # Verify HTML structure for multi-session
         assert "<!DOCTYPE html>" in html
         assert "Multi Session Test" in html
@@ -217,14 +219,14 @@ class TestDataWithTestFiles:
     def test_empty_directory_handling(self):
         """Test handling of directories with no JSONL files."""
         import tempfile
-        
+
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
-            
+
             # Should return empty list for directory with no JSONL files
             messages = load_directory_transcripts(temp_path)
             assert messages == []
-            
+
             # Should generate minimal HTML for empty message list
             html = generate_html(messages, "Empty Test")
             assert "<!DOCTYPE html>" in html
@@ -250,39 +252,39 @@ class TestDataWithTestFiles:
                 "last_modified": 1700000100.0,
             },
         ]
-        
+
         index_html = generate_projects_index_html(project_summaries)
-        
+
         # Check basic structure
         assert "<!DOCTYPE html>" in index_html
         assert "<title>Claude Code Projects</title>" in index_html
-        
+
         # Check that both projects are listed
         assert "test-project-1" in index_html
         assert "user/workspace/my/app" in index_html  # Formatted name
-        
+
         # Check summary stats
         assert "23" in index_html  # Total messages (15 + 8)
-        assert "5" in index_html   # Total jsonl files (3 + 2)
-        assert "2" in index_html   # Total projects
+        assert "5" in index_html  # Total jsonl files (3 + 2)
+        assert "2" in index_html  # Total projects
 
     def test_projects_index_with_date_range(self):
         """Test generating index HTML with date range in title."""
-        project_summaries = [{
-            "name": "test-project",
-            "path": Path("/tmp/project"),
-            "html_file": "test-project/combined_transcripts.html",
-            "jsonl_count": 1,
-            "message_count": 5,
-            "last_modified": 1700000000.0,
-        }]
-        
+        project_summaries = [
+            {
+                "name": "test-project",
+                "path": Path("/tmp/project"),
+                "html_file": "test-project/combined_transcripts.html",
+                "jsonl_count": 1,
+                "message_count": 5,
+                "last_modified": 1700000000.0,
+            }
+        ]
+
         index_html = generate_projects_index_html(
-            project_summaries, 
-            from_date="yesterday", 
-            to_date="today"
+            project_summaries, from_date="yesterday", to_date="today"
         )
-        
+
         # Check that date range appears in title
         assert "Claude Code Projects (from yesterday to today)" in index_html
 
@@ -293,8 +295,7 @@ class TestErrorHandling:
     def test_malformed_message_handling(self):
         """Test that malformed messages are skipped gracefully."""
         import tempfile
-        import json
-        
+
         # Create a JSONL file with mix of valid and invalid entries
         malformed_data = [
             '{"type": "user", "timestamp": "2025-06-14T10:00:00Z", "parentUuid": null, "isSidechain": false, "userType": "human", "cwd": "/tmp", "sessionId": "test", "version": "1.0.0", "uuid": "test_000", "message": {"role": "user", "content": [{"type": "text", "text": "Valid message"}]}}',
@@ -302,26 +303,26 @@ class TestErrorHandling:
             '{"incomplete": "message"}',  # Missing required fields
             '{"type": "user", "timestamp": "2025-06-14T10:01:00Z", "parentUuid": null, "isSidechain": false, "userType": "human", "cwd": "/tmp", "sessionId": "test", "version": "1.0.0", "uuid": "test_001", "message": {"role": "user", "content": [{"type": "text", "text": "Another valid message"}]}}',
         ]
-        
+
         with tempfile.NamedTemporaryFile(mode="w", suffix=".jsonl", delete=False) as f:
             for line in malformed_data:
                 f.write(line + "\n")
             f.flush()
             test_file_path = Path(f.name)
-        
+
         try:
             # Should load only valid messages, skipping malformed ones
             messages = load_transcript(test_file_path)
-            
+
             # Should have loaded 2 valid messages, skipped 2 malformed ones
             assert len(messages) == 2
-            
+
             # Should generate HTML without errors
             html = generate_html(messages, "Malformed Test")
             assert "<!DOCTYPE html>" in html
             assert "Valid message" in html
             assert "Another valid message" in html
-            
+
         finally:
             test_file_path.unlink()
 

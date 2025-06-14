@@ -7,9 +7,6 @@ from pathlib import Path
 from claude_code_log.converter import (
     load_transcript,
     generate_html,
-    is_system_message,
-    extract_command_info,
-    extract_text_content,
 )
 
 

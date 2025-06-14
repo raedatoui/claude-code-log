@@ -3,7 +3,7 @@
 
 import json
 from pathlib import Path
-from typing import List, Optional, Union, Dict, Any
+from typing import List, Optional, Union, Dict, Any, cast
 from datetime import datetime
 import dateparser
 import html
@@ -179,12 +179,11 @@ def extract_command_info(text_content: str) -> tuple[str, str, str]:
         contents_text = command_contents_match.group(1).strip()
         # Try to parse as JSON and extract the text field
         try:
-            contents_json = json.loads(contents_text)
+            contents_json: Any = json.loads(contents_text)
             if isinstance(contents_json, dict) and "text" in contents_json:
-                text_value = contents_json["text"]  # type: ignore
-                command_contents = (
-                    text_value if isinstance(text_value, str) else str(text_value)
-                )  # type: ignore
+                text_dict = cast(Dict[str, Any], contents_json)
+                text_value = text_dict["text"]
+                command_contents = str(text_value)
             else:
                 command_contents = contents_text
         except json.JSONDecodeError:
@@ -426,7 +425,7 @@ def process_projects_hierarchy(
         raise FileNotFoundError(f"Projects path not found: {projects_path}")
 
     # Find all project directories (those with JSONL files)
-    project_dirs = []
+    project_dirs: List[Path] = []
     for child in projects_path.iterdir():
         if child.is_dir() and list(child.glob("*.jsonl")):
             project_dirs.append(child)
@@ -450,8 +449,8 @@ def process_projects_hierarchy(
             if from_date or to_date:
                 messages = filter_messages_by_date(messages, from_date, to_date)
 
-            last_modified = (
-                max(f.stat().st_mtime for f in jsonl_files) if jsonl_files else 0
+            last_modified: float = (
+                max(f.stat().st_mtime for f in jsonl_files) if jsonl_files else 0.0
             )
 
             project_summaries.append(
