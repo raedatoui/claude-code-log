@@ -124,24 +124,26 @@ class SummaryTranscriptEntry(BaseModel):
     leafUuid: str
 
 
-TranscriptEntry = Union[UserTranscriptEntry, AssistantTranscriptEntry, SummaryTranscriptEntry]
+TranscriptEntry = Union[
+    UserTranscriptEntry, AssistantTranscriptEntry, SummaryTranscriptEntry
+]
 
 
 def parse_transcript_entry(data: Dict[str, Any]) -> TranscriptEntry:
     """
     Parse a JSON dictionary into the appropriate TranscriptEntry type.
-    
+
     Args:
         data: Dictionary parsed from JSON
-        
+
     Returns:
         The appropriate TranscriptEntry subclass
-        
+
     Raises:
         ValueError: If the data doesn't match any known transcript entry type
     """
     entry_type = data.get("type")
-    
+
     if entry_type == "user":
         return UserTranscriptEntry.model_validate(data)
     elif entry_type == "assistant":
