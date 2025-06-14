@@ -134,16 +134,42 @@ def escape_html(text: str) -> str:
     return html.escape(text)
 
 
-def extract_command_name(text_content: str) -> str:
-    """Extract command name from system message with command tags."""
+def extract_command_info(text_content: str) -> tuple[str, str, str]:
+    """Extract command info from system message with command tags."""
     import re
 
+    # Extract command name
     command_name_match = re.search(
         r"<command-name>([^<]+)</command-name>", text_content
     )
-    if command_name_match:
-        return command_name_match.group(1).strip()
-    return "system"
+    command_name = (
+        command_name_match.group(1).strip() if command_name_match else "system"
+    )
+
+    # Extract command args
+    command_args_match = re.search(
+        r"<command-args>([^<]*)</command-args>", text_content
+    )
+    command_args = command_args_match.group(1).strip() if command_args_match else ""
+
+    # Extract command contents
+    command_contents_match = re.search(
+        r"<command-contents>(.+?)</command-contents>", text_content, re.DOTALL
+    )
+    command_contents = ""
+    if command_contents_match:
+        contents_text = command_contents_match.group(1).strip()
+        # Try to parse as JSON and extract the text field
+        try:
+            contents_json = json.loads(contents_text)
+            if isinstance(contents_json, dict) and "text" in contents_json:
+                command_contents = contents_json["text"]
+            else:
+                command_contents = contents_text
+        except json.JSONDecodeError:
+            command_contents = contents_text
+
+    return command_name, command_args, command_contents
 
 
 def is_system_message(text_content: str, message_content: dict) -> bool:
@@ -276,7 +302,6 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
         "            font-weight: normal;",
         "        }",
         "        .content {",
-        "            white-space: pre-wrap;",
         "            word-wrap: break-word;",
         "        }",
         "        .duplicate-note {",
@@ -367,10 +392,28 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
             content_html = f"<strong>Summary:</strong> {escape_html(str(summary_text))}"
         elif is_command_message:
             css_class = "system"
-            command_name = extract_command_name(text_content)
+            command_name, command_args, command_contents = extract_command_info(
+                text_content
+            )
             escaped_command_name = escape_html(command_name)
-            escaped_content = escape_html(text_content)
-            content_html = f"<details><summary>Command: {escaped_command_name}</summary><div class='content'>{escaped_content}</div></details>"
+            escaped_command_args = escape_html(command_args)
+
+            # Format the command contents with proper line breaks
+            formatted_contents = command_contents.replace("\\n", "\n")
+            escaped_command_contents = escape_html(formatted_contents)
+
+            # Build the content HTML
+            content_parts: List[str] = [
+                f"<strong>Command:</strong> {escaped_command_name}"
+            ]
+            if command_args:
+                content_parts.append(f"<strong>Args:</strong> {escaped_command_args}")
+            if command_contents:
+                content_parts.append(
+                    f"<details><summary>Content</summary><div class='content'>{escaped_command_contents}</div></details>"
+                )
+
+            content_html = "<br>".join(content_parts)
             message_type = "system"
         else:
             css_class = f"{message_type}"
