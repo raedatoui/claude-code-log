@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Claude Transcript - style_guide</title>
+    <script type="module">
+      import { marked } from 'https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js';
+      
+      // Configure marked options
+      marked.setOptions({
+        breaks: true,
+        gfm: true
+      });
+      
+      document.addEventListener('DOMContentLoaded', function() {
+        // Find all content divs and render markdown
+        const contentDivs = document.querySelectorAll('.content');
+        contentDivs.forEach(div => {
+          // Skip if it's already HTML (contains tags)
+          if (div.innerHTML.includes('<') && div.innerHTML.includes('>')) {
+            return;
+          }
+          
+          const markdownText = div.textContent;
+          if (markdownText.trim()) {
+            div.innerHTML = marked.parse(markdownText);
+          }
+        });
+      });
+    </script>
+    <style>
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Ubuntu Mono', 'Cascadia Code', 'Menlo', 'Consolas', monospace;
+            line-height: 1.5;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #fafafa;
+            color: #333;
+        }
+        .message {
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid;
+        }
+        .session-divider {
+            margin: 30px 0;
+            padding: 8px 0;
+            border-top: 2px solid #ddd;
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .user {
+            background-color: #e3f2fd;
+            border-left-color: #2196f3;
+        }
+        .assistant {
+            background-color: #f3e5f5;
+            border-left-color: #9c27b0;
+        }
+        .summary {
+            background-color: #e8f5e8;
+            border-left-color: #4caf50;
+        }
+        .system {
+            background-color: #fff8e1;
+            border-left-color: #ff9800;
+        }
+        details {
+            margin-top: 8px;
+        }
+        details summary {
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 0;
+            color: #666;
+        }
+        details[open] summary {
+            margin-bottom: 8px;
+        }
+        .tool-content {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 8px 0;
+            overflow-x: auto;
+        }
+        .tool-result {
+            background-color: #e8f5e8;
+            border-left: 3px solid #4caf50;
+        }
+        .tool-use {
+            background-color: #e3f2fd;
+            border-left: 3px solid #2196f3;
+        }
+        .tool-input {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 6px;
+            margin: 4px 0;
+            font-size: 0.9em;
+        }
+        .tool-input > pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .timestamp {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: normal;
+        }
+        .content {
+            word-wrap: break-word;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Claude Transcript - style_guide</h1>
+    
+    
+        
+        
+        <div class='session-divider'>Session: style_guide</div>
+    
+    
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 10:00:00</span>
+            </div>
+            <div class='content'>📝 **User Message Example**
+
+This is a basic user message with some **markdown formatting**:
+
+- Bullet points work
+- `inline code` is supported
+- [Links](https://example.com) are preserved
+
+Code blocks are also supported:
+```python
+def hello_world():
+    print(&quot;Hello, world!&quot;)
+    return 42
+```</div>
+        </div>
+    
+        
+        <div class='message assistant'>
+            <div class='header'>
+                <span>Assistant</span>
+                <span class='timestamp'>2025-06-14 10:01:00</span>
+            </div>
+            <div class='content'>🛠️ **Tool Use Example**
+
+Let me create a file to demonstrate tool usage:
+
+    <div class="tool-content tool-use">
+        <details>
+            <summary><strong>Tool Use:</strong> Edit (ID: tool_style_001)</summary>
+            <div class="tool-input">
+                <strong>Input:</strong>
+                <pre>{
+  &quot;file_path&quot;: &quot;/tmp/style_guide_example.py&quot;,
+  &quot;old_string&quot;: &quot;&quot;,
+  &quot;new_string&quot;: &quot;#!/usr/bin/env python3\n\&quot;\&quot;\&quot;\nStyle Guide Example File\n\nThis file demonstrates how tool usage appears in transcripts.\n\&quot;\&quot;\&quot;\n\nimport os\nimport sys\nfrom typing import List, Dict, Any\n\n\nclass StyleGuideExample:\n    \&quot;\&quot;\&quot;Example class for the style guide.\&quot;\&quot;\&quot;\n    \n    def __init__(self, name: str):\n        self.name = name\n        self.items: List[Dict[str, Any]] = []\n    \n    def add_item(self, item: Dict[str, Any]) -&gt; None:\n        \&quot;\&quot;\&quot;Add an item to the collection.\&quot;\&quot;\&quot;\n        self.items.append(item)\n        print(f\&quot;Added item: {item.get(&#x27;name&#x27;, &#x27;Unknown&#x27;)}\&quot;)\n    \n    def process_all(self) -&gt; None:\n        \&quot;\&quot;\&quot;Process all items in the collection.\&quot;\&quot;\&quot;\n        for i, item in enumerate(self.items):\n            print(f\&quot;Processing item {i+1}: {item}\&quot;)\n\n\nif __name__ == \&quot;__main__\&quot;:\n    example = StyleGuideExample(\&quot;Demo\&quot;)\n    example.add_item({\&quot;name\&quot;: \&quot;Sample\&quot;, \&quot;value\&quot;: 42})\n    example.add_item({\&quot;name\&quot;: \&quot;Test\&quot;, \&quot;value\&quot;: 100})\n    example.process_all()\n    print(\&quot;Style guide example completed!\&quot;)&quot;
+}</pre>
+            </div>
+        </details>
+    </div>
+    </div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 10:01:01</span>
+            </div>
+            <div class='content'>
+    <div class="tool-content tool-result">
+        <details>
+            <summary><strong>Tool Result:</strong> tool_style_001</summary>
+            <div class="tool-input">
+                <pre>File created successfully at: /tmp/style_guide_example.py</pre>
+            </div>
+        </details>
+    </div>
+    </div>
+        </div>
+    
+        
+        <div class='message assistant'>
+            <div class='header'>
+                <span>Assistant</span>
+                <span class='timestamp'>2025-06-14 10:01:30</span>
+            </div>
+            <div class='content'>⚠️ **Tool Error Example**
+
+Let me demonstrate what happens when a tool encounters an error:
+
+    <div class="tool-content tool-use">
+        <details>
+            <summary><strong>Tool Use:</strong> Bash (ID: tool_style_002)</summary>
+            <div class="tool-input">
+                <strong>Input:</strong>
+                <pre>{
+  &quot;command&quot;: &quot;nonexistent_command --invalid-flag&quot;,
+  &quot;description&quot;: &quot;This command will fail to demonstrate error handling&quot;
+}</pre>
+            </div>
+        </details>
+    </div>
+    </div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 10:01:31</span>
+            </div>
+            <div class='content'>
+    <div class="tool-content tool-result">
+        <details>
+            <summary><strong>Tool Result (Error):</strong> tool_style_002</summary>
+            <div class="tool-input">
+                <pre>bash: line 1: nonexistent_command: command not found
+Error: Command &#x27;nonexistent_command&#x27; not found in PATH
+Exit code: 127</pre>
+            </div>
+        </details>
+    </div>
+    </div>
+        </div>
+    
+        
+        <div class='message system'>
+            <div class='header'>
+                <span>System</span>
+                <span class='timestamp'>2025-06-14 10:02:00</span>
+            </div>
+            <div class='content'><strong>Command:</strong> style-guide-test<br><strong>Args:</strong> --format json --output /tmp/test.json<br><details><summary>Content</summary><div class='content'>This is the command content with JSON data:
+{
+  &quot;name&quot;: &quot;Style Guide Test&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;Demonstrates command content formatting&quot;
+}</div></details></div>
+        </div>
+    
+        
+        <div class='message system'>
+            <div class='header'>
+                <span>System</span>
+                <span class='timestamp'>2025-06-14 10:02:10</span>
+            </div>
+            <div class='content'><strong>Command Output:</strong><br><div class='content'>Style Guide Test Results:
+✓ Message rendering: PASSED
+✓ Markdown processing: PASSED
+✓ Tool use formatting: PASSED
+✓ Error handling: PASSED
+✓ System commands: PASSED
+✓ Unicode support: PASSED
+
+Total tests: 6
+Passed: 6
+Failed: 0
+
+Timestamp: 2025-06-14T10:02:10Z
+Status: ALL_TESTS_PASSED
+
+Style guide generation completed successfully! 🎉</div></div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 10:03:00</span>
+            </div>
+            <div class='content'>📏 **Long Text Example**
+
+This message demonstrates how long text content is handled by the transcript viewer. The CSS should handle word wrapping automatically, ensuring that even very long messages remain readable and don&#x27;t break the layout.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+
+The layout should remain clean and readable even with this amount of text content. Line breaks and paragraph spacing should be preserved appropriately.</div>
+        </div>
+    
+        
+        <div class='message summary'>
+            <div class='header'>
+                <span>Summary</span>
+                <span class='timestamp'></span>
+            </div>
+            <div class='content'><strong>Summary:</strong> 📋 **Summary Example** - This style guide demonstrated all major message types: user messages, assistant responses, tool usage (both successful and error cases), system commands, command outputs, long text handling, special character support, and this summary. The transcript viewer properly renders markdown, handles tool interactions, manages text wrapping, and supports full Unicode character sets. All visual elements maintain consistent styling and readability.</div>
+        </div>
+    
+</body>
+</html>

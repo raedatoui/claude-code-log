@@ -94,6 +94,13 @@ Run tests with:
 uv run pytest
 ```
 
+**Comprehensive Testing & Style Guide**: The project includes extensive testing infrastructure and visual documentation. See [test/README.md](test/README.md) for details on:
+
+- **Unit Tests**: Template rendering, message type handling, edge cases
+- **Visual Style Guide**: Interactive documentation showing all message types
+- **Representative Test Data**: Real-world JSONL samples for development
+- **Style Guide Generation**: Create visual documentation with `uv run python scripts/generate_style_guide.py`
+
 ### Code Quality
 
 - **Format code**: `ruff format`
@@ -106,6 +113,7 @@ uv run pytest
 - **Format**: `ruff format`
 - **Lint**: `ruff check --fix`
 - **Type Check**: `uv run pyright`
+- **Generate Style Guide**: `uv run python scripts/generate_style_guide.py`
 
 Test with Claude transcript JSONL files typically found in `~/.claude/projects/` directories.
 
@@ -175,7 +183,7 @@ uv run claude-code-log
 - ✅ **Master Index Page**: Project cards with statistics and quick navigation
 - **Enhanced UI**: Make it look even nicer with improved styling
 - **GitHub Action CI**: Automated testing and deployment
-- **Template Refactoring**: Move HTML templates into separate files (use Jinja or similar)
+- ✅ **Template Refactoring**: Move HTML templates into separate files (use Jinja or similar)
 - **Tool Use Preview**: Show first few lines of tool use and other collapsed details
 - **Rich Metadata**: Render timestamps, durations, token usage, etc.
 - **Session Navigation**: Navigation between sessions within page

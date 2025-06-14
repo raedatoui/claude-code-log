@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Claude Transcripts - test_data</title>
+    <script type="module">
+      import { marked } from 'https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js';
+      
+      // Configure marked options
+      marked.setOptions({
+        breaks: true,
+        gfm: true
+      });
+      
+      document.addEventListener('DOMContentLoaded', function() {
+        // Find all content divs and render markdown
+        const contentDivs = document.querySelectorAll('.content');
+        contentDivs.forEach(div => {
+          // Skip if it's already HTML (contains tags)
+          if (div.innerHTML.includes('<') && div.innerHTML.includes('>')) {
+            return;
+          }
+          
+          const markdownText = div.textContent;
+          if (markdownText.trim()) {
+            div.innerHTML = marked.parse(markdownText);
+          }
+        });
+      });
+    </script>
+    <style>
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Ubuntu Mono', 'Cascadia Code', 'Menlo', 'Consolas', monospace;
+            line-height: 1.5;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #fafafa;
+            color: #333;
+        }
+        .message {
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid;
+        }
+        .session-divider {
+            margin: 30px 0;
+            padding: 8px 0;
+            border-top: 2px solid #ddd;
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .user {
+            background-color: #e3f2fd;
+            border-left-color: #2196f3;
+        }
+        .assistant {
+            background-color: #f3e5f5;
+            border-left-color: #9c27b0;
+        }
+        .summary {
+            background-color: #e8f5e8;
+            border-left-color: #4caf50;
+        }
+        .system {
+            background-color: #fff8e1;
+            border-left-color: #ff9800;
+        }
+        details {
+            margin-top: 8px;
+        }
+        details summary {
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 0;
+            color: #666;
+        }
+        details[open] summary {
+            margin-bottom: 8px;
+        }
+        .tool-content {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 8px 0;
+            overflow-x: auto;
+        }
+        .tool-result {
+            background-color: #e8f5e8;
+            border-left: 3px solid #4caf50;
+        }
+        .tool-use {
+            background-color: #e3f2fd;
+            border-left: 3px solid #2196f3;
+        }
+        .tool-input {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 6px;
+            margin: 4px 0;
+            font-size: 0.9em;
+        }
+        .tool-input > pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .timestamp {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: normal;
+        }
+        .content {
+            word-wrap: break-word;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Claude Transcripts - test_data</h1>
+    
+    
+        
+        
+        <div class='session-divider'>Session: representative_messages</div>
+    
+    
+    
+        
+        <div class='message summary'>
+            <div class='header'>
+                <span>Summary</span>
+                <span class='timestamp'></span>
+            </div>
+            <div class='content'><strong>Summary:</strong> User learned about Python decorators, including basic decorators and parameterized decorators. Created and ran examples showing how decorators work with functions. User is now ready to implement their own timing decorator.</div>
+        </div>
+    
+        
+        <div class='message summary'>
+            <div class='header'>
+                <span>Summary</span>
+                <span class='timestamp'></span>
+            </div>
+            <div class='content'><strong>Summary:</strong> Tested various edge cases including markdown formatting, long text, tool errors, system messages, command outputs, special characters and emojis. All message types render correctly in the transcript viewer.</div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 10:00:00</span>
+            </div>
+            <div class='content'>Hello Claude! Can you help me understand how Python decorators work?</div>
+        </div>
+    
+        
+        <div class='message assistant'>
+            <div class='header'>
+                <span>Assistant</span>
+                <span class='timestamp'>2025-06-14 10:00:30</span>
+            </div>
+            <div class='content'>I&#x27;d be happy to help you understand Python decorators! A decorator is a design pattern that allows you to modify or extend the behavior of functions or classes without permanently modifying their code.
+
+Here&#x27;s a simple example:
+
+```python
+def my_decorator(func):
+    def wrapper():
+        print(&quot;Something before the function&quot;)
+        func()
+        print(&quot;Something after the function&quot;)
+    return wrapper
+
+@my_decorator
+def say_hello():
+    print(&quot;Hello!&quot;)
+
+say_hello()
+```
+
+This will output:
+```
+Something before the function
+Hello!
+Something after the function
+```</div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 10:01:00</span>
+            </div>
+            <div class='content'>Great! Can you also show me how to create a decorator that takes parameters?</div>
+        </div>
+    
+        
+        <div class='message assistant'>
+            <div class='header'>
+                <span>Assistant</span>
+                <span class='timestamp'>2025-06-14 10:01:30</span>
+            </div>
+            <div class='content'>
+    <div class="tool-content tool-use">
+        <details>
+            <summary><strong>Tool Use:</strong> Edit (ID: tool_001)</summary>
+            <div class="tool-input">
+                <strong>Input:</strong>
+                <pre>{
+  &quot;file_path&quot;: &quot;/tmp/decorator_example.py&quot;,
+  &quot;old_string&quot;: &quot;&quot;,
+  &quot;new_string&quot;: &quot;def repeat(times):\n    def decorator(func):\n        def wrapper(*args, **kwargs):\n            for _ in range(times):\n                result = func(*args, **kwargs)\n            return result\n        return wrapper\n    return decorator\n\n@repeat(3)\ndef greet(name):\n    print(f\&quot;Hello, {name}!\&quot;)\n\ngreet(\&quot;Alice\&quot;)&quot;
+}</pre>
+            </div>
+        </details>
+    </div>
+    </div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 10:01:31</span>
+            </div>
+            <div class='content'>
+    <div class="tool-content tool-result">
+        <details>
+            <summary><strong>Tool Result:</strong> tool_001</summary>
+            <div class="tool-input">
+                <pre>File created successfully at: /tmp/decorator_example.py</pre>
+            </div>
+        </details>
+    </div>
+    </div>
+        </div>
+    
+        
+        <div class='message assistant'>
+            <div class='header'>
+                <span>Assistant</span>
+                <span class='timestamp'>2025-06-14 10:02:00</span>
+            </div>
+            <div class='content'>Perfect! I&#x27;ve created an example of a parameterized decorator. Here&#x27;s how it works:
+
+1. **`repeat(times)`** - This is the decorator factory that takes parameters
+2. **`decorator(func)`** - This is the actual decorator that gets returned
+3. **`wrapper(*args, **kwargs)`** - This is the wrapper function that does the work
+
+The key insight is that we have **three levels of functions**:
+- The outermost function takes the decorator parameters
+- The middle function takes the function to be decorated
+- The innermost function is the actual wrapper that gets called
+
+When you run this code, it will print &quot;Hello, Alice!&quot; three times.</div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 10:02:30</span>
+            </div>
+            <div class='content'>Can you run that example to show the output?</div>
+        </div>
+    
+        
+        <div class='message assistant'>
+            <div class='header'>
+                <span>Assistant</span>
+                <span class='timestamp'>2025-06-14 10:03:00</span>
+            </div>
+            <div class='content'>
+    <div class="tool-content tool-use">
+        <details>
+            <summary><strong>Tool Use:</strong> Bash (ID: tool_002)</summary>
+            <div class="tool-input">
+                <strong>Input:</strong>
+                <pre>{
+  &quot;command&quot;: &quot;python /tmp/decorator_example.py&quot;,
+  &quot;description&quot;: &quot;Run the decorator example to show output&quot;
+}</pre>
+            </div>
+        </details>
+    </div>
+    </div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 10:03:01</span>
+            </div>
+            <div class='content'>
+    <div class="tool-content tool-result">
+        <details>
+            <summary><strong>Tool Result:</strong> tool_002</summary>
+            <div class="tool-input">
+                <pre>Hello, Alice!
+Hello, Alice!
+Hello, Alice!</pre>
+            </div>
+        </details>
+    </div>
+    </div>
+        </div>
+    
+        
+        <div class='message assistant'>
+            <div class='header'>
+                <span>Assistant</span>
+                <span class='timestamp'>2025-06-14 10:03:30</span>
+            </div>
+            <div class='content'>Perfect! As you can see, the `@repeat(3)` decorator successfully made the `greet` function execute three times, printing &quot;Hello, Alice!&quot; three times.
+
+This demonstrates the power of parameterized decorators - you can customize their behavior by passing arguments to the decorator factory. Some common use cases include:
+
+- **Timing decorators**: `@time_it(units=&#x27;ms&#x27;)`
+- **Retry decorators**: `@retry(max_attempts=3, delay=1)`
+- **Authentication decorators**: `@require_role(&#x27;admin&#x27;)`
+- **Caching decorators**: `@cache(ttl=300)`
+
+The pattern is always the same: decorator factory → decorator → wrapper function.</div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 10:04:00</span>
+            </div>
+            <div class='content'>This is really helpful! Let me try to implement a timing decorator myself. Can you help me if I get stuck?</div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 11:00:00</span>
+            </div>
+            <div class='content'>Here&#x27;s a message with some **markdown** formatting, `inline code`, and even a [link](https://example.com). Let&#x27;s see how it renders!</div>
+        </div>
+    
+        
+        <div class='message assistant'>
+            <div class='header'>
+                <span>Assistant</span>
+                <span class='timestamp'>2025-06-14 11:00:30</span>
+            </div>
+            <div class='content'>Great example! Markdown formatting is indeed supported. Here are some more examples:
+
+## Headers work too
+
+### Sublevel headers
+
+- Bullet points
+- **Bold text**
+- *Italic text*
+- `inline code`
+
+&gt; Block quotes look nice
+
+```python
+# Code blocks with syntax highlighting
+def hello_world():
+    print(&quot;Hello, world!&quot;)
+    return 42
+```
+
+| Tables | Also | Work |
+|--------|------|------|
+| Cell 1 | Cell 2 | Cell 3 |
+| Data   | More  | Info  |
+
+The markdown renderer handles all of this automatically!</div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 11:01:00</span>
+            </div>
+            <div class='content'>Let&#x27;s test a very long message to see how it handles text wrapping and layout. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</div>
+        </div>
+    
+        
+        <div class='message assistant'>
+            <div class='header'>
+                <span>Assistant</span>
+                <span class='timestamp'>2025-06-14 11:01:30</span>
+            </div>
+            <div class='content'>
+    <div class="tool-content tool-use">
+        <details>
+            <summary><strong>Tool Use:</strong> FailingTool (ID: tool_edge_001)</summary>
+            <div class="tool-input">
+                <strong>Input:</strong>
+                <pre>{
+  &quot;test_param&quot;: &quot;This tool will fail to demonstrate error handling&quot;
+}</pre>
+            </div>
+        </details>
+    </div>
+    </div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 11:01:31</span>
+            </div>
+            <div class='content'>
+    <div class="tool-content tool-result">
+        <details>
+            <summary><strong>Tool Result (Error):</strong> tool_edge_001</summary>
+            <div class="tool-input">
+                <pre>Error: Tool execution failed with error: Command not found</pre>
+            </div>
+        </details>
+    </div>
+    </div>
+        </div>
+    
+        
+        <div class='message system'>
+            <div class='header'>
+                <span>System</span>
+                <span class='timestamp'>2025-06-14 11:02:10</span>
+            </div>
+            <div class='content'><strong>Command:</strong> test-command<br><strong>Args:</strong> --verbose --output /tmp/test.log<br><details><summary>Content</summary><div class='content'>This is the actual command content with some JSON structure and escaped characters: &quot;quotes&quot; and 
+line breaks
+</div></details></div>
+        </div>
+    
+        
+        <div class='message system'>
+            <div class='header'>
+                <span>System</span>
+                <span class='timestamp'>2025-06-14 11:02:20</span>
+            </div>
+            <div class='content'><strong>Command Output:</strong><br><div class='content'>Command output here:
+Line 1 of output
+Line 2 of output
+Some data: 12345
+Status: SUCCESS
+Timestamp: 2025-06-14T11:02:20Z</div></div>
+        </div>
+    
+        
+        <div class='message assistant'>
+            <div class='header'>
+                <span>Assistant</span>
+                <span class='timestamp'>2025-06-14 11:03:00</span>
+            </div>
+            <div class='content'>I see the long Lorem ipsum text wraps nicely! Long text handling is important for readability. The CSS should handle word wrapping automatically.
+
+    <div class="tool-content tool-use">
+        <details>
+            <summary><strong>Tool Use:</strong> MultiEdit (ID: tool_edge_002)</summary>
+            <div class="tool-input">
+                <strong>Input:</strong>
+                <pre>{
+  &quot;file_path&quot;: &quot;/tmp/complex_example.py&quot;,
+  &quot;edits&quot;: [
+    {
+      &quot;old_string&quot;: &quot;&quot;,
+      &quot;new_string&quot;: &quot;#!/usr/bin/env python3\n\&quot;\&quot;\&quot;\nComplex example with multiple operations.\n\&quot;\&quot;\&quot;\n\nimport json\nimport sys\nfrom typing import List, Dict, Any\n\ndef process_data(items: List[Dict[str, Any]]) -&gt; None:\n    \&quot;\&quot;\&quot;\n    Process a list of data items.\n    \&quot;\&quot;\&quot;\n    for item in items:\n        print(f\&quot;Processing: {item[&#x27;name&#x27;]}\&quot;)\n        if item.get(&#x27;active&#x27;, False):\n            print(f\&quot;  Status: Active\&quot;)\n        else:\n            print(f\&quot;  Status: Inactive\&quot;)\n\nif __name__ == \&quot;__main__\&quot;:\n    sample_data = [\n        {\&quot;name\&quot;: \&quot;Item 1\&quot;, \&quot;active\&quot;: True},\n        {\&quot;name\&quot;: \&quot;Item 2\&quot;, \&quot;active\&quot;: False},\n        {\&quot;name\&quot;: \&quot;Item 3\&quot;, \&quot;active\&quot;: True}\n    ]\n    process_data(sample_data)&quot;
+    }
+  ]
+}</pre>
+            </div>
+        </details>
+    </div>
+    </div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 11:03:01</span>
+            </div>
+            <div class='content'>
+    <div class="tool-content tool-result">
+        <details>
+            <summary><strong>Tool Result:</strong> tool_edge_002</summary>
+            <div class="tool-input">
+                <pre>File created successfully at: /tmp/complex_example.py</pre>
+            </div>
+        </details>
+    </div>
+    </div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 11:03:30</span>
+            </div>
+            <div class='content'>Testing special characters: café, naïve, résumé, 中文, العربية, русский, 🎉 emojis 🚀 and symbols ∑∆√π∞</div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 12:00:00</span>
+            </div>
+            <div class='content'>This is from a different session file to test multi-session handling.</div>
+        </div>
+    
+        
+        <div class='message assistant'>
+            <div class='header'>
+                <span>Assistant</span>
+                <span class='timestamp'>2025-06-14 12:00:30</span>
+            </div>
+            <div class='content'>Indeed! This message is from a different JSONL file, which should help test the session divider logic. Only the first session should show a divider.</div>
+        </div>
+    
+        
+        <div class='message user'>
+            <div class='header'>
+                <span>User</span>
+                <span class='timestamp'>2025-06-14 12:01:00</span>
+            </div>
+            <div class='content'>Perfect! This should appear without any session divider above it.</div>
+        </div>
+    
+</body>
+</html>

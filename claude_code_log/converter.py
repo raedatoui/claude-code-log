@@ -7,6 +7,7 @@ from typing import List, Optional, Union, Dict, Any
 from datetime import datetime
 import dateparser
 import html
+from jinja2 import Environment, FileSystemLoader
 from .models import (
     TranscriptEntry,
     SummaryTranscriptEntry,
@@ -268,176 +269,38 @@ def is_system_message(text_content: str) -> bool:
     return any(pattern in text_content for pattern in system_message_patterns)
 
 
+def _get_template_environment() -> Environment:
+    """Get Jinja2 template environment."""
+    templates_dir = Path(__file__).parent / "templates"
+    return Environment(loader=FileSystemLoader(templates_dir))
+
+
+class TemplateMessage:
+    """Structured message data for template rendering."""
+
+    def __init__(
+        self,
+        message_type: str,
+        content_html: str,
+        formatted_timestamp: str,
+        css_class: str,
+        source_file: str,
+    ):
+        self.type = message_type
+        self.content_html = content_html
+        self.formatted_timestamp = formatted_timestamp
+        self.css_class = css_class
+        self.display_type = message_type.title()
+        self._source_file = source_file
+
+
 def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) -> str:
-    """Generate HTML from transcript messages."""
+    """Generate HTML from transcript messages using Jinja2 templates."""
     if not title:
         title = "Claude Transcript"
 
-    html_parts = [
-        "<!DOCTYPE html>",
-        "<html lang='en'>",
-        "<head>",
-        "    <meta charset='UTF-8'>",
-        "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>",
-        f"    <title>{title}</title>",
-        '    <script type="module">',
-        "      import { marked } from 'https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js';",
-        "      ",
-        "      // Configure marked options",
-        "      marked.setOptions({",
-        "        breaks: true,",
-        "        gfm: true",
-        "      });",
-        "      ",
-        "      document.addEventListener('DOMContentLoaded', function() {",
-        "        // Find all content divs and render markdown",
-        "        const contentDivs = document.querySelectorAll('.content');",
-        "        contentDivs.forEach(div => {",
-        "          // Skip if it's already HTML (contains tags)",
-        "          if (div.innerHTML.includes('<') && div.innerHTML.includes('>')) {",
-        "            return;",
-        "          }",
-        "          ",
-        "          const markdownText = div.textContent;",
-        "          if (markdownText.trim()) {",
-        "            div.innerHTML = marked.parse(markdownText);",
-        "          }",
-        "        });",
-        "      });",
-        "    </script>",
-        "    <style>",
-        "        body {",
-        "            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Ubuntu Mono', 'Cascadia Code', 'Menlo', 'Consolas', monospace;",
-        "            line-height: 1.5;",
-        "            max-width: 1200px;",
-        "            margin: 0 auto;",
-        "            padding: 10px;",
-        "            background-color: #fafafa;",
-        "            color: #333;",
-        "        }",
-        "        .message {",
-        "            margin-bottom: 12px;",
-        "            padding: 12px;",
-        "            border-radius: 6px;",
-        "            border-left: 3px solid;",
-        "        }",
-        "        .session-divider {",
-        "            margin: 30px 0;",
-        "            padding: 8px 0;",
-        "            border-top: 2px solid #ddd;",
-        "            text-align: center;",
-        "            font-weight: 600;",
-        "            color: #666;",
-        "            font-size: 0.9em;",
-        "        }",
-        "        .user {",
-        "            background-color: #e3f2fd;",
-        "            border-left-color: #2196f3;",
-        "        }",
-        "        .assistant {",
-        "            background-color: #f3e5f5;",
-        "            border-left-color: #9c27b0;",
-        "        }",
-        "        .summary {",
-        "            background-color: #e8f5e8;",
-        "            border-left-color: #4caf50;",
-        "        }",
-        "        .system {",
-        "            background-color: #fff8e1;",
-        "            border-left-color: #ff9800;",
-        "        }",
-        "        details {",
-        "            margin-top: 8px;",
-        "        }",
-        "        details summary {",
-        "            font-weight: 600;",
-        "            cursor: pointer;",
-        "            padding: 4px 0;",
-        "            color: #666;",
-        "        }",
-        "        details[open] summary {",
-        "            margin-bottom: 8px;",
-        "        }",
-        "        .tool-content {",
-        "            background-color: #f8f9fa;",
-        "            border: 1px solid #e9ecef;",
-        "            border-radius: 4px;",
-        "            padding: 8px;",
-        "            margin: 8px 0;",
-        "            overflow-x: auto;",
-        "        }",
-        "        .tool-result {",
-        "            background-color: #e8f5e8;",
-        "            border-left: 3px solid #4caf50;",
-        "        }",
-        "        .tool-use {",
-        "            background-color: #e3f2fd;",
-        "            border-left: 3px solid #2196f3;",
-        "        }",
-        "        .tool-input {",
-        "            background-color: #fff3cd;",
-        "            border: 1px solid #ffeaa7;",
-        "            border-radius: 4px;",
-        "            padding: 6px;",
-        "            margin: 4px 0;",
-        "            font-size: 0.9em;",
-        "        }",
-        "        .tool-input > pre {",
-        "            white-space: pre-wrap;",
-        "            word-wrap: break-word;",
-        "        }",
-        "        .duplicate-collapsed {",
-        "            background-color: #fff3cd;",
-        "            border-left-color: #ffc107;",
-        "            opacity: 0.7;",
-        "        }",
-        "        .header {",
-        "            font-weight: 600;",
-        "            margin-bottom: 8px;",
-        "            display: flex;",
-        "            justify-content: space-between;",
-        "            align-items: center;",
-        "        }",
-        "        .timestamp {",
-        "            font-size: 0.85em;",
-        "            color: #666;",
-        "            font-weight: normal;",
-        "        }",
-        "        .content {",
-        "            word-wrap: break-word;",
-        "        }",
-        "        .duplicate-note {",
-        "            font-style: italic;",
-        "            color: #856404;",
-        "            font-size: 0.9em;",
-        "            margin-top: 8px;",
-        "        }",
-        "        h1 {",
-        "            text-align: center;",
-        "            color: #2c3e50;",
-        "            margin-bottom: 20px;",
-        "            font-size: 1.8em;",
-        "        }",
-        "        code {",
-        "            background-color: #f5f5f5;",
-        "            padding: 2px 4px;",
-        "            border-radius: 3px;",
-        "            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;",
-        "        }",
-        "        pre {",
-        "            background-color: #f5f5f5;",
-        "            padding: 10px;",
-        "            border-radius: 5px;",
-        "            overflow-x: auto;",
-        "        }",
-        "    </style>",
-        "</head>",
-        "<body>",
-        f"    <h1>{title}</h1>",
-    ]
-
-    current_session = None
-    last_message_content = None
+    # Process messages into template-friendly format
+    template_messages: List[TemplateMessage] = []
 
     for message in messages:
         message_type = message.type
@@ -474,25 +337,6 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
 
         # Check if we're in a new session
         source_file = getattr(message, "_source_file", "unknown")
-        is_new_session = current_session != source_file
-
-        # Check for duplicate message at session boundary
-        is_duplicate = (
-            is_new_session
-            and last_message_content is not None
-            and text_content.strip() == last_message_content.strip()
-        )
-
-        if is_new_session:
-            if current_session is not None:  # Don't add divider before first session
-                html_parts.append(
-                    f"    <div class='session-divider'>Session: {source_file}</div>"
-                )
-            else:
-                html_parts.append(
-                    f"    <div class='session-divider'>Session: {source_file}</div>"
-                )
-            current_session = source_file
 
         # Get timestamp (only for non-summary messages)
         timestamp = (
@@ -556,28 +400,19 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
             # Use the new render_message_content function to handle tool use
             content_html = render_message_content(message_content)
 
-        if is_duplicate:
-            css_class += " duplicate-collapsed"
-            content_html = "<div class='duplicate-note'>(Duplicate from previous session - collapsed)</div>"
-
-        html_parts.extend(
-            [
-                f"    <div class='message {css_class}'>",
-                "        <div class='header'>",
-                f"            <span>{message_type.title()}</span>",
-                f"            <span class='timestamp'>{formatted_timestamp}</span>",
-                "        </div>",
-                f"        <div class='content'>{content_html}</div>",
-                "    </div>",
-            ]
+        template_message = TemplateMessage(
+            message_type=message_type,
+            content_html=content_html,
+            formatted_timestamp=formatted_timestamp,
+            css_class=css_class,
+            source_file=source_file,
         )
+        template_messages.append(template_message)
 
-        # Update last message content for duplicate detection
-        last_message_content = text_content
-
-    html_parts.extend(["</body>", "</html>"])
-
-    return "\n".join(html_parts)
+    # Render template
+    env = _get_template_environment()
+    template = env.get_template("transcript.html")
+    return str(template.render(title=title, messages=template_messages))
 
 
 def process_projects_hierarchy(
@@ -640,14 +475,41 @@ def process_projects_hierarchy(
     return index_path
 
 
+class TemplateProject:
+    """Structured project data for template rendering."""
+
+    def __init__(self, project_data: Dict[str, Any]):
+        self.name = project_data["name"]
+        self.html_file = project_data["html_file"]
+        self.jsonl_count = project_data["jsonl_count"]
+        self.message_count = project_data["message_count"]
+        self.last_modified = project_data["last_modified"]
+
+        # Format display name (remove leading dash and convert dashes to slashes)
+        self.display_name = self.name
+        if self.display_name.startswith("-"):
+            self.display_name = self.display_name[1:].replace("-", "/")
+
+        # Format last modified date
+        last_modified_dt = datetime.fromtimestamp(self.last_modified)
+        self.formatted_date = last_modified_dt.strftime("%Y-%m-%d %H:%M")
+
+
+class TemplateSummary:
+    """Summary statistics for template rendering."""
+
+    def __init__(self, project_summaries: List[Dict[str, Any]]):
+        self.total_projects = len(project_summaries)
+        self.total_jsonl = sum(p["jsonl_count"] for p in project_summaries)
+        self.total_messages = sum(p["message_count"] for p in project_summaries)
+
+
 def generate_projects_index_html(
     project_summaries: List[Dict[str, Any]],
     from_date: Optional[str] = None,
     to_date: Optional[str] = None,
 ) -> str:
-    """Generate an index HTML page listing all projects."""
-    import datetime
-
+    """Generate an index HTML page listing all projects using Jinja2 templates."""
     title = "Claude Code Projects"
     if from_date or to_date:
         date_range_parts: List[str] = []
@@ -663,164 +525,18 @@ def generate_projects_index_html(
         project_summaries, key=lambda p: p["last_modified"], reverse=True
     )
 
-    html_parts = [
-        "<!DOCTYPE html>",
-        "<html lang='en'>",
-        "<head>",
-        "    <meta charset='UTF-8'>",
-        "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>",
-        f"    <title>{title}</title>",
-        "    <style>",
-        "        body {",
-        "            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Ubuntu Mono', 'Cascadia Code', 'Menlo', 'Consolas', monospace;",
-        "            line-height: 1.6;",
-        "            max-width: 1200px;",
-        "            margin: 0 auto;",
-        "            padding: 20px;",
-        "            background-color: #fafafa;",
-        "            color: #333;",
-        "        }",
-        "        h1 {",
-        "            text-align: center;",
-        "            color: #2c3e50;",
-        "            margin-bottom: 30px;",
-        "            font-size: 2em;",
-        "        }",
-        "        .project-list {",
-        "            display: grid;",
-        "            gap: 15px;",
-        "        }",
-        "        .project-card {",
-        "            background: white;",
-        "            border-radius: 8px;",
-        "            padding: 20px;",
-        "            box-shadow: 0 2px 4px rgba(0,0,0,0.1);",
-        "            border-left: 4px solid #2196f3;",
-        "        }",
-        "        .project-card:hover {",
-        "            box-shadow: 0 4px 8px rgba(0,0,0,0.15);",
-        "            transform: translateY(-1px);",
-        "            transition: all 0.2s ease;",
-        "        }",
-        "        .project-name {",
-        "            font-size: 1.2em;",
-        "            font-weight: 600;",
-        "            margin-bottom: 10px;",
-        "        }",
-        "        .project-name a {",
-        "            text-decoration: none;",
-        "            color: #2196f3;",
-        "        }",
-        "        .project-name a:hover {",
-        "            text-decoration: underline;",
-        "        }",
-        "        .project-stats {",
-        "            color: #666;",
-        "            font-size: 0.9em;",
-        "            display: flex;",
-        "            gap: 20px;",
-        "            flex-wrap: wrap;",
-        "        }",
-        "        .stat {",
-        "            display: flex;",
-        "            align-items: center;",
-        "            gap: 5px;",
-        "        }",
-        "        .summary {",
-        "            text-align: center;",
-        "            margin-bottom: 30px;",
-        "            padding: 15px;",
-        "            background: white;",
-        "            border-radius: 8px;",
-        "            box-shadow: 0 2px 4px rgba(0,0,0,0.1);",
-        "        }",
-        "        .summary-stats {",
-        "            display: flex;",
-        "            justify-content: center;",
-        "            gap: 30px;",
-        "            flex-wrap: wrap;",
-        "        }",
-        "        .summary-stat {",
-        "            text-align: center;",
-        "        }",
-        "        .summary-stat .number {",
-        "            font-size: 1.5em;",
-        "            font-weight: 600;",
-        "            color: #2196f3;",
-        "        }",
-        "        .summary-stat .label {",
-        "            color: #666;",
-        "            font-size: 0.9em;",
-        "        }",
-        "    </style>",
-        "</head>",
-        "<body>",
-        f"    <h1>{title}</h1>",
-    ]
+    # Convert to template-friendly format
+    template_projects = [TemplateProject(project) for project in sorted_projects]
+    template_summary = TemplateSummary(project_summaries)
 
-    # Add summary statistics
-    total_projects = len(project_summaries)
-    total_jsonl = sum(p["jsonl_count"] for p in project_summaries)
-    total_messages = sum(p["message_count"] for p in project_summaries)
-
-    html_parts.extend(
-        [
-            "    <div class='summary'>",
-            "        <div class='summary-stats'>",
-            "            <div class='summary-stat'>",
-            f"                <div class='number'>{total_projects}</div>",
-            "                <div class='label'>Projects</div>",
-            "            </div>",
-            "            <div class='summary-stat'>",
-            f"                <div class='number'>{total_jsonl}</div>",
-            "                <div class='label'>Transcript Files</div>",
-            "            </div>",
-            "            <div class='summary-stat'>",
-            f"                <div class='number'>{total_messages}</div>",
-            "                <div class='label'>Messages</div>",
-            "            </div>",
-            "        </div>",
-            "    </div>",
-        ]
-    )
-
-    # Add project list
-    html_parts.append("    <div class='project-list'>")
-
-    for project in sorted_projects:
-        # Format the project name (remove leading dash and convert dashes to slashes)
-        display_name = project["name"]
-        if display_name.startswith("-"):
-            display_name = display_name[1:].replace("-", "/")
-
-        # Format last modified date
-        last_modified = datetime.datetime.fromtimestamp(project["last_modified"])
-        formatted_date = last_modified.strftime("%Y-%m-%d %H:%M")
-
-        html_parts.extend(
-            [
-                "        <div class='project-card'>",
-                "            <div class='project-name'>",
-                f"                <a href='{project['html_file']}'>{escape_html(display_name)}</a>",
-                "            </div>",
-                "            <div class='project-stats'>",
-                f"                <div class='stat'>📁 {project['jsonl_count']} transcript files</div>",
-                f"                <div class='stat'>💬 {project['message_count']} messages</div>",
-                f"                <div class='stat'>🕒 {formatted_date}</div>",
-                "            </div>",
-                "        </div>",
-            ]
+    # Render template
+    env = _get_template_environment()
+    template = env.get_template("index.html")
+    return str(
+        template.render(
+            title=title, projects=template_projects, summary=template_summary
         )
-
-    html_parts.extend(
-        [
-            "    </div>",
-            "</body>",
-            "</html>",
-        ]
     )
-
-    return "\n".join(html_parts)
 
 
 def convert_jsonl_to_html(

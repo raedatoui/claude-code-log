@@ -56,14 +56,23 @@ The project uses:
 ## Development Commands
 
 ### Testing
+
 Run tests with:
+
 ```bash
 uv run pytest
 ```
 
 ### Code Quality
+
 - **Format code**: `ruff format`
 - **Lint and fix**: `ruff check --fix`
 - **Type checking**: `uv run pyright`
+
+### Testing & Style Guide
+
+- **Unit Tests**: See [test/README.md](test/README.md) for comprehensive testing documentation
+- **Visual Style Guide**: `uv run python scripts/generate_style_guide.py`
+- **Manual Testing**: Use representative test data in `test/test_data/`
 
 Test with Claude transcript JSONL files typically found in `~/.claude/projects/` directories.
