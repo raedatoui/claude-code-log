@@ -5,7 +5,7 @@ description = "Convert Claude transcript JSONL files to HTML"
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
-dependencies = ["click>=8.0.0", "dateparser>=1.0.0"]
+dependencies = ["click>=8.0.0", "dateparser>=1.0.0", "pydantic>=2.0.0"]
 
 [project.scripts]
 claude-code-log = "claude_code_log.cli:main"

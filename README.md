@@ -103,9 +103,7 @@ Test with Claude transcript JSONL files typically found in `~/.claude/projects/`
 
 ## TODO
 
-- Escape HTML / XML tags in messages so they get rendered properly
 - Process entire `~/.claude/projects/` hierarchy and render as multiple linked HTML files as CLI tool default
-- Add linting with Ruff and pyright
 - Github Action CI
 - Move HTML template into a separate file (use Jinja or similar)
 - Tool use rendering

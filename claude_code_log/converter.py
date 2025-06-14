@@ -3,26 +3,30 @@
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import List, Optional, Union
 from datetime import datetime
 import dateparser
 import html
+from .models import (
+    TranscriptEntry,
+    SummaryTranscriptEntry,
+    parse_transcript_entry,
+    ContentItem,
+    TextContent,
+    ToolResultContent,
+)
 
 
-def extract_text_content(content: Any) -> str:
+def extract_text_content(content: Union[str, List[ContentItem]]) -> str:
     """Extract text content from Claude message content structure."""
     if isinstance(content, list):
-        text_parts = []
+        text_parts: List[str] = []
         for item in content:
-            if isinstance(item, dict):
-                if item.get("type") == "text":
-                    text_parts.append(item.get("text", ""))
-                # Skip tool_use and tool_result items since we only want user messages
+            if isinstance(item, TextContent):
+                text_parts.append(item.text)
         return "\n".join(text_parts)
-    elif isinstance(content, dict):
-        if content.get("type") == "text":
-            return content.get("text", "")
-    return str(content) if content else ""
+    else:
+        return str(content) if content else ""
 
 
 def format_timestamp(timestamp_str: str) -> str:
@@ -43,8 +47,8 @@ def parse_timestamp(timestamp_str: str) -> Optional[datetime]:
 
 
 def filter_messages_by_date(
-    messages: List[Dict[str, Any]], from_date: Optional[str], to_date: Optional[str]
-) -> List[Dict[str, Any]]:
+    messages: List[TranscriptEntry], from_date: Optional[str], to_date: Optional[str]
+) -> List[TranscriptEntry]:
     """Filter messages based on date range."""
     if not from_date and not to_date:
         return messages
@@ -69,9 +73,14 @@ def filter_messages_by_date(
         if to_date in ["today", "yesterday"] or "days ago" in to_date:
             to_dt = to_dt.replace(hour=23, minute=59, second=59, microsecond=999999)
 
-    filtered_messages = []
+    filtered_messages: List[TranscriptEntry] = []
     for message in messages:
-        timestamp_str = message.get("timestamp", "")
+        # Handle SummaryTranscriptEntry which doesn't have timestamp
+        if isinstance(message, SummaryTranscriptEntry):
+            filtered_messages.append(message)
+            continue
+            
+        timestamp_str = message.timestamp
         if not timestamp_str:
             continue
 
@@ -94,27 +103,30 @@ def filter_messages_by_date(
     return filtered_messages
 
 
-def load_transcript(jsonl_path: Path) -> List[Dict[str, Any]]:
+def load_transcript(jsonl_path: Path) -> List[TranscriptEntry]:
     """Load and parse JSONL transcript file."""
-    messages = []
+    messages: List[TranscriptEntry] = []
     with open(jsonl_path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if line:
                 try:
-                    entry = json.loads(line)
-                    if entry.get("type") in ["user", "assistant", "summary"]:
+                    entry_dict = json.loads(line)
+                    if entry_dict.get("type") in ["user", "assistant", "summary"]:
+                        # Parse using Pydantic models
+                        entry = parse_transcript_entry(entry_dict)
                         # Add source file info for session tracking
-                        entry["_source_file"] = jsonl_path.stem
+                        entry._source_file = jsonl_path.stem  # type: ignore
                         messages.append(entry)
-                except json.JSONDecodeError:
+                except (json.JSONDecodeError, ValueError):
+                    # Skip lines that can't be parsed
                     continue
     return messages
 
 
-def load_directory_transcripts(directory_path: Path) -> List[Dict[str, Any]]:
+def load_directory_transcripts(directory_path: Path) -> List[TranscriptEntry]:
     """Load all JSONL transcript files from a directory and combine them."""
-    all_messages = []
+    all_messages: List[TranscriptEntry] = []
 
     # Find all .jsonl files
     jsonl_files = list(directory_path.glob("*.jsonl"))
@@ -124,8 +136,12 @@ def load_directory_transcripts(directory_path: Path) -> List[Dict[str, Any]]:
         all_messages.extend(messages)
 
     # Sort all messages chronologically
-    all_messages.sort(key=lambda x: x.get("timestamp", ""))
-
+    def get_timestamp(entry: TranscriptEntry) -> str:
+        if hasattr(entry, 'timestamp'):
+            return entry.timestamp  # type: ignore
+        return ''
+    
+    all_messages.sort(key=get_timestamp)
     return all_messages
 
 
@@ -156,14 +172,15 @@ def extract_command_info(text_content: str) -> tuple[str, str, str]:
     command_contents_match = re.search(
         r"<command-contents>(.+?)</command-contents>", text_content, re.DOTALL
     )
-    command_contents = ""
+    command_contents: str = ""
     if command_contents_match:
         contents_text = command_contents_match.group(1).strip()
         # Try to parse as JSON and extract the text field
         try:
             contents_json = json.loads(contents_text)
             if isinstance(contents_json, dict) and "text" in contents_json:
-                command_contents = contents_json["text"]
+                text_value = contents_json["text"]  # type: ignore
+                command_contents = text_value if isinstance(text_value, str) else str(text_value)  # type: ignore
             else:
                 command_contents = contents_text
         except json.JSONDecodeError:
@@ -172,29 +189,23 @@ def extract_command_info(text_content: str) -> tuple[str, str, str]:
     return command_name, command_args, command_contents
 
 
-def is_system_message(text_content: str, message_content: dict) -> bool:
+def is_system_message(text_content: str, message_content: Union[str, List[ContentItem]]) -> bool:
     """Check if a message is a system message that should be filtered out."""
     system_message_patterns = [
         "Caveat: The messages below were generated by the user while running local commands. DO NOT respond to these messages or otherwise consider them in your response unless the user explicitly asks you to.",
         "[Request interrupted by user for tool use]",
     ]
 
-    # Check for command output messages with <local-command-stdout> tags
-    if "<local-command-stdout>" in text_content:
-        return True
-
     # Check for tool result messages - these have tool_use_id and type="tool_result"
-    if isinstance(message_content, dict) and "content" in message_content:
-        content = message_content["content"]
-        if isinstance(content, list):
-            for item in content:
-                if isinstance(item, dict) and item.get("type") == "tool_result":
-                    return True
+    if isinstance(message_content, list):
+        for item in message_content:
+            if isinstance(item, ToolResultContent):
+                return True
 
     return any(pattern in text_content for pattern in system_message_patterns)
 
 
-def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -> str:
+def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) -> str:
     """Generate HTML from transcript messages."""
     if not title:
         title = "Claude Transcript"
@@ -338,16 +349,17 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
     last_message_content = None
 
     for message in messages:
-        message_type = message.get("type", "unknown")
+        message_type = message.type
 
         # Extract message content first to check for duplicates
-        message_content = message.get("message", {})
-        if isinstance(message_content, dict):
-            content = message_content.get("content", "")
+        if isinstance(message, SummaryTranscriptEntry):
+            text_content = message.summary
+            message_content = message.summary
         else:
-            content = message_content
-
-        text_content = extract_text_content(content)
+            # Must be UserTranscriptEntry or AssistantTranscriptEntry
+            message_content = message.message.content  # type: ignore
+            text_content = extract_text_content(message_content)
+            
         if not text_content.strip():
             continue
 
@@ -356,12 +368,13 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
         is_command_message = (
             "<command-name>" in text_content and "<command-message>" in text_content
         )
+        is_local_command_output = "<local-command-stdout>" in text_content
 
         if is_system and not is_command_message:
             continue
 
         # Check if we're in a new session
-        source_file = message.get("_source_file", "unknown")
+        source_file = getattr(message, '_source_file', 'unknown')
         is_new_session = current_session != source_file
 
         # Check for duplicate message at session boundary
@@ -382,13 +395,14 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
                 )
             current_session = source_file
 
-        timestamp = message.get("timestamp", "")
+        # Get timestamp (only for non-summary messages)
+        timestamp = getattr(message, 'timestamp', '') if hasattr(message, 'timestamp') else ''
         formatted_timestamp = format_timestamp(timestamp) if timestamp else ""
 
         # Determine CSS class and content based on message type and duplicate status
         if message_type == "summary":
             css_class = "summary"
-            summary_text = message.get("summary", "Summary")
+            summary_text = message.summary if isinstance(message, SummaryTranscriptEntry) else "Summary"
             content_html = f"<strong>Summary:</strong> {escape_html(str(summary_text))}"
         elif is_command_message:
             css_class = "system"
@@ -414,6 +428,18 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
                 )
 
             content_html = "<br>".join(content_parts)
+            message_type = "system"
+        elif is_local_command_output:
+            css_class = "system"
+            # Extract content between <local-command-stdout> tags
+            import re
+            stdout_match = re.search(r"<local-command-stdout>(.*?)</local-command-stdout>", text_content, re.DOTALL)
+            if stdout_match:
+                stdout_content = stdout_match.group(1).strip()
+                escaped_stdout = escape_html(stdout_content)
+                content_html = f"<strong>Command Output:</strong><br><div class='content'>{escaped_stdout}</div>"
+            else:
+                content_html = escape_html(text_content)
             message_type = "system"
         else:
             css_class = f"{message_type}"
@@ -471,7 +497,7 @@ def convert_jsonl_to_html(
 
     # Update title to include date range if specified
     if from_date or to_date:
-        date_range_parts = []
+        date_range_parts: List[str] = []
         if from_date:
             date_range_parts.append(f"from {from_date}")
         if to_date:
@@ -480,5 +506,7 @@ def convert_jsonl_to_html(
         title += f" ({date_range_str})"
 
     html_content = generate_html(messages, title)
+    # output_path is guaranteed to be a Path at this point
+    assert output_path is not None
     output_path.write_text(html_content, encoding="utf-8")
     return output_path
