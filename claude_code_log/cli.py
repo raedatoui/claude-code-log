@@ -7,7 +7,7 @@ from typing import Optional
 
 import click
 
-from .converter import convert_jsonl_to_html
+from .converter import convert_jsonl_to_html, process_projects_hierarchy
 
 
 def convert_project_path_to_claude_dir(input_path: Path) -> Path:
@@ -30,7 +30,7 @@ def convert_project_path_to_claude_dir(input_path: Path) -> Path:
 
 
 @click.command()
-@click.argument("input_path", type=click.Path(path_type=Path))
+@click.argument("input_path", type=click.Path(path_type=Path), required=False)
 @click.option(
     "-o",
     "--output",
@@ -52,19 +52,54 @@ def convert_project_path_to_claude_dir(input_path: Path) -> Path:
     type=str,
     help='Filter messages up to this date/time (e.g., "1 hour ago", "today", "2025-06-08 15:00")',
 )
+@click.option(
+    "--all-projects",
+    is_flag=True,
+    help="Process all projects in ~/.claude/projects/ hierarchy and create linked HTML files",
+)
 def main(
-    input_path: Path,
+    input_path: Optional[Path],
     output: Optional[Path],
     open_browser: bool,
     from_date: Optional[str],
     to_date: Optional[str],
+    all_projects: bool,
 ) -> None:
     """Convert Claude transcript JSONL files to HTML.
 
-    INPUT_PATH: Path to a Claude transcript JSONL file, directory containing JSONL files, or project path to convert to ~/.claude/projects/
+    INPUT_PATH: Path to a Claude transcript JSONL file, directory containing JSONL files, or project path to convert. If not provided, defaults to ~/.claude/projects/ and --all-projects is used.
     """
     try:
-        # Check if we should convert to Claude projects directory
+        # Handle default case - process all projects hierarchy if no input path and --all-projects flag
+        if input_path is None:
+            input_path = Path.home() / ".claude" / "projects"
+            all_projects = True
+
+        # Handle --all-projects flag or default behavior
+        if all_projects:
+            if not input_path.exists():
+                raise FileNotFoundError(f"Projects directory not found: {input_path}")
+
+            click.echo(f"Processing all projects in {input_path}...")
+            output_path = process_projects_hierarchy(input_path, from_date, to_date)
+
+            # Count processed projects
+            project_count = len(
+                [
+                    d
+                    for d in input_path.iterdir()
+                    if d.is_dir() and list(d.glob("*.jsonl"))
+                ]
+            )
+            click.echo(
+                f"Successfully processed {project_count} projects and created index at {output_path}"
+            )
+
+            if open_browser:
+                click.launch(str(output_path))
+            return
+
+        # Original single file/directory processing logic
         should_convert = False
 
         if not input_path.exists():

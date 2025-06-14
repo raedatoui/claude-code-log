@@ -3,7 +3,7 @@
 
 import json
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict, Any
 from datetime import datetime
 import dateparser
 import html
@@ -576,6 +576,249 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
         last_message_content = text_content
 
     html_parts.extend(["</body>", "</html>"])
+
+    return "\n".join(html_parts)
+
+
+def process_projects_hierarchy(
+    projects_path: Path,
+    from_date: Optional[str] = None,
+    to_date: Optional[str] = None,
+) -> Path:
+    """Process the entire ~/.claude/projects/ hierarchy and create linked HTML files."""
+    if not projects_path.exists():
+        raise FileNotFoundError(f"Projects path not found: {projects_path}")
+
+    # Find all project directories (those with JSONL files)
+    project_dirs = []
+    for child in projects_path.iterdir():
+        if child.is_dir() and list(child.glob("*.jsonl")):
+            project_dirs.append(child)
+
+    if not project_dirs:
+        raise FileNotFoundError(
+            f"No project directories with JSONL files found in {projects_path}"
+        )
+
+    # Process each project directory
+    project_summaries: List[Dict[str, Any]] = []
+    for project_dir in sorted(project_dirs):
+        try:
+            # Generate HTML for this project
+            output_path = convert_jsonl_to_html(project_dir, None, from_date, to_date)
+
+            # Get project info for index
+            jsonl_files = list(project_dir.glob("*.jsonl"))
+            jsonl_count = len(jsonl_files)
+            messages = load_directory_transcripts(project_dir)
+            if from_date or to_date:
+                messages = filter_messages_by_date(messages, from_date, to_date)
+
+            last_modified = (
+                max(f.stat().st_mtime for f in jsonl_files) if jsonl_files else 0
+            )
+
+            project_summaries.append(
+                {
+                    "name": project_dir.name,
+                    "path": project_dir,
+                    "html_file": f"{project_dir.name}/{output_path.name}",
+                    "jsonl_count": jsonl_count,
+                    "message_count": len(messages),
+                    "last_modified": last_modified,
+                }
+            )
+        except Exception as e:
+            print(f"Warning: Failed to process {project_dir}: {e}")
+            continue
+
+    # Generate index HTML
+    index_path = projects_path / "index.html"
+    index_html = generate_projects_index_html(project_summaries, from_date, to_date)
+    index_path.write_text(index_html, encoding="utf-8")
+
+    return index_path
+
+
+def generate_projects_index_html(
+    project_summaries: List[Dict[str, Any]],
+    from_date: Optional[str] = None,
+    to_date: Optional[str] = None,
+) -> str:
+    """Generate an index HTML page listing all projects."""
+    import datetime
+
+    title = "Claude Code Projects"
+    if from_date or to_date:
+        date_range_parts: List[str] = []
+        if from_date:
+            date_range_parts.append(f"from {from_date}")
+        if to_date:
+            date_range_parts.append(f"to {to_date}")
+        date_range_str = " ".join(date_range_parts)
+        title += f" ({date_range_str})"
+
+    # Sort projects by last modified (most recent first)
+    sorted_projects = sorted(
+        project_summaries, key=lambda p: p["last_modified"], reverse=True
+    )
+
+    html_parts = [
+        "<!DOCTYPE html>",
+        "<html lang='en'>",
+        "<head>",
+        "    <meta charset='UTF-8'>",
+        "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>",
+        f"    <title>{title}</title>",
+        "    <style>",
+        "        body {",
+        "            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Ubuntu Mono', 'Cascadia Code', 'Menlo', 'Consolas', monospace;",
+        "            line-height: 1.6;",
+        "            max-width: 1200px;",
+        "            margin: 0 auto;",
+        "            padding: 20px;",
+        "            background-color: #fafafa;",
+        "            color: #333;",
+        "        }",
+        "        h1 {",
+        "            text-align: center;",
+        "            color: #2c3e50;",
+        "            margin-bottom: 30px;",
+        "            font-size: 2em;",
+        "        }",
+        "        .project-list {",
+        "            display: grid;",
+        "            gap: 15px;",
+        "        }",
+        "        .project-card {",
+        "            background: white;",
+        "            border-radius: 8px;",
+        "            padding: 20px;",
+        "            box-shadow: 0 2px 4px rgba(0,0,0,0.1);",
+        "            border-left: 4px solid #2196f3;",
+        "        }",
+        "        .project-card:hover {",
+        "            box-shadow: 0 4px 8px rgba(0,0,0,0.15);",
+        "            transform: translateY(-1px);",
+        "            transition: all 0.2s ease;",
+        "        }",
+        "        .project-name {",
+        "            font-size: 1.2em;",
+        "            font-weight: 600;",
+        "            margin-bottom: 10px;",
+        "        }",
+        "        .project-name a {",
+        "            text-decoration: none;",
+        "            color: #2196f3;",
+        "        }",
+        "        .project-name a:hover {",
+        "            text-decoration: underline;",
+        "        }",
+        "        .project-stats {",
+        "            color: #666;",
+        "            font-size: 0.9em;",
+        "            display: flex;",
+        "            gap: 20px;",
+        "            flex-wrap: wrap;",
+        "        }",
+        "        .stat {",
+        "            display: flex;",
+        "            align-items: center;",
+        "            gap: 5px;",
+        "        }",
+        "        .summary {",
+        "            text-align: center;",
+        "            margin-bottom: 30px;",
+        "            padding: 15px;",
+        "            background: white;",
+        "            border-radius: 8px;",
+        "            box-shadow: 0 2px 4px rgba(0,0,0,0.1);",
+        "        }",
+        "        .summary-stats {",
+        "            display: flex;",
+        "            justify-content: center;",
+        "            gap: 30px;",
+        "            flex-wrap: wrap;",
+        "        }",
+        "        .summary-stat {",
+        "            text-align: center;",
+        "        }",
+        "        .summary-stat .number {",
+        "            font-size: 1.5em;",
+        "            font-weight: 600;",
+        "            color: #2196f3;",
+        "        }",
+        "        .summary-stat .label {",
+        "            color: #666;",
+        "            font-size: 0.9em;",
+        "        }",
+        "    </style>",
+        "</head>",
+        "<body>",
+        f"    <h1>{title}</h1>",
+    ]
+
+    # Add summary statistics
+    total_projects = len(project_summaries)
+    total_jsonl = sum(p["jsonl_count"] for p in project_summaries)
+    total_messages = sum(p["message_count"] for p in project_summaries)
+
+    html_parts.extend(
+        [
+            "    <div class='summary'>",
+            "        <div class='summary-stats'>",
+            "            <div class='summary-stat'>",
+            f"                <div class='number'>{total_projects}</div>",
+            "                <div class='label'>Projects</div>",
+            "            </div>",
+            "            <div class='summary-stat'>",
+            f"                <div class='number'>{total_jsonl}</div>",
+            "                <div class='label'>Transcript Files</div>",
+            "            </div>",
+            "            <div class='summary-stat'>",
+            f"                <div class='number'>{total_messages}</div>",
+            "                <div class='label'>Messages</div>",
+            "            </div>",
+            "        </div>",
+            "    </div>",
+        ]
+    )
+
+    # Add project list
+    html_parts.append("    <div class='project-list'>")
+
+    for project in sorted_projects:
+        # Format the project name (remove leading dash and convert dashes to slashes)
+        display_name = project["name"]
+        if display_name.startswith("-"):
+            display_name = display_name[1:].replace("-", "/")
+
+        # Format last modified date
+        last_modified = datetime.datetime.fromtimestamp(project["last_modified"])
+        formatted_date = last_modified.strftime("%Y-%m-%d %H:%M")
+
+        html_parts.extend(
+            [
+                "        <div class='project-card'>",
+                "            <div class='project-name'>",
+                f"                <a href='{project['html_file']}'>{escape_html(display_name)}</a>",
+                "            </div>",
+                "            <div class='project-stats'>",
+                f"                <div class='stat'>📁 {project['jsonl_count']} transcript files</div>",
+                f"                <div class='stat'>💬 {project['message_count']} messages</div>",
+                f"                <div class='stat'>🕒 {formatted_date}</div>",
+                "            </div>",
+                "        </div>",
+            ]
+        )
+
+    html_parts.extend(
+        [
+            "    </div>",
+            "</body>",
+            "</html>",
+        ]
+    )
 
     return "\n".join(html_parts)
 
