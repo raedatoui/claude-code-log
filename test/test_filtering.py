@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Permanent test script to verify system message filtering works correctly.
 
-This test ensures that the claude-logbook tool properly filters out:
+This test ensures that the claude-code-log tool properly filters out:
 - Tool result messages (file reads, command outputs, etc.)
 - Command messages with <command-name> tags
 - System caveat messages
@@ -13,7 +13,7 @@ Run this test after making changes to the filtering logic.
 import json
 import tempfile
 from pathlib import Path
-from claude_logbook.converter import convert_jsonl_to_html
+from claude_code_log.converter import convert_jsonl_to_html
 
 def create_test_jsonl():
     """Create a test JSONL file with various message types."""

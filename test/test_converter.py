@@ -4,7 +4,7 @@
 import json
 import tempfile
 from pathlib import Path
-from claude_logbook.converter import load_transcript, generate_html, is_system_message
+from claude_code_log.converter import load_transcript, generate_html, is_system_message
 
 
 def test_caveat_message_filtering():

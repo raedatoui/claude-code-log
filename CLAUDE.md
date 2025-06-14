@@ -1,4 +1,4 @@
-# Claude Logbook
+# Claude Code Log
 
 A Python CLI tool that converts Claude transcript JSONL files into readable HTML format.
 
@@ -20,38 +20,50 @@ This tool processes Claude Code transcript files (stored as JSONL) and generates
 
 ```bash
 # Single file
-claude-logbook transcript.jsonl
+claude-code-log transcript.jsonl
 
 # Entire directory
-claude-logbook /path/to/transcript/directory
+claude-code-log /path/to/transcript/directory
 
 # Custom output location
-claude-logbook /path/to/directory -o combined_transcripts.html
+claude-code-log /path/to/directory -o combined_transcripts.html
 
 # Open in browser after conversion
-claude-logbook /path/to/directory --open-browser
+claude-code-log /path/to/directory --open-browser
 
 # Filter by date range (supports natural language)
-claude-logbook /path/to/directory --from-date "yesterday" --to-date "today"
-claude-logbook /path/to/directory --from-date "last week"
-claude-logbook /path/to/directory --to-date "2025-06-01"
-claude-logbook /path/to/directory --from-date "3 days ago" --to-date "yesterday"
+claude-code-log /path/to/directory --from-date "yesterday" --to-date "today"
+claude-code-log /path/to/directory --from-date "last week"
+claude-code-log /path/to/directory --to-date "2025-06-01"
+claude-code-log /path/to/directory --from-date "3 days ago" --to-date "yesterday"
 ```
 
 ## File Structure
 
-- `claude_logbook/converter.py` - Core conversion logic
-- `claude_logbook/cli.py` - Command-line interface
+- `claude_code_log/converter.py` - Core conversion logic
+- `claude_code_log/cli.py` - Command-line interface
 - `pyproject.toml` - Project configuration with Click dependency
 
 ## Development
 
 The project uses:
+
 - Python 3.12+
 - Click for CLI
 - dateparser for natural language date parsing
 - Standard library for JSON/HTML processing
 
-## Testing
+## Development Commands
+
+### Testing
+Run tests with:
+```bash
+uv run pytest
+```
+
+### Code Quality
+- **Format code**: `ruff format`
+- **Lint and fix**: `ruff check --fix`
+- **Type checking**: `uv run pyright`
 
 Test with Claude transcript JSONL files typically found in `~/.claude/projects/` directories.

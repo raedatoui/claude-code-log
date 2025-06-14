@@ -1,28 +1,25 @@
 [project]
-name = "claude-logbook"
+name = "claude-code-log"
 version = "0.1.0"
 description = "Convert Claude transcript JSONL files to HTML"
 readme = "README.md"
 requires-python = ">=3.12"
-license = {text = "MIT"}
-dependencies = [
-    "click>=8.0.0",
-    "dateparser>=1.0.0",
-]
+license = { text = "MIT" }
+dependencies = ["click>=8.0.0", "dateparser>=1.0.0"]
 
 [project.scripts]
-claude-logbook = "claude_logbook.cli:main"
+claude-code-log = "claude_code_log.cli:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.pytest.ini_options]
-addopts = "-n auto --tb=native"
+testpaths = ["test"]
 
 [tool.pyright]
 # Pyright configuration with strict settings
-include = ["claude_logbook"]
+include = ["claude_code_log"]
 exclude = ["**/__pycache__", "dist"]
 stubPath = "stubs"
 venvPath = "."

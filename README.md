@@ -1,4 +1,4 @@
-# Claude Logbook
+# Claude Code Log
 
 A Python CLI tool that converts Claude transcript JSONL files into readable HTML format.
 
@@ -23,27 +23,27 @@ This tool processes Claude Code transcript files (stored as JSONL) and generates
 
 ```bash
 # Single file
-claude-logbook transcript.jsonl
+claude-code-log transcript.jsonl
 
 # Entire directory
-claude-logbook /path/to/transcript/directory
+claude-code-log /path/to/transcript/directory
 
 # Custom output location
-claude-logbook /path/to/directory -o combined_transcripts.html
+claude-code-log /path/to/directory -o combined_transcripts.html
 
 # Open in browser after conversion
-claude-logbook /path/to/directory --open-browser
+claude-code-log /path/to/directory --open-browser
 
 # Filter by date range (supports natural language)
-claude-logbook /path/to/directory --from-date "yesterday" --to-date "today"
-claude-logbook /path/to/directory --from-date "last week"
-claude-logbook /path/to/directory --from-date "3 days ago" --to-date "yesterday"
+claude-code-log /path/to/directory --from-date "yesterday" --to-date "today"
+claude-code-log /path/to/directory --from-date "last week"
+claude-code-log /path/to/directory --from-date "3 days ago" --to-date "yesterday"
 ```
 
 ## File Structure
 
-- `claude_logbook/converter.py` - Core conversion logic
-- `claude_logbook/cli.py` - Command-line interface
+- `claude_code_log/converter.py` - Core conversion logic
+- `claude_code_log/cli.py` - Command-line interface
 - `pyproject.toml` - Project configuration with Click dependency
 
 ## Development
@@ -57,17 +57,28 @@ The project uses:
 - Minimal dependencies for portability
 - marked.js (CDN) for client-side markdown rendering
 
-## Testing
+## Development Commands
+
+### Testing
 
 Run tests with:
 
 ```bash
-python test_converter.py
-python test_new_features.py
-python test_date_filtering.py
-python test_filtering.py
-python test_path_conversion.py
+uv run pytest
 ```
+
+### Code Quality
+
+- **Format code**: `ruff format`
+- **Lint and fix**: `ruff check --fix`
+- **Type checking**: `uv run pyright`
+
+### All Commands
+
+- **Test**: `uv run pytest`
+- **Format**: `ruff format`
+- **Lint**: `ruff check --fix`
+- **Type Check**: `uv run pyright`
 
 Test with Claude transcript JSONL files typically found in `~/.claude/projects/` directories.
 
@@ -92,10 +103,8 @@ Test with Claude transcript JSONL files typically found in `~/.claude/projects/`
 
 ## TODO
 
-- Rename from claude-logbook to claude-code-log
 - Escape HTML / XML tags in messages so they get rendered properly
 - Process entire `~/.claude/projects/` hierarchy and render as multiple linked HTML files as CLI tool default
-- Migrate to Pytest
 - Add linting with Ruff and pyright
 - Github Action CI
 - Move HTML template into a separate file (use Jinja or similar)

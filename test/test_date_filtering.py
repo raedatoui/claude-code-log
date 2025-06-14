@@ -5,7 +5,7 @@ import json
 import tempfile
 from datetime import datetime, timedelta
 from pathlib import Path
-from claude_logbook.converter import filter_messages_by_date, load_transcript, convert_jsonl_to_html
+from claude_code_log.converter import filter_messages_by_date, convert_jsonl_to_html
 
 
 def create_test_message(timestamp_str: str, text: str) -> dict:
@@ -142,7 +142,7 @@ def test_natural_language_dates():
     
     for date_format in date_formats:
         try:
-            filtered = filter_messages_by_date(messages, date_format, None)
+            filter_messages_by_date(messages, date_format, None)
             print(f"✓ Successfully parsed date format: {date_format}")
         except ValueError:
             print(f"✗ Failed to parse date format: {date_format}")

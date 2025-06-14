@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CLI interface for claude-logbook."""
+"""CLI interface for claude-code-log."""
 
 import sys
 from pathlib import Path

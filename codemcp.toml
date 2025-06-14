@@ -1,9 +1,7 @@
-# codemcp configuration file for claude-logbook
+# codemcp configuration file for claude-code-log
 
 [commands]
 format = ["ruff", "format"]
-# TODO: I don't think this is right, need to read the manual,
-# need to be a lot more opinionated about lints here
 lint = ["ruff", "check", "--fix"]
 typecheck = ["uv", "run", "pyright"]
 test = ["uv", "run", "pytest"]

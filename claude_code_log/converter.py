@@ -54,11 +54,17 @@ def filter_messages_by_date(messages: List[Dict[str, Any]], from_date: Optional[
         from_dt = dateparser.parse(from_date)
         if not from_dt:
             raise ValueError(f"Could not parse from-date: {from_date}")
+        # If parsing relative dates like "today", start from beginning of day
+        if from_date in ["today", "yesterday"] or "days ago" in from_date:
+            from_dt = from_dt.replace(hour=0, minute=0, second=0, microsecond=0)
     
     if to_date:
         to_dt = dateparser.parse(to_date)
         if not to_dt:
             raise ValueError(f"Could not parse to-date: {to_date}")
+        # If parsing relative dates like "today", end at end of day
+        if to_date in ["today", "yesterday"] or "days ago" in to_date:
+            to_dt = to_dt.replace(hour=23, minute=59, second=59, microsecond=999999)
     
     filtered_messages = []
     for message in messages:
@@ -343,10 +349,6 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
         elif is_command_message:
             css_class = "system"
             command_name = extract_command_name(text_content)
-            # Extract just the command message part
-            import re
-            command_msg_match = re.search(r'<command-message>([^<]+)</command-message>', text_content)
-            command_msg = command_msg_match.group(1).strip() if command_msg_match else "System command"
             content_html = f"<details><summary>Command: {command_name}</summary><div class='content'>{text_content}</div></details>"
             message_type = "system"
         else:
@@ -355,7 +357,7 @@ def generate_html(messages: List[Dict[str, Any]], title: Optional[str] = None) -
         
         if is_duplicate:
             css_class += " duplicate-collapsed"
-            content_html = f"<div class='duplicate-note'>(Duplicate from previous session - collapsed)</div>"
+            content_html = "<div class='duplicate-note'>(Duplicate from previous session - collapsed)</div>"
         
         html_parts.extend([
             f"    <div class='message {css_class}'>",

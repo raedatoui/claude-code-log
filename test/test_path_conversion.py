@@ -2,7 +2,7 @@
 """Test the project path conversion functionality."""
 
 from pathlib import Path
-from claude_logbook.cli import convert_project_path_to_claude_dir
+from claude_code_log.cli import convert_project_path_to_claude_dir
 
 def test_path_conversion():
     """Test that project paths are correctly converted to ~/.claude/projects/ format."""
@@ -26,7 +26,7 @@ def test_path_conversion():
     print()
     
     # Test case 3: Absolute path with symlinks resolved
-    input_path = Path("/Users/ezyang/Nursery/claude-logbook")
+    input_path = Path("/Users/ezyang/Nursery/claude-code-log")
     result = convert_project_path_to_claude_dir(input_path)
     print(f"Input: {input_path}")
     print(f"Result: {result}")
