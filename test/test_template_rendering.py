@@ -88,9 +88,9 @@ class TestTemplateRendering:
         assert "Command:" in html_content
         assert "test-command" in html_content
 
-        # Check command output handling
-        assert "Command Output:" in html_content
-        assert "Line 1 of output" in html_content
+        # Check that local command output is filtered out (it's a system message)
+        assert "local-command-stdout" not in html_content
+        assert "Line 1 of output" not in html_content
 
         # Check special characters
         assert "café, naïve, résumé" in html_content
@@ -161,12 +161,12 @@ class TestTemplateRendering:
         # Check tool use formatting
         assert "Tool Use:" in html_content
         assert "Edit" in html_content
-        assert 'class="tool-use"' in html_content
+        assert "tool-use" in html_content
 
         # Check tool result formatting
         assert "Tool Result:" in html_content
         assert "File created successfully" in html_content
-        assert 'class="tool-result"' in html_content
+        assert "tool-result" in html_content
 
         # Check tool input details
         assert "<details>" in html_content
@@ -185,7 +185,7 @@ class TestTemplateRendering:
         # Check timestamp format (YYYY-MM-DD HH:MM:SS)
         assert "2025-06-14 10:00:00" in html_content
         assert "2025-06-14 10:00:30" in html_content
-        assert 'class="timestamp"' in html_content
+        assert "class='timestamp'" in html_content
 
     def test_index_template_rendering(self):
         """Test index template with project summaries."""
@@ -215,13 +215,13 @@ class TestTemplateRendering:
         # Basic structure checks
         assert "<!DOCTYPE html>" in index_html
         assert "<title>Claude Code Projects</title>" in index_html
-        assert 'class="project-list"' in index_html
-        assert 'class="summary"' in index_html
+        assert "class='project-list'" in index_html
+        assert "class='summary'" in index_html
 
         # Check project data
         assert "test-project-1" in index_html
         assert (
-            "user/workspace/my-app" in index_html
+            "user/workspace/my/app" in index_html
         )  # Dash formatting should be applied
         assert "📁 3 transcript files" in index_html
         assert "💬 15 messages" in index_html

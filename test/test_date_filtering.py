@@ -6,6 +6,7 @@ import tempfile
 from datetime import datetime, timedelta
 from pathlib import Path
 from claude_code_log.converter import filter_messages_by_date, convert_jsonl_to_html
+from claude_code_log.models import parse_transcript_entry
 
 
 def create_test_message(timestamp_str: str, text: str) -> dict:
@@ -13,6 +14,13 @@ def create_test_message(timestamp_str: str, text: str) -> dict:
     return {
         "type": "user",
         "timestamp": timestamp_str,
+        "parentUuid": None,
+        "isSidechain": False,
+        "userType": "human",
+        "cwd": "/tmp",
+        "sessionId": "test_session",
+        "version": "1.0.0",
+        "uuid": f"test_msg_{timestamp_str}",
         "message": {"role": "user", "content": [{"type": "text", "text": text}]},
     }
 
@@ -26,7 +34,7 @@ def test_date_filtering():
     two_days_ago = today - timedelta(days=2)
     three_days_ago = today - timedelta(days=3)
 
-    messages = [
+    message_dicts = [
         create_test_message(
             three_days_ago.isoformat() + "Z", "Message from 3 days ago"
         ),
@@ -34,6 +42,9 @@ def test_date_filtering():
         create_test_message(yesterday.isoformat() + "Z", "Message from yesterday"),
         create_test_message(today.isoformat() + "Z", "Message from today"),
     ]
+
+    # Parse dictionaries into TranscriptEntry objects
+    messages = [parse_transcript_entry(msg_dict) for msg_dict in message_dicts]
 
     # Test filtering from yesterday onwards
     filtered = filter_messages_by_date(messages, "yesterday", None)
@@ -112,11 +123,13 @@ def test_end_to_end_date_filtering():
         # Check the generated HTML
         html_content = result_path.read_text()
 
-        # Should contain today's message
-        assert "Today's message" in html_content, "HTML should contain today's message"
+        # Should contain today's message (HTML escaped)
+        assert "Today&#x27;s message" in html_content, (
+            "HTML should contain today's message"
+        )
 
         # Should NOT contain yesterday's message
-        assert "Yesterday's message" not in html_content, (
+        assert "Yesterday&#x27;s message" not in html_content, (
             "HTML should not contain yesterday's message"
         )
 
@@ -137,7 +150,8 @@ def test_end_to_end_date_filtering():
 def test_natural_language_dates():
     """Test various natural language date formats."""
 
-    messages = [create_test_message("2025-06-08T12:00:00Z", "Test message")]
+    message_dict = create_test_message("2025-06-08T12:00:00Z", "Test message")
+    messages = [parse_transcript_entry(message_dict)]
 
     # Test various natural language formats
     date_formats = ["today", "yesterday", "last week", "3 days ago", "1 week ago"]
