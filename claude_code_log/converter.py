@@ -17,6 +17,7 @@ from .models import (
     TextContent,
     ToolResultContent,
     ToolUseContent,
+    ThinkingContent,
 )
 
 
@@ -27,6 +28,9 @@ def extract_text_content(content: Union[str, List[ContentItem]]) -> str:
         for item in content:
             if isinstance(item, TextContent):
                 text_parts.append(item.text)
+            elif isinstance(item, ThinkingContent):
+                # Skip thinking content in main text extraction
+                continue
         return "\n".join(text_parts)
     else:
         return str(content) if content else ""
@@ -109,21 +113,54 @@ def filter_messages_by_date(
 def load_transcript(jsonl_path: Path) -> List[TranscriptEntry]:
     """Load and parse JSONL transcript file."""
     messages: List[TranscriptEntry] = []
+    unique_errors: Dict[str, int] = {}
+    unhandled_types: Dict[str, int] = {}
+
     with open(jsonl_path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if line:
                 try:
                     entry_dict = json.loads(line)
-                    if entry_dict.get("type") in ["user", "assistant", "summary"]:
+                    entry_type = entry_dict.get("type", "unknown")
+
+                    if entry_type in ["user", "assistant", "summary"]:
                         # Parse using Pydantic models
                         entry = parse_transcript_entry(entry_dict)
                         messages.append(entry)
                     else:
-                        print("Unhandled message type:" + str(entry_dict))
-                except (json.JSONDecodeError, ValueError) as e:
-                    print("Unhandled message:" + str(e))
-                    continue
+                        # Track unhandled message types
+                        unhandled_types[entry_type] = (
+                            unhandled_types.get(entry_type, 0) + 1
+                        )
+                except json.JSONDecodeError as e:
+                    error_key = f"JSON decode error: {type(e).__name__}"
+                    unique_errors[error_key] = unique_errors.get(error_key, 0) + 1
+                except ValueError as e:
+                    # Extract a more descriptive error message
+                    error_msg = str(e)
+                    if "validation error" in error_msg.lower():
+                        error_key = f"Validation error: {str(e)[:200]}..."
+                    else:
+                        error_key = f"ValueError: {error_msg[:200]}..."
+                    unique_errors[error_key] = unique_errors.get(error_key, 0) + 1
+                except Exception as e:
+                    error_key = f"Unexpected error: {type(e).__name__}"
+                    unique_errors[error_key] = unique_errors.get(error_key, 0) + 1
+
+    # Print summary of errors if any occurred
+    if unique_errors or unhandled_types:
+        print(f"\nParsing summary for {jsonl_path.name}:")
+        if unhandled_types:
+            print("Unhandled message types:")
+            for msg_type, count in unhandled_types.items():
+                print(f"  - {msg_type}: {count} occurrences")
+        if unique_errors:
+            print("Parsing errors:")
+            for error, count in unique_errors.items():
+                print(f"  - {error}: {count} occurrences")
+        print()
+
     return messages
 
 
@@ -223,7 +260,17 @@ def format_tool_use_content(tool_use: ToolUseContent) -> str:
 def format_tool_result_content(tool_result: ToolResultContent) -> str:
     """Format tool result content as HTML."""
     escaped_id = escape_html(tool_result.tool_use_id)
-    escaped_content = escape_html(tool_result.content)
+
+    # Handle both string and structured content
+    if isinstance(tool_result.content, str):
+        escaped_content = escape_html(tool_result.content)
+    else:
+        # Content is a list of structured items, extract text
+        content_parts: List[str] = []
+        for item in tool_result.content:
+            if item.get("type") == "text":
+                content_parts.append(item.get("text", ""))
+        escaped_content = escape_html("\n".join(content_parts))
 
     error_indicator = " (Error)" if tool_result.is_error else ""
 
@@ -233,6 +280,22 @@ def format_tool_result_content(tool_result: ToolResultContent) -> str:
             <summary><strong>Tool Result{error_indicator}:</strong> {escaped_id}</summary>
             <div class="tool-input">
                 <pre>{escaped_content}</pre>
+            </div>
+        </details>
+    </div>
+    """
+
+
+def format_thinking_content(thinking: ThinkingContent) -> str:
+    """Format thinking content as HTML."""
+    escaped_thinking = escape_html(thinking.thinking)
+
+    return f"""
+    <div class="tool-content thinking-content">
+        <details>
+            <summary><strong>Thinking</strong></summary>
+            <div class="thinking-text">
+                <pre>{escaped_thinking}</pre>
             </div>
         </details>
     </div>
@@ -266,6 +329,8 @@ def render_message_content(
             rendered_parts.append(format_tool_use_content(item))  # type: ignore
         elif type(item) is ToolResultContent:
             rendered_parts.append(format_tool_result_content(item))  # type: ignore
+        elif type(item) is ThinkingContent:
+            rendered_parts.append(format_thinking_content(item))  # type: ignore
 
     return "\n".join(rendered_parts)
 
@@ -373,11 +438,13 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
         message_content = message.message.content  # type: ignore
         text_content = extract_text_content(message_content)
 
-        # Check if message has tool use or tool result content even if no text
+        # Check if message has tool use, tool result, or thinking content even if no text
         has_tool_content = False
         if isinstance(message_content, list):
             for item in message_content:
-                if isinstance(item, (ToolUseContent, ToolResultContent)):
+                if isinstance(
+                    item, (ToolUseContent, ToolResultContent, ThinkingContent)
+                ):
                     has_tool_content = True
                     break
 

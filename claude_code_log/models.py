@@ -1,6 +1,6 @@
 """Pydantic models for Claude Code transcript JSON structures."""
 
-from typing import Any, List, Union, Optional, Dict, Literal
+from typing import Any, List, Union, Optional, Dict, Literal, cast
 from pydantic import BaseModel
 
 
@@ -13,10 +13,10 @@ class TodoItem(BaseModel):
 
 class UsageInfo(BaseModel):
     input_tokens: int
-    cache_creation_input_tokens: int
-    cache_read_input_tokens: int
+    cache_creation_input_tokens: Optional[int] = None
+    cache_read_input_tokens: Optional[int] = None
     output_tokens: int
-    service_tier: str
+    service_tier: Optional[str] = None
 
 
 class TextContent(BaseModel):
@@ -34,11 +34,17 @@ class ToolUseContent(BaseModel):
 class ToolResultContent(BaseModel):
     type: Literal["tool_result"]
     tool_use_id: str
-    content: str
+    content: Union[str, List[Dict[str, Any]]]
     is_error: Optional[bool] = None
 
 
-ContentItem = Union[TextContent, ToolUseContent, ToolResultContent]
+class ThinkingContent(BaseModel):
+    type: Literal["thinking"]
+    thinking: str
+    signature: Optional[str] = None
+
+
+ContentItem = Union[TextContent, ToolUseContent, ToolResultContent, ThinkingContent]
 
 
 class UserMessage(BaseModel):
@@ -54,7 +60,7 @@ class AssistantMessage(BaseModel):
     content: List[ContentItem]
     stop_reason: Optional[str]
     stop_sequence: Optional[str]
-    usage: UsageInfo
+    usage: Optional[UsageInfo] = None
 
 
 class FileInfo(BaseModel):
@@ -115,7 +121,7 @@ class UserTranscriptEntry(BaseTranscriptEntry):
 class AssistantTranscriptEntry(BaseTranscriptEntry):
     type: Literal["assistant"]
     message: AssistantMessage
-    requestId: str
+    requestId: Optional[str] = None
 
 
 class SummaryTranscriptEntry(BaseModel):
@@ -127,6 +133,34 @@ class SummaryTranscriptEntry(BaseModel):
 TranscriptEntry = Union[
     UserTranscriptEntry, AssistantTranscriptEntry, SummaryTranscriptEntry
 ]
+
+
+def parse_content_item(item_data: Dict[str, Any]) -> ContentItem:
+    """Parse a content item based on its type field."""
+    content_type = item_data.get("type", "")
+
+    if content_type == "text":
+        return TextContent.model_validate(item_data)
+    elif content_type == "tool_use":
+        return ToolUseContent.model_validate(item_data)
+    elif content_type == "tool_result":
+        return ToolResultContent.model_validate(item_data)
+    elif content_type == "thinking":
+        return ThinkingContent.model_validate(item_data)
+    else:
+        # Fallback to text content for unknown types
+        return TextContent(type="text", text=str(item_data))
+
+
+def parse_message_content(content_data: Any) -> Union[str, List[ContentItem]]:
+    """Parse message content, handling both string and list formats."""
+    if isinstance(content_data, str):
+        return content_data
+    elif isinstance(content_data, list):
+        content_list = cast(List[Dict[str, Any]], content_data)
+        return [parse_content_item(item) for item in content_list]
+    else:
+        return str(content_data)
 
 
 def parse_transcript_entry(data: Dict[str, Any]) -> TranscriptEntry:
@@ -145,10 +179,53 @@ def parse_transcript_entry(data: Dict[str, Any]) -> TranscriptEntry:
     entry_type = data.get("type")
 
     if entry_type == "user":
-        return UserTranscriptEntry.model_validate(data)
+        # Parse message content if present
+        data_copy = data.copy()
+        if "message" in data_copy and "content" in data_copy["message"]:
+            data_copy["message"] = data_copy["message"].copy()
+            data_copy["message"]["content"] = parse_message_content(
+                data_copy["message"]["content"]
+            )
+        return UserTranscriptEntry.model_validate(data_copy)
     elif entry_type == "assistant":
-        return AssistantTranscriptEntry.model_validate(data)
+        # Parse message content if present
+        data_copy = data.copy()
+        if "message" in data_copy and "content" in data_copy["message"]:
+            data_copy["message"] = data_copy["message"].copy()
+            data_copy["message"]["content"] = parse_message_content(
+                data_copy["message"]["content"]
+            )
+        return AssistantTranscriptEntry.model_validate(data_copy)
     elif entry_type == "summary":
         return SummaryTranscriptEntry.model_validate(data)
     else:
         raise ValueError(f"Unknown transcript entry type: {entry_type}")
+
+
+def try_parse_transcript_entry(entry_dict: Dict[str, Any]) -> Optional[TranscriptEntry]:
+    """Try to parse a transcript entry, returning None if parsing fails."""
+    try:
+        return parse_transcript_entry(entry_dict)
+    except Exception:
+        return None
+
+
+def parse_transcript_entry_with_fallback(
+    entry_dict: Dict[str, Any],
+) -> Optional[TranscriptEntry]:
+    """
+    Try to parse a transcript entry against different Pydantic models.
+
+    This function attempts to parse the entry using each model type in order,
+    using proper content parsing to avoid Union validation errors.
+
+    Args:
+        entry_dict: Dictionary parsed from JSON
+
+    Returns:
+        The appropriate TranscriptEntry subclass, or None if parsing fails
+    """
+    try:
+        return parse_transcript_entry(entry_dict)
+    except Exception:
+        return None
