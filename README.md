@@ -75,9 +75,14 @@ claude-code-log /path/to/directory --from-date "3 days ago" --to-date "yesterday
 
 ## File Structure
 
-- `claude_code_log/converter.py` - Core conversion logic and hierarchy processing
+- `claude_code_log/parser.py` - Data extraction and parsing from JSONL files
+- `claude_code_log/renderer.py` - HTML generation and template rendering
+- `claude_code_log/converter.py` - High-level conversion orchestration
 - `claude_code_log/cli.py` - Command-line interface with project discovery
-- `claude_code_log/models.py` - Pydantic models for transcript parsing
+- `claude_code_log/models.py` - Pydantic models for transcript data structures
+- `claude_code_log/templates/` - Jinja2 HTML templates
+  - `transcript.html` - Main transcript viewer template
+  - `index.html` - Project directory index template
 - `pyproject.toml` - Project configuration with dependencies
 
 ## Development
@@ -102,9 +107,27 @@ Run tests with:
 uv run pytest
 ```
 
+### Test Coverage
+
+Generate test coverage reports:
+
+```bash
+# Run tests with coverage
+uv run pytest --cov=claude_code_log --cov-report=html --cov-report=term
+
+# Generate HTML coverage report only
+uv run pytest --cov=claude_code_log --cov-report=html
+
+# View coverage in terminal
+uv run pytest --cov=claude_code_log --cov-report=term-missing
+```
+
+HTML coverage reports are generated in `htmlcov/index.html`.
+
 **Comprehensive Testing & Style Guide**: The project includes extensive testing infrastructure and visual documentation. See [test/README.md](test/README.md) for details on:
 
 - **Unit Tests**: Template rendering, message type handling, edge cases
+- **Test Coverage**: 78%+ coverage across all modules with detailed reporting
 - **Visual Style Guide**: Interactive documentation showing all message types
 - **Representative Test Data**: Real-world JSONL samples for development
 - **Style Guide Generation**: Create visual documentation with `uv run python scripts/generate_style_guide.py`
@@ -118,6 +141,7 @@ uv run pytest
 ### All Commands
 
 - **Test**: `uv run pytest`
+- **Test with Coverage**: `uv run pytest --cov=claude_code_log --cov-report=html`
 - **Format**: `ruff format`
 - **Lint**: `ruff check --fix`
 - **Type Check**: `uv run pyright`

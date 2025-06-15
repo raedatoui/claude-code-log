@@ -3,13 +3,12 @@
 
 import pytest
 from pathlib import Path
-from claude_code_log.converter import (
-    load_transcript,
+from claude_code_log.parser import load_transcript, load_directory_transcripts
+from claude_code_log.renderer import (
     generate_html,
     TemplateMessage,
     TemplateProject,
     TemplateSummary,
-    load_directory_transcripts,
     generate_projects_index_html,
 )
 

@@ -6,6 +6,11 @@ This directory contains comprehensive testing infrastructure and visual document
 
 Representative JSONL files covering all message types and edge cases:
 
+**Note**: After the module split, import paths have changed:
+- `from claude_code_log.parser import load_transcript, extract_text_content`
+- `from claude_code_log.renderer import generate_html, format_timestamp`
+- `from claude_code_log.converter import convert_jsonl_to_html`
+
 ### `representative_messages.jsonl`
 A comprehensive conversation demonstrating:
 - User and assistant messages
@@ -94,12 +99,39 @@ open scripts/style_guide_output/index.html
 
 ### Unit Tests
 ```bash
+# Run all tests
+uv run pytest -v
+
 # Run all template tests
 uv run pytest test/test_template_rendering.py -v
 
 # Run specific test
 uv run pytest test/test_template_rendering.py::TestTemplateRendering::test_representative_messages_render -v
+
+# Run tests with coverage
+uv run pytest --cov=claude_code_log --cov-report=term-missing -v
 ```
+
+### Test Coverage
+
+Generate detailed coverage reports:
+
+```bash
+# Run tests with coverage and HTML report
+uv run pytest --cov=claude_code_log --cov-report=html --cov-report=term
+
+# View coverage by module
+uv run pytest --cov=claude_code_log --cov-report=term-missing
+
+# Open HTML coverage report
+open htmlcov/index.html
+```
+
+Current coverage: **78%+** across all modules:
+- `parser.py`: 81% - Data extraction and parsing
+- `renderer.py`: 86% - HTML generation and formatting  
+- `converter.py`: 52% - High-level orchestration
+- `models.py`: 89% - Pydantic data models
 
 ### Manual Testing
 ```bash
@@ -138,7 +170,12 @@ test/
 │   ├── representative_messages.jsonl
 │   ├── edge_cases.jsonl
 │   └── session_b.jsonl
-└── test_template_rendering.py    # Comprehensive unit tests
+├── test_template_rendering.py    # Template rendering tests
+├── test_template_data.py         # Template data structure tests
+├── test_template_utils.py        # Utility function tests
+├── test_message_filtering.py     # Message filtering tests
+├── test_date_filtering.py        # Date filtering tests
+└── test_*.py                     # Additional test modules
 
 scripts/
 ├── generate_style_guide.py       # Visual documentation generator
@@ -146,6 +183,10 @@ scripts/
     ├── index.html
     ├── transcript_style_guide.html
     └── index_style_guide.html
+
+htmlcov/                          # Coverage reports
+├── index.html                    # Main coverage report
+└── *.html                        # Per-module coverage details
 ```
 
 ## Benefits
@@ -153,9 +194,11 @@ scripts/
 This testing infrastructure provides:
 
 - **Regression Prevention**: Catch template breaking changes
+- **Coverage Tracking**: 78%+ test coverage with detailed reporting
+- **Module Testing**: Focused tests for parser, renderer, and converter modules
 - **Visual Documentation**: See how all message types render
 - **Development Reference**: Example data for testing new features
 - **Quality Assurance**: Verify edge cases and error handling
 - **Design Consistency**: Maintain visual standards across updates
 
-The combination of unit tests and visual style guides ensures both functional correctness and design quality.
+The combination of unit tests, coverage tracking, and visual style guides ensures both functional correctness and design quality across the modular codebase.

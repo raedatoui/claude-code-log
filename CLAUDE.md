@@ -44,7 +44,9 @@ claude-code-log /path/to/directory --from-date "3 days ago" --to-date "yesterday
 
 ## File Structure
 
-- `claude_code_log/converter.py` - Core conversion logic and HTML generation
+- `claude_code_log/parser.py` - Data extraction and parsing from JSONL files
+- `claude_code_log/renderer.py` - HTML generation and template rendering
+- `claude_code_log/converter.py` - High-level conversion orchestration
 - `claude_code_log/cli.py` - Command-line interface
 - `claude_code_log/models.py` - Pydantic models for transcript data structures
 - `claude_code_log/templates/` - Jinja2 HTML templates
@@ -73,6 +75,23 @@ Run tests with:
 ```bash
 uv run pytest
 ```
+
+### Test Coverage
+
+Generate test coverage reports:
+
+```bash
+# Run tests with coverage
+uv run pytest --cov=claude_code_log --cov-report=html --cov-report=term
+
+# Generate HTML coverage report only
+uv run pytest --cov=claude_code_log --cov-report=html
+
+# View coverage in terminal
+uv run pytest --cov=claude_code_log --cov-report=term-missing
+```
+
+HTML coverage reports are generated in `htmlcov/index.html`.
 
 ### Code Quality
 

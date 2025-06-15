@@ -3,10 +3,9 @@
 
 import pytest
 from datetime import datetime
-from claude_code_log.converter import (
+from claude_code_log.parser import parse_timestamp, extract_text_content
+from claude_code_log.renderer import (
     format_timestamp,
-    parse_timestamp,
-    extract_text_content,
     extract_command_info,
     escape_html,
     is_system_message,

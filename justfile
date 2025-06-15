@@ -8,6 +8,9 @@ gen:
 test:
     uv run pytest
 
+test-cov:
+    uv run pytest --cov=claude_code_log --cov-report=xml --cov-report=html --cov-report=term
+
 format:
     uv run ruff format
 
