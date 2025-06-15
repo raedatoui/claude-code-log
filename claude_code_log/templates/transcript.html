@@ -137,6 +137,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .timestamp {
@@ -222,15 +224,34 @@
             font-size: 1.1em;
         }
 
-        .session-header a.scroll-top {
-            font-size: 2em;
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5em;
             line-height: 1;
-            float: right;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: background-color 0.3s, transform 0.2s;
+            z-index: 1000;
         }
 
-        .session-header a.scroll-top:visited {
-            color: #666;
+        .scroll-top:hover {
+            background-color: #1976d2;
+            transform: translateY(-2px);
+        }
+
+        .scroll-top:visited {
+            color: white;
         }
 
         .session-summary {
@@ -255,6 +276,7 @@
             border-radius: 5px;
             white-space: pre-wrap;
             word-wrap: break-word;
+            word-break: break-word;
             font-family: inherit;
         }
     </style>
@@ -278,7 +300,10 @@
                     {{ session.id[:8] }}
                 </div>
                 <div class='session-link-meta'>
-                    {{ session.first_timestamp }} • {{ session.message_count }} messages
+                    {{ session.timestamp_range }} • {{ session.message_count }} messages
+                    {% if session.token_summary %}
+                    <br>{{ session.token_summary }}
+                    {% endif %}
                 </div>
                 {% if session.first_user_message %}
                 <pre class='session-preview'
@@ -296,7 +321,6 @@
     {% if message.is_session_header %}
     <div class="session-divider"></div>
     <div id='session-{{ message.session_id }}' class='message session-header'>
-        <a class="scroll-top" href="#title">🔝</a>
         <div class='header'>{{ message.content_html }}</div>
         {% if message.session_subtitle %}
         <div class='session-subtitle' style='font-size: 0.9em; color: #666; margin-top: 4px;'>{{
@@ -308,12 +332,19 @@
     <div class='message {{ message.css_class }}'>
         <div class='header'>
             <span>{{ message.display_type }}</span>
-            <span class='timestamp'>{{ message.formatted_timestamp }}</span>
+            <div style='display: flex; flex-direction: column; align-items: flex-end; gap: 2px;'>
+                <span class='timestamp'>{{ message.formatted_timestamp }}</span>
+                {% if message.token_usage %}
+                <span class='token-usage' style='font-size: 0.75em; color: #888;'>{{ message.token_usage }}</span>
+                {% endif %}
+            </div>
         </div>
         <div class='content'>{{ message.content_html | safe }}</div>
     </div>
     {% endif %}
     {% endfor %}
+    
+    <a class="scroll-top" href="#title">🔝</a>
 </body>
 
 </html>

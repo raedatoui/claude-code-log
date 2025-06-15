@@ -379,6 +379,7 @@ class TemplateMessage:
         session_summary: Optional[str] = None,
         session_id: Optional[str] = None,
         is_session_header: bool = False,
+        token_usage: Optional[str] = None,
     ):
         self.type = message_type
         self.content_html = content_html
@@ -389,6 +390,7 @@ class TemplateMessage:
         self.session_id = session_id
         self.is_session_header = is_session_header
         self.session_subtitle: Optional[str] = None
+        self.token_usage = token_usage
 
 
 def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) -> str:
@@ -437,6 +439,11 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
     sessions: Dict[str, Dict[str, Any]] = {}
     session_order: List[str] = []
     seen_sessions: set[str] = set()
+
+    # Track requestIds to avoid double-counting token usage
+    seen_request_ids: set[str] = set()
+    # Track which messages should show token usage (first occurrence of each requestId)
+    show_tokens_for_message: set[str] = set()
 
     # Process messages into template-friendly format
     template_messages: List[TemplateMessage] = []
@@ -495,8 +502,13 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
                 "id": session_id,
                 "summary": current_session_summary,
                 "first_timestamp": getattr(message, "timestamp", ""),
+                "last_timestamp": getattr(message, "timestamp", ""),
                 "message_count": 0,
                 "first_user_message": first_user_message,
+                "total_input_tokens": 0,
+                "total_output_tokens": 0,
+                "total_cache_creation_tokens": 0,
+                "total_cache_read_tokens": 0,
             }
             session_order.append(session_id)
 
@@ -530,11 +542,72 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
 
         sessions[session_id]["message_count"] += 1
 
+        # Update last timestamp for this session
+        current_timestamp = getattr(message, "timestamp", "")
+        if current_timestamp:
+            sessions[session_id]["last_timestamp"] = current_timestamp
+
+        # Extract and accumulate token usage for assistant messages
+        # Only count tokens for the first message with each requestId to avoid duplicates
+        if message_type == "assistant" and hasattr(message, "message"):
+            assistant_message = getattr(message, "message")
+            request_id = getattr(message, "requestId", None)
+            message_uuid = getattr(message, "uuid", "")
+
+            if (
+                hasattr(assistant_message, "usage")
+                and assistant_message.usage
+                and request_id
+                and request_id not in seen_request_ids
+            ):
+                # Mark this requestId as seen to avoid double-counting
+                seen_request_ids.add(request_id)
+                # Mark this specific message UUID as one that should show token usage
+                show_tokens_for_message.add(message_uuid)
+
+                usage = assistant_message.usage
+                sessions[session_id]["total_input_tokens"] += usage.input_tokens
+                sessions[session_id]["total_output_tokens"] += usage.output_tokens
+                if usage.cache_creation_input_tokens:
+                    sessions[session_id]["total_cache_creation_tokens"] += (
+                        usage.cache_creation_input_tokens
+                    )
+                if usage.cache_read_input_tokens:
+                    sessions[session_id]["total_cache_read_tokens"] += (
+                        usage.cache_read_input_tokens
+                    )
+
         # Get timestamp (only for non-summary messages)
         timestamp = (
             getattr(message, "timestamp", "") if hasattr(message, "timestamp") else ""
         )
         formatted_timestamp = format_timestamp(timestamp) if timestamp else ""
+
+        # Extract token usage for assistant messages
+        # Only show token usage for the first message with each requestId to avoid duplicates
+        token_usage_str: Optional[str] = None
+        if message_type == "assistant" and hasattr(message, "message"):
+            assistant_message = getattr(message, "message")
+            message_uuid = getattr(message, "uuid", "")
+
+            if (
+                hasattr(assistant_message, "usage")
+                and assistant_message.usage
+                and message_uuid in show_tokens_for_message
+            ):
+                # Only show token usage for messages marked as first occurrence of requestId
+                usage = assistant_message.usage
+                token_parts = [
+                    f"Input: {usage.input_tokens}",
+                    f"Output: {usage.output_tokens}",
+                ]
+                if usage.cache_creation_input_tokens:
+                    token_parts.append(
+                        f"Cache Creation: {usage.cache_creation_input_tokens}"
+                    )
+                if usage.cache_read_input_tokens:
+                    token_parts.append(f"Cache Read: {usage.cache_read_input_tokens}")
+                token_usage_str = " | ".join(token_parts)
 
         # Determine CSS class and content based on message type and duplicate status
         if message_type == "summary":
@@ -598,6 +671,7 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
             css_class=css_class,
             session_summary=session_summary,
             session_id=session_id,
+            token_usage=token_usage_str,
         )
         template_messages.append(template_message)
 
@@ -605,15 +679,48 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
     session_nav: List[Dict[str, Any]] = []
     for session_id in session_order:
         session_info = sessions[session_id]
+
+        # Format timestamp range
+        first_ts = session_info["first_timestamp"]
+        last_ts = session_info["last_timestamp"]
+        timestamp_range = ""
+        if first_ts and last_ts:
+            if first_ts == last_ts:
+                timestamp_range = format_timestamp(first_ts)
+            else:
+                timestamp_range = (
+                    f"{format_timestamp(first_ts)} - {format_timestamp(last_ts)}"
+                )
+        elif first_ts:
+            timestamp_range = format_timestamp(first_ts)
+
+        # Format token usage summary
+        token_summary = ""
+        total_input = session_info["total_input_tokens"]
+        total_output = session_info["total_output_tokens"]
+        total_cache_creation = session_info["total_cache_creation_tokens"]
+        total_cache_read = session_info["total_cache_read_tokens"]
+
+        if total_input > 0 or total_output > 0:
+            token_parts: List[str] = []
+            if total_input > 0:
+                token_parts.append(f"Input: {total_input}")
+            if total_output > 0:
+                token_parts.append(f"Output: {total_output}")
+            if total_cache_creation > 0:
+                token_parts.append(f"Cache Creation: {total_cache_creation}")
+            if total_cache_read > 0:
+                token_parts.append(f"Cache Read: {total_cache_read}")
+            token_summary = "Token usage – " + " | ".join(token_parts)
+
         session_nav.append(
             {
                 "id": session_id,
                 "summary": session_info["summary"],
-                "first_timestamp": format_timestamp(session_info["first_timestamp"])
-                if session_info["first_timestamp"]
-                else "",
+                "timestamp_range": timestamp_range,
                 "message_count": session_info["message_count"],
                 "first_user_message": session_info["first_user_message"],
+                "token_summary": token_summary,
             }
         )
 
