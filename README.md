@@ -1,10 +1,10 @@
 # Claude Code Log
 
-A Python CLI tool that converts Claude transcript JSONL files into readable HTML format.
+A Python CLI tool that converts Claude Code transcript JSONL files into readable HTML format.
 
 ## Project Overview
 
-This tool processes Claude Code transcript files (stored as JSONL) and generates clean, minimalist HTML pages showing user prompts chronologically. It's designed to create a readable log of your Claude interactions with support for both individual files and entire project hierarchies.
+This tool generates clean, minimalist HTML pages showing user prompts and assistant responses chronologically. It's designed to create a readable log of your Claude Code interactions with support for both individual files and entire project hierarchies.
 
 ## Key Features
 

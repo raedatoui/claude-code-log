@@ -16,3 +16,9 @@ lint:
 
 typecheck:
     uv run pyright
+
+build:
+    uv build
+
+publish:
+    uv publish
