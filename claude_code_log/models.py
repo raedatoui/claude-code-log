@@ -44,7 +44,20 @@ class ThinkingContent(BaseModel):
     signature: Optional[str] = None
 
 
-ContentItem = Union[TextContent, ToolUseContent, ToolResultContent, ThinkingContent]
+class ImageSource(BaseModel):
+    type: Literal["base64"]
+    media_type: str
+    data: str
+
+
+class ImageContent(BaseModel):
+    type: Literal["image"]
+    source: ImageSource
+
+
+ContentItem = Union[
+    TextContent, ToolUseContent, ToolResultContent, ThinkingContent, ImageContent
+]
 
 
 class UserMessage(BaseModel):
@@ -147,6 +160,8 @@ def parse_content_item(item_data: Dict[str, Any]) -> ContentItem:
         return ToolResultContent.model_validate(item_data)
     elif content_type == "thinking":
         return ThinkingContent.model_validate(item_data)
+    elif content_type == "image":
+        return ImageContent.model_validate(item_data)
     else:
         # Fallback to text content for unknown types
         return TextContent(type="text", text=str(item_data))

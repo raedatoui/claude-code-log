@@ -18,6 +18,7 @@ from .models import (
     ToolResultContent,
     ToolUseContent,
     ThinkingContent,
+    ImageContent,
 )
 
 
@@ -302,6 +303,18 @@ def format_thinking_content(thinking: ThinkingContent) -> str:
     """
 
 
+def format_image_content(image: ImageContent) -> str:
+    """Format image content as HTML."""
+    # Create a data URL from the base64 image data
+    data_url = f"data:{image.source.media_type};base64,{image.source.data}"
+
+    return f"""
+    <div class="image-content">
+        <img src="{data_url}" alt="Uploaded image" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; margin: 10px 0;" />
+    </div>
+    """
+
+
 def render_message_content(
     content: Union[str, List[ContentItem]], message_type: str
 ) -> str:
@@ -331,6 +344,8 @@ def render_message_content(
             rendered_parts.append(format_tool_result_content(item))  # type: ignore
         elif type(item) is ThinkingContent:
             rendered_parts.append(format_thinking_content(item))  # type: ignore
+        elif type(item) is ImageContent:
+            rendered_parts.append(format_image_content(item))  # type: ignore
 
     return "\n".join(rendered_parts)
 
@@ -438,12 +453,13 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
         message_content = message.message.content  # type: ignore
         text_content = extract_text_content(message_content)
 
-        # Check if message has tool use, tool result, or thinking content even if no text
+        # Check if message has tool use, tool result, thinking, or image content even if no text
         has_tool_content = False
         if isinstance(message_content, list):
             for item in message_content:
                 if isinstance(
-                    item, (ToolUseContent, ToolResultContent, ThinkingContent)
+                    item,
+                    (ToolUseContent, ToolResultContent, ThinkingContent, ImageContent),
                 ):
                     has_tool_content = True
                     break
