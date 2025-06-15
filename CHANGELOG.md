@@ -5,7 +5,92 @@ All notable changes to claude-code-log will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.1] - 2025-06-15
+
+### Added
+
+- **Table of Contents & Session Navigation**: Added comprehensive session navigation system
+  - Interactive table of contents with session summaries and quick navigation
+  - Timestamp ranges showing first-to-last timestamp for each session
+  - Session-based organization with clickable navigation links
+  - Floating "back to top" button for easy navigation
+
+- **Token Usage Tracking**: Complete token consumption display and tracking
+  - Individual assistant messages show token usage in headers
+  - Session-level token aggregation in table of contents
+  - Detailed breakdown: Input, Output, Cache Creation, Cache Read tokens
+  - Data extracted from AssistantMessage.usage field in JSONL files
+
+- **Enhanced Content Support**: Expanded message type and content handling
+  - **Tool Use Rendering**: Proper display of tool invocations and results
+  - **Thinking Content**: Support for Claude's internal thinking processes
+  - **Image Handling**: Display of pasted images in transcript conversations
+  - **Todo List Rendering**: Support for structured todo lists in messages
+
+- **Project Hierarchy Processing**: Complete project management system
+  - Process entire `~/.claude/projects/` directory by default
+  - Master index page with project cards and statistics
+  - Linked navigation between index and individual project pages
+  - Project statistics including file counts and recent activity
+
+- **Improved User Experience**: Enhanced interface and navigation
+  - Chronological ordering of all messages across sessions
+  - Session demarcation with clear visual separators
+  - Always-visible scroll-to-top button
+  - Space-efficient, content-dense layout design
+
+### Changed
+
+- **Default Behavior**: Changed default mode to process all projects instead of requiring explicit input
+  - `claude-code-log` now processes `~/.claude/projects/` by default
+  - Added `--all-projects` flag for explicit project processing
+  - Maintained backward compatibility for single file/directory processing
+
+- **Output Structure**: Restructured HTML output for better organization
+  - Session-based navigation replaces simple chronological listing
+  - Enhanced template system with comprehensive session metadata
+  - Improved visual hierarchy with table of contents integration
+
+- **Data Models**: Expanded Pydantic models for richer data representation
+  - Enhanced TranscriptEntry with proper content type handling
+  - Added UsageInfo model for token usage tracking
+  - Improved ContentItem unions for diverse content types
+
+### Technical
+
+- **Template System**: Major improvements to Jinja2 template architecture
+  - New session navigation template components
+  - Token usage display templates
+  - Enhanced message rendering with rich content support
+  - Responsive design improvements
+
+- **Testing Infrastructure**: Comprehensive test coverage expansion
+  - Increased test coverage to 78%+ across all modules
+  - Added visual style guide generation
+  - Representative test data based on real transcript files
+  - Extensive test documentation in test/README.md
+
+- **Code Quality**: Significant refactoring and quality improvements
+  - Complete Pydantic migration with proper error handling
+  - Improved type hints and function documentation
+  - Enhanced CLI interface with better argument parsing
+  - Comprehensive linting and formatting standards
+
+### Fixed
+
+- **Data Processing**: Improved robustness of transcript processing
+  - Better handling of malformed or incomplete JSONL entries
+  - More reliable session detection and grouping
+  - Enhanced error handling for edge cases in data parsing
+  - Fixed HTML escaping issues in message content
+
+- **Template Rendering**: Resolved template and rendering issues
+  - Fixed session summary attachment logic
+  - Improved timestamp handling and formatting
+  - Better handling of mixed content types in templates
+  - Resolved CSS and styling inconsistencies
+
+## [0.1.0]
 
 ### Added
 

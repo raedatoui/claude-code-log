@@ -21,6 +21,7 @@ typecheck:
     uv run pyright
 
 build:
+    rm dist/*
     uv build
 
 publish:

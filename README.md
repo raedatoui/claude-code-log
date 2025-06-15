@@ -4,6 +4,8 @@ A Python CLI tool that converts Claude Code transcript JSONL files into readable
 
 ## Project Overview
 
+📋 **[View Changelog](CHANGELOG.md)** - See what's new in each release
+
 This tool generates clean, minimalist HTML pages showing user prompts and assistant responses chronologically. It's designed to create a readable log of your Claude Code interactions with support for both individual files and entire project hierarchies.
 
 ## Quickstart
@@ -194,7 +196,7 @@ When processing all projects, the tool generates:
 
 ## Installation
 
-Install using pip (coming soon to PyPI):
+Install using pip:
 
 ```bash
 pip install claude-code-log
@@ -214,4 +216,3 @@ uv run claude-code-log
 - **Enhanced UI**: Make it look even nicer with improved styling
 - **Tool Use Preview**: Show first few lines of tool use and other collapsed details
 - **In-page Filtering**: Client-side filtering and search
-- **TodoWrite Rendering**: Render TodoWrite as actual todo list with checkboxes
