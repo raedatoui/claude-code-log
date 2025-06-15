@@ -9,6 +9,7 @@ import dateparser
 import html
 from jinja2 import Environment, FileSystemLoader
 from .models import (
+    AssistantTranscriptEntry,
     TranscriptEntry,
     SummaryTranscriptEntry,
     parse_transcript_entry,
@@ -117,11 +118,11 @@ def load_transcript(jsonl_path: Path) -> List[TranscriptEntry]:
                     if entry_dict.get("type") in ["user", "assistant", "summary"]:
                         # Parse using Pydantic models
                         entry = parse_transcript_entry(entry_dict)
-                        # Add source file info for session tracking
-                        entry._source_file = jsonl_path.stem  # type: ignore
                         messages.append(entry)
-                except (json.JSONDecodeError, ValueError):
-                    # Skip lines that can't be parsed
+                    else:
+                        print("Unhandled message type:" + str(entry_dict))
+                except (json.JSONDecodeError, ValueError) as e:
+                    print("Unhandled message:" + str(e))
                     continue
     return messages
 
@@ -238,21 +239,32 @@ def format_tool_result_content(tool_result: ToolResultContent) -> str:
     """
 
 
-def render_message_content(content: Union[str, List[ContentItem]]) -> str:
+def render_message_content(
+    content: Union[str, List[ContentItem]], message_type: str
+) -> str:
     """Render message content with proper tool use and tool result formatting."""
     if isinstance(content, str):
-        return escape_html(content)
+        escaped_text = escape_html(content)
+        return (
+            "<pre>" + escaped_text + "</pre>"
+            if message_type == "user"
+            else escaped_text
+        )
 
     # content is a list of ContentItem objects
     rendered_parts: List[str] = []
 
     for item in content:
-        item_type = type(item).__name__
-        if item_type == "TextContent":
-            rendered_parts.append(escape_html(item.text))  # type: ignore
-        elif item_type == "ToolUseContent":
+        if type(item) is TextContent:
+            escaped_text = escape_html(item.text)
+            rendered_parts.append(
+                "<pre>" + escaped_text + "</pre>"
+                if message_type == "user"
+                else escaped_text
+            )
+        elif type(item) is ToolUseContent:
             rendered_parts.append(format_tool_use_content(item))  # type: ignore
-        elif item_type == "ToolResultContent":
+        elif type(item) is ToolResultContent:
             rendered_parts.append(format_tool_result_content(item))  # type: ignore
 
     return "\n".join(rendered_parts)
@@ -284,14 +296,19 @@ class TemplateMessage:
         content_html: str,
         formatted_timestamp: str,
         css_class: str,
-        source_file: str,
+        session_summary: Optional[str] = None,
+        session_id: Optional[str] = None,
+        is_session_header: bool = False,
     ):
         self.type = message_type
         self.content_html = content_html
         self.formatted_timestamp = formatted_timestamp
         self.css_class = css_class
         self.display_type = message_type.title()
-        self._source_file = source_file
+        self.session_summary = session_summary
+        self.session_id = session_id
+        self.is_session_header = is_session_header
+        self.session_subtitle: Optional[str] = None
 
 
 def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) -> str:
@@ -299,20 +316,62 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
     if not title:
         title = "Claude Transcript"
 
+    # Pre-process to find and attach session summaries
+    session_summaries: Dict[str, str] = {}
+    uuid_to_session: Dict[str, str] = {}
+    uuid_to_session_backup: Dict[str, str] = {}
+
+    # Build mapping from message UUID to session ID
+    for message in messages:
+        if hasattr(message, "uuid") and hasattr(message, "sessionId"):
+            message_uuid = getattr(message, "uuid", "")
+            session_id = getattr(message, "sessionId", "")
+            if message_uuid and session_id:
+                # There is often duplication, in that case we want to prioritise the assistant
+                # message because summaries are generated from Claude's (last) success message
+                if type(message) is AssistantTranscriptEntry:
+                    uuid_to_session[message_uuid] = session_id
+                else:
+                    uuid_to_session_backup[message_uuid] = session_id
+
+    # Map summaries to sessions via leafUuid -> message UUID -> session ID
+    for message in messages:
+        if isinstance(message, SummaryTranscriptEntry):
+            leaf_uuid = message.leafUuid
+            if leaf_uuid in uuid_to_session:
+                session_summaries[uuid_to_session[leaf_uuid]] = message.summary
+            elif (
+                leaf_uuid in uuid_to_session_backup
+                and uuid_to_session_backup[leaf_uuid] not in session_summaries
+            ):
+                session_summaries[uuid_to_session_backup[leaf_uuid]] = message.summary
+
+    # Attach summaries to messages
+    for message in messages:
+        if hasattr(message, "sessionId"):
+            session_id = getattr(message, "sessionId", "")
+            if session_id in session_summaries:
+                setattr(message, "_session_summary", session_summaries[session_id])
+
+    # Group messages by session and collect session info for navigation
+    sessions: Dict[str, Dict[str, Any]] = {}
+    session_order: List[str] = []
+    seen_sessions: set[str] = set()
+
     # Process messages into template-friendly format
     template_messages: List[TemplateMessage] = []
 
     for message in messages:
         message_type = message.type
 
-        # Extract message content first to check for duplicates
+        # Skip summary messages - they should already be attached to their sessions
         if isinstance(message, SummaryTranscriptEntry):
-            text_content = message.summary
-            message_content = message.summary
-        else:
-            # Must be UserTranscriptEntry or AssistantTranscriptEntry
-            message_content = message.message.content  # type: ignore
-            text_content = extract_text_content(message_content)
+            continue
+
+        # Extract message content first to check for duplicates
+        # Must be UserTranscriptEntry or AssistantTranscriptEntry
+        message_content = message.message.content  # type: ignore
+        text_content = extract_text_content(message_content)
 
         # Check if message has tool use or tool result content even if no text
         has_tool_content = False
@@ -336,7 +395,57 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
             continue
 
         # Check if we're in a new session
-        source_file = getattr(message, "_source_file", "unknown")
+        session_id = getattr(message, "sessionId", "unknown")
+        session_summary = getattr(message, "_session_summary", None)
+
+        # Track sessions for navigation and add session header if new
+        if session_id not in sessions:
+            # Get the session summary for this session (may be None)
+            current_session_summary = getattr(message, "_session_summary", None)
+
+            # Get first user message content for preview
+            first_user_message = ""
+            if message_type == "user" and hasattr(message, "message"):
+                first_user_message = extract_text_content(message.message.content)
+
+            sessions[session_id] = {
+                "id": session_id,
+                "summary": current_session_summary,
+                "first_timestamp": getattr(message, "timestamp", ""),
+                "message_count": 0,
+                "first_user_message": first_user_message,
+            }
+            session_order.append(session_id)
+
+            # Add session header message
+            if session_id not in seen_sessions:
+                seen_sessions.add(session_id)
+                # Create a meaningful session title
+                session_title = (
+                    f"{current_session_summary} • {session_id[:8]}"
+                    if current_session_summary
+                    else session_id[:8]
+                )
+
+                session_header = TemplateMessage(
+                    message_type="session_header",
+                    content_html=session_title,
+                    formatted_timestamp="",
+                    css_class="session-header",
+                    session_summary=current_session_summary,
+                    session_id=session_id,
+                    is_session_header=True,
+                )
+                template_messages.append(session_header)
+
+        # Update first user message if this is a user message and we don't have one yet
+        elif message_type == "user" and not sessions[session_id]["first_user_message"]:
+            if hasattr(message, "message"):
+                sessions[session_id]["first_user_message"] = extract_text_content(
+                    message.message.content
+                )[:500]  # type: ignore
+
+        sessions[session_id]["message_count"] += 1
 
         # Get timestamp (only for non-summary messages)
         timestamp = (
@@ -397,22 +506,40 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
             message_type = "system"
         else:
             css_class = f"{message_type}"
-            # Use the new render_message_content function to handle tool use
-            content_html = render_message_content(message_content)
+            content_html = render_message_content(message_content, message_type)
 
         template_message = TemplateMessage(
             message_type=message_type,
             content_html=content_html,
             formatted_timestamp=formatted_timestamp,
             css_class=css_class,
-            source_file=source_file,
+            session_summary=session_summary,
+            session_id=session_id,
         )
         template_messages.append(template_message)
+
+    # Prepare session navigation data
+    session_nav: List[Dict[str, Any]] = []
+    for session_id in session_order:
+        session_info = sessions[session_id]
+        session_nav.append(
+            {
+                "id": session_id,
+                "summary": session_info["summary"],
+                "first_timestamp": format_timestamp(session_info["first_timestamp"])
+                if session_info["first_timestamp"]
+                else "",
+                "message_count": session_info["message_count"],
+                "first_user_message": session_info["first_user_message"],
+            }
+        )
 
     # Render template
     env = _get_template_environment()
     template = env.get_template("transcript.html")
-    return str(template.render(title=title, messages=template_messages))
+    return str(
+        template.render(title=title, messages=template_messages, sessions=session_nav)
+    )
 
 
 def process_projects_hierarchy(

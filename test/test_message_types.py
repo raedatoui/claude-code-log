@@ -15,7 +15,7 @@ def test_summary_type_support():
     summary_message = {
         "type": "summary",
         "summary": "User Initializes Project Documentation",
-        "leafUuid": "test-uuid-123",
+        "leafUuid": "test_msg_001",  # Should match a message UUID
     }
 
     user_message = {
@@ -48,13 +48,12 @@ def test_summary_type_support():
         # Generate HTML
         html = generate_html(messages, "Test Transcript")
 
-        # Should contain summary with proper formatting
-        assert "Summary:" in html, "Summary should be displayed with 'Summary:' prefix"
+        # Summary should be attached to session header, not as separate message
         assert "User Initializes Project Documentation" in html, (
             "Summary text should be included"
         )
-        assert "class='message summary'" in html, (
-            "Summary should have summary CSS class"
+        assert "session-header" in html, (
+            "Summary should appear in session header section"
         )
 
         print("✓ Test passed: Summary type messages are properly handled")

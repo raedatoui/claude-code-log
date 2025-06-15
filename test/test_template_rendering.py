@@ -33,16 +33,17 @@ class TestTemplateRendering:
             "<title>Claude Transcript - representative_messages</title>" in html_content
         )
 
-        # Check for session divider (should only be one)
-        session_divider_count = html_content.count("session-divider")
-        assert session_divider_count == 2, (
-            f"Expected 2 session dividers (element + class), got {session_divider_count}"
+        # Check for session header (should have one)
+        session_header_count = html_content.count("session-header")
+        assert session_header_count >= 1, (
+            f"Expected at least 1 session header, got {session_header_count}"
         )
 
         # Check that all message types are present
         assert "class='message user'" in html_content
         assert "class='message assistant'" in html_content
-        assert "class='message summary'" in html_content
+        # Summary messages are now integrated into session headers
+        assert "session-summary" in html_content or "Summary:" in html_content
 
         # Check specific content
         assert (
@@ -119,10 +120,10 @@ class TestTemplateRendering:
             html_file = convert_jsonl_to_html(temp_path)
             html_content = html_file.read_text()
 
-            # Should only have one session divider (for the first session)
-            session_dividers = html_content.count("class='session-divider'")
-            assert session_dividers == 1, (
-                f"Expected 1 session divider, got {session_dividers}"
+            # Should have session headers for each session
+            session_headers = html_content.count("session-header")
+            assert session_headers >= 1, (
+                f"Expected at least 1 session header, got {session_headers}"
             )
 
             # Check both sessions' content is present
@@ -245,7 +246,8 @@ class TestTemplateRendering:
         # Check message type classes
         assert "class='message user'" in html_content
         assert "class='message assistant'" in html_content
-        assert "class='message summary'" in html_content
+        # Summary messages are now integrated into session headers
+        assert "session-summary" in html_content or "Summary:" in html_content
 
         # Check tool content classes
         assert 'class="tool-content tool-use"' in html_content

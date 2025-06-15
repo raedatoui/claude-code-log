@@ -24,7 +24,6 @@ class TestTemplateMessage:
             content_html="<p>Test content</p>",
             formatted_timestamp="2025-06-14 10:00:00",
             css_class="user",
-            source_file="test_session",
         )
 
         assert msg.type == "user"
@@ -32,7 +31,6 @@ class TestTemplateMessage:
         assert msg.formatted_timestamp == "2025-06-14 10:00:00"
         assert msg.css_class == "user"
         assert msg.display_type == "User"
-        assert msg._source_file == "test_session"
 
     def test_template_message_display_type_capitalization(self):
         """Test that display_type properly capitalizes message types."""
@@ -49,7 +47,6 @@ class TestTemplateMessage:
                 content_html="content",
                 formatted_timestamp="time",
                 css_class="class",
-                source_file="file",
             )
             assert msg.display_type == expected_display
 
@@ -174,7 +171,8 @@ class TestDataWithTestFiles:
         assert "<title>Test Transcript</title>" in html
         assert "message user" in html
         assert "message assistant" in html
-        assert "message summary" in html
+        # Summary messages are now integrated into session headers
+        assert "session-summary" in html or "Summary:" in html
 
     def test_edge_cases_data_structure(self):
         """Test that edge cases data generates proper template data."""

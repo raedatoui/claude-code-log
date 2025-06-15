@@ -184,6 +184,8 @@ uv run claude-code-log
 - **Enhanced UI**: Make it look even nicer with improved styling
 - **GitHub Action CI**: Automated testing and deployment
 - ✅ **Template Refactoring**: Move HTML templates into separate files (use Jinja or similar)
+- Handle thinking tokens
+- Handle pasted images (and text?)
 - **Tool Use Preview**: Show first few lines of tool use and other collapsed details
 - **Rich Metadata**: Render timestamps, durations, token usage, etc.
 - **Session Navigation**: Navigation between sessions within page
