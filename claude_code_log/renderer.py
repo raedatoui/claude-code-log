@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import List, Optional, Union, Dict, Any, cast
 from datetime import datetime
 import html
+import mistune
 from jinja2 import Environment, FileSystemLoader
 
 from .models import (
@@ -34,6 +35,16 @@ def format_timestamp(timestamp_str: str) -> str:
 def escape_html(text: str) -> str:
     """Escape HTML special characters in text."""
     return html.escape(text)
+
+
+def render_markdown(text: str) -> str:
+    """Convert markdown text to HTML using mistune."""
+    # Configure mistune with GitHub-flavored markdown features
+    renderer = mistune.create_markdown(
+        plugins=['strikethrough', 'footnotes', 'table', 'url', 'task_lists', 'def_list'],
+        escape=False  # Don't escape HTML since we want to render markdown properly
+    )
+    return renderer(text)
 
 
 def extract_command_info(text_content: str) -> tuple[str, str, str]:
@@ -229,24 +240,26 @@ def render_message_content(
 ) -> str:
     """Render message content with proper tool use and tool result formatting."""
     if isinstance(content, str):
-        escaped_text = escape_html(content)
-        return (
-            "<pre>" + escaped_text + "</pre>"
-            if message_type == "user"
-            else escaped_text
-        )
+        if message_type == "user":
+            # User messages are shown as-is in preformatted blocks
+            escaped_text = escape_html(content)
+            return "<pre>" + escaped_text + "</pre>"
+        else:
+            # Assistant messages get markdown rendering
+            return render_markdown(content)
 
     # content is a list of ContentItem objects
     rendered_parts: List[str] = []
 
     for item in content:
         if type(item) is TextContent:
-            escaped_text = escape_html(item.text)
-            rendered_parts.append(
-                "<pre>" + escaped_text + "</pre>"
-                if message_type == "user"
-                else escaped_text
-            )
+            if message_type == "user":
+                # User messages are shown as-is in preformatted blocks
+                escaped_text = escape_html(item.text)
+                rendered_parts.append("<pre>" + escaped_text + "</pre>")
+            else:
+                # Assistant messages get markdown rendering
+                rendered_parts.append(render_markdown(item.text))
         elif type(item) is ToolUseContent:
             rendered_parts.append(format_tool_use_content(item))  # type: ignore
         elif type(item) is ToolResultContent:

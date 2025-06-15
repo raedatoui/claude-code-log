@@ -5,33 +5,6 @@
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>{{ title }}</title>
-    <script type="module">
-        import { marked } from 'https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js';
-
-        // Configure marked options
-        marked.setOptions({
-            breaks: true,
-            gfm: true
-        });
-
-        document.addEventListener('DOMContentLoaded', function () {
-            // Find all content divs and render markdown
-            const contentDivs = document.querySelectorAll('.content');
-            contentDivs.forEach(div => {
-                // Skip if it's already HTML (contains tags or tool content)
-                if (div.innerHTML.includes('<pre>') ||
-                    div.innerHTML.includes('<div class="tool-content') ||
-                    div.innerHTML.includes('todo-write')) {
-                    return;
-                }
-
-                const markdownText = div.textContent;
-                if (markdownText.trim()) {
-                    div.innerHTML = marked.parse(markdownText);
-                }
-            });
-        });
-    </script>
     <style>
         body {
             font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Ubuntu Mono', 'Cascadia Code', 'Menlo', 'Consolas', monospace;
