@@ -30,10 +30,13 @@ def test_server_side_markdown_rendering():
             "role": "assistant",
             "model": "claude-3-5-sonnet-20241022",
             "content": [
-                {"type": "text", "text": "# Test Markdown\n\nThis is **bold** text and `code` inline."}
+                {
+                    "type": "text",
+                    "text": "# Test Markdown\n\nThis is **bold** text and `code` inline.",
+                }
             ],
             "stop_reason": "end_turn",
-            "stop_sequence": None
+            "stop_sequence": None,
         },
     }
 
@@ -50,10 +53,14 @@ def test_server_side_markdown_rendering():
         assert "marked" not in html, "Should not include marked.js reference"
         assert "import { marked }" not in html, "Should not import marked module"
         assert "marked.parse" not in html, "Should not use marked.parse function"
-        assert "DOMContentLoaded" not in html or "marked" not in html, "Should not have markdown-related DOM handlers"
+        assert "DOMContentLoaded" not in html or "marked" not in html, (
+            "Should not have markdown-related DOM handlers"
+        )
 
         # Should include rendered HTML from markdown
-        assert "<h1>Test Markdown</h1>" in html, "Should render markdown heading as HTML"
+        assert "<h1>Test Markdown</h1>" in html, (
+            "Should render markdown heading as HTML"
+        )
         assert "<strong>bold</strong>" in html, "Should render bold text as HTML"
         assert "<code>code</code>" in html, "Should render inline code as HTML"
 
@@ -78,13 +85,16 @@ def test_user_message_not_markdown_rendered():
         "message": {
             "role": "user",
             "content": [
-                {"type": "text", "text": "# This should NOT be rendered\n\n**This should stay bold**"}
+                {
+                    "type": "text",
+                    "text": "# This should NOT be rendered\n\n**This should stay bold**",
+                }
             ],
         },
     }
 
     with tempfile.NamedTemporaryFile(mode="w", suffix=".jsonl", delete=False) as f:
-        f.write(json.dumps(user_message) + "\n") 
+        f.write(json.dumps(user_message) + "\n")
         f.flush()
         test_file_path = Path(f.name)
 
@@ -93,10 +103,18 @@ def test_user_message_not_markdown_rendered():
         html = generate_html(messages, "Test Transcript")
 
         # User messages should be shown as-is in pre tags, not rendered as HTML
-        assert "<pre># This should NOT be rendered" in html, "User markdown should remain as text in pre tags"
-        assert "**This should stay bold**</pre>" in html, "User markdown asterisks should remain literal"
-        assert "<h1>This should NOT be rendered</h1>" not in html, "User markdown should not be rendered as HTML"
-        assert "<strong>This should stay bold</strong>" not in html, "User markdown should not be rendered as HTML"
+        assert "<pre># This should NOT be rendered" in html, (
+            "User markdown should remain as text in pre tags"
+        )
+        assert "**This should stay bold**</pre>" in html, (
+            "User markdown asterisks should remain literal"
+        )
+        assert "<h1>This should NOT be rendered</h1>" not in html, (
+            "User markdown should not be rendered as HTML"
+        )
+        assert "<strong>This should stay bold</strong>" not in html, (
+            "User markdown should not be rendered as HTML"
+        )
 
         print("✓ Test passed: User messages are not markdown rendered")
 

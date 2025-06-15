@@ -41,10 +41,17 @@ def render_markdown(text: str) -> str:
     """Convert markdown text to HTML using mistune."""
     # Configure mistune with GitHub-flavored markdown features
     renderer = mistune.create_markdown(
-        plugins=['strikethrough', 'footnotes', 'table', 'url', 'task_lists', 'def_list'],
-        escape=False  # Don't escape HTML since we want to render markdown properly
+        plugins=[
+            "strikethrough",
+            "footnotes",
+            "table",
+            "url",
+            "task_lists",
+            "def_list",
+        ],
+        escape=False,  # Don't escape HTML since we want to render markdown properly
     )
-    return renderer(text)
+    return str(renderer(text))
 
 
 def extract_command_info(text_content: str) -> tuple[str, str, str]:

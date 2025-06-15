@@ -55,7 +55,9 @@ class TestTemplateRendering:
         assert "Tool Result:" in html_content
 
         # Check that markdown elements are rendered server-side
-        assert "<code>@time_it" in html_content  # Inline code blocks are rendered to HTML
+        assert (
+            "<code>@time_it" in html_content
+        )  # Inline code blocks are rendered to HTML
         assert "decorator factory" in html_content
         assert "<strong>" in html_content  # Bold text is rendered to strong tags
         assert "<code>" in html_content  # Inline code is rendered to code tags
@@ -274,7 +276,9 @@ class TestTemplateRendering:
         assert "<strong>" in html_content  # Bold text should be rendered
         assert "<code>" in html_content  # Code should be rendered
         assert "<p>" in html_content  # Paragraphs should be rendered
-        assert "<ul>" in html_content or "<ol>" in html_content  # Lists should be rendered
+        assert (
+            "<ul>" in html_content or "<ol>" in html_content
+        )  # Lists should be rendered
 
     def test_html_escaping(self):
         """Test that HTML special characters are properly escaped."""
