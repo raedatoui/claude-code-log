@@ -213,6 +213,6 @@ uv run claude-code-log
 
 ## TODO
 
-- **Enhanced UI**: Make it look even nicer with improved styling
+- Show top level stats on index page – token usage added up + time of last interaction
 - **Tool Use Preview**: Show first few lines of tool use and other collapsed details
 - **In-page Filtering**: Client-side filtering and search

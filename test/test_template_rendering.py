@@ -82,7 +82,8 @@ class TestTemplateRendering:
         assert "Lorem ipsum dolor sit amet" in html_content
 
         # Check tool error handling
-        assert "Tool Result (Error):" in html_content
+        assert "Tool Result" in html_content
+        assert "Error):" in html_content
         assert "Tool execution failed" in html_content
 
         # Check system message filtering (caveat should be filtered out)

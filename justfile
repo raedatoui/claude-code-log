@@ -20,6 +20,8 @@ lint:
 typecheck:
     uv run pyright
 
+ci: format test lint typecheck 
+
 build:
     rm dist/*
     uv build

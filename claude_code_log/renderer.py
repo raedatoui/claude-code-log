@@ -175,7 +175,7 @@ def format_tool_use_content(tool_use: ToolUseContent) -> str:
     return f"""
     <div class="tool-content tool-use">
         <details>
-            <summary><strong>Tool Use:</strong> {escaped_name} (ID: {escaped_id})</summary>
+            <summary><strong>🛠️ Tool Use:</strong> {escaped_name} (ID: {escaped_id})</summary>
             <div class="tool-input">
                 <strong>Input:</strong>
                 <pre>{escaped_input}</pre>
@@ -200,12 +200,12 @@ def format_tool_result_content(tool_result: ToolResultContent) -> str:
                 content_parts.append(item.get("text", ""))
         escaped_content = escape_html("\n".join(content_parts))
 
-    error_indicator = " (Error)" if tool_result.is_error else ""
+    error_indicator = " (🚨 Error)" if tool_result.is_error else ""
 
     return f"""
     <div class="tool-content tool-result">
         <details>
-            <summary><strong>Tool Result{error_indicator}:</strong> {escaped_id}</summary>
+            <summary><strong>🧰 Tool Result{error_indicator}:</strong> {escaped_id}</summary>
             <div class="tool-input">
                 <pre>{escaped_content}</pre>
             </div>
@@ -221,7 +221,7 @@ def format_thinking_content(thinking: ThinkingContent) -> str:
     return f"""
     <div class="tool-content thinking-content">
         <details>
-            <summary><strong>Thinking</strong></summary>
+            <summary><strong>💭 Thinking</strong></summary>
             <div class="thinking-text">
                 <pre>{escaped_thinking}</pre>
             </div>
