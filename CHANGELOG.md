@@ -5,6 +5,13 @@ All notable changes to claude-code-log will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2025-06-16
+
+### Changed
+
+- **Static Markdown**: Render Markdown in Python to make it easier to test and not require Javascipt
+- **Visual Design**: Make it nicer to look at
+
 ## [0.2.1] - 2025-06-15
 
 ### Added
