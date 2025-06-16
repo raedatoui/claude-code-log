@@ -25,11 +25,10 @@ uvx claude-code-log --open-browser
 - **Single File or Directory Processing**: Convert individual JSONL files or specific directories
 - **Chronological Ordering**: All messages sorted by timestamp across sessions
 - **Session Demarcation**: Clear visual separators between different transcript sessions
-- **User-Focused**: Shows only user messages by default (assistant responses filtered out)
 - **Date Range Filtering**: Filter messages by date range using natural language (e.g., "today", "yesterday", "last week")
-- **Summary Support**: Display summary messages with highlighted formatting
+- **Summary Support**: Display summary messages matched with corresponding sessions
 - **System Command Visibility**: Show system commands (like `init`) in expandable details
-- **Markdown Rendering**: Automatic markdown rendering in message content using marked.js
+- **Markdown Rendering**: Automatic markdown rendering in assistant message content
 - **Project Navigation**: Master index page with project statistics and quick navigation
 - **Space-Efficient Layout**: Compact design optimized for content density
 - **CLI Interface**: Simple command-line tool using Click
@@ -100,7 +99,7 @@ The project uses:
 - dateparser for natural language date parsing
 - Standard library for JSON/HTML processing
 - Minimal dependencies for portability
-- marked.js (CDN) for client-side markdown rendering
+- mistune for quick Markdown rendering
 
 ## Development Commands
 
