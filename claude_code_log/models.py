@@ -215,32 +215,3 @@ def parse_transcript_entry(data: Dict[str, Any]) -> TranscriptEntry:
         return SummaryTranscriptEntry.model_validate(data)
     else:
         raise ValueError(f"Unknown transcript entry type: {entry_type}")
-
-
-def try_parse_transcript_entry(entry_dict: Dict[str, Any]) -> Optional[TranscriptEntry]:
-    """Try to parse a transcript entry, returning None if parsing fails."""
-    try:
-        return parse_transcript_entry(entry_dict)
-    except Exception:
-        return None
-
-
-def parse_transcript_entry_with_fallback(
-    entry_dict: Dict[str, Any],
-) -> Optional[TranscriptEntry]:
-    """
-    Try to parse a transcript entry against different Pydantic models.
-
-    This function attempts to parse the entry using each model type in order,
-    using proper content parsing to avoid Union validation errors.
-
-    Args:
-        entry_dict: Dictionary parsed from JSON
-
-    Returns:
-        The appropriate TranscriptEntry subclass, or None if parsing fails
-    """
-    try:
-        return parse_transcript_entry(entry_dict)
-    except Exception:
-        return None

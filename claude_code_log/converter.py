@@ -2,6 +2,7 @@
 """Convert Claude transcript JSONL files to HTML."""
 
 from pathlib import Path
+import traceback
 from typing import List, Optional, Dict, Any
 
 from .parser import (
@@ -107,7 +108,11 @@ def process_projects_hierarchy(
                 }
             )
         except Exception as e:
-            print(f"Warning: Failed to process {project_dir}: {e}")
+            print(
+                f"Warning: Failed to process {project_dir}: {e}\n"
+                f"Previous (in alphabetical order) file before error: {project_summaries[-1]}\n"
+                f"Traceback:\n{traceback.format_exc()}"
+            )
             continue
 
     # Generate index HTML

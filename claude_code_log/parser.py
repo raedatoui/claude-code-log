@@ -3,6 +3,7 @@
 
 import json
 from pathlib import Path
+import traceback
 from typing import List, Optional, Union, Dict
 from datetime import datetime
 import dateparser
@@ -109,7 +110,7 @@ def load_transcript(jsonl_path: Path) -> List[TranscriptEntry]:
             if line:
                 try:
                     entry_dict = json.loads(line)
-                    entry_type = entry_dict.get("type", "unknown")
+                    entry_type = entry_dict.get("type", "unknown, missing type")
 
                     if entry_type in ["user", "assistant", "summary"]:
                         # Parse using Pydantic models
@@ -121,7 +122,7 @@ def load_transcript(jsonl_path: Path) -> List[TranscriptEntry]:
                             unhandled_types.get(entry_type, 0) + 1
                         )
                 except json.JSONDecodeError as e:
-                    error_key = f"JSON decode error: {type(e).__name__}"
+                    error_key = f"JSON decode error: {str(e)}"
                     unique_errors[error_key] = unique_errors.get(error_key, 0) + 1
                 except ValueError as e:
                     # Extract a more descriptive error message
@@ -132,7 +133,7 @@ def load_transcript(jsonl_path: Path) -> List[TranscriptEntry]:
                         error_key = f"ValueError: {error_msg[:200]}..."
                     unique_errors[error_key] = unique_errors.get(error_key, 0) + 1
                 except Exception as e:
-                    error_key = f"Unexpected error: {type(e).__name__}"
+                    error_key = f"Unexpected error: {str(e)}\n{traceback.format_exc()}"
                     unique_errors[error_key] = unique_errors.get(error_key, 0) + 1
 
     # Print summary of errors if any occurred

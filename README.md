@@ -18,7 +18,6 @@ TL;DR: run the command below and browse the pages generated from your entire Cla
 uvx claude-code-log --open-browser
 ```
 
-
 ## Key Features
 
 - **Project Hierarchy Processing**: Process entire `~/.claude/projects/` directory with linked index page
@@ -215,6 +214,7 @@ uv run claude-code-log
 
 ## TODO
 
-- Show top level stats on index page – token usage added up + time of last interaction
+- **Show top level stats on index page**: token usage added up + time of last interaction
 - **Tool Use Preview**: Show first few lines of tool use and other collapsed details
 - **In-page Filtering**: Client-side filtering and search
+- **Timeline view**: Show interaction on a timeline to get a better idea on timings and parallel calls
