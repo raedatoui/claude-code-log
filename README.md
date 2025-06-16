@@ -2,6 +2,8 @@
 
 A Python CLI tool that converts Claude Code transcript JSONL files into readable HTML format.
 
+[claude_code_log.webm](https://github.com/user-attachments/assets/12d94faf-6901-4429-b4e6-ea5f102d0c1c)
+
 ## Project Overview
 
 📋 **[View Changelog](CHANGELOG.md)** - See what's new in each release
@@ -15,6 +17,7 @@ TL;DR: run the command below and browse the pages generated from your entire Cla
 ```sh
 uvx claude-code-log --open-browser
 ```
+
 
 ## Key Features
 
