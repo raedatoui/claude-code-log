@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **More rrror handling**: Add better error reporting with line numbers and render fallbacks
+- **More error handling**: Add better error reporting with line numbers and render fallbacks
 
 ## [0.2.3] - 2025-06-16
 
