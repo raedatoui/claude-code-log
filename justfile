@@ -139,3 +139,8 @@ release-push:
 
     echo "🏷️  Pushing tag $LAST_TAG"
     git push origin $LAST_TAG
+
+copy-example:
+    rsync ~/.claude/projects/-Users-dain-workspace-claude-code-log/combined_transcripts.html ./docs/claude-code-log-transcript.html
+
+regen-all: render-test-data style-guide gen copy-example

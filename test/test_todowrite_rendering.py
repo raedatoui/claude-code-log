@@ -220,12 +220,16 @@ class TestTodoWriteRendering:
 
     def test_todowrite_vs_regular_tool_use(self):
         """Test that TodoWrite is handled differently from regular tool use."""
-        # Create regular tool use
+        # Create regular tool use with longer content to ensure collapsible details
+        long_content = (
+            "This is a very long content that should definitely exceed 200 characters so that we can test the collapsible details functionality properly. "
+            * 3
+        )
         regular_tool = ToolUseContent(
             type="tool_use",
             id="toolu_regular",
             name="Edit",
-            input={"file_path": "/tmp/test.py", "content": "print('hello')"},
+            input={"file_path": "/tmp/test.py", "content": long_content},
         )
 
         # Create TodoWrite tool use
@@ -252,7 +256,7 @@ class TestTodoWriteRendering:
         todowrite_html = format_tool_use_content(todowrite_tool)
 
         # Regular tool should use standard formatting
-        assert "<details>" in regular_html
+        assert 'class="collapsible-details"' in regular_html
         assert "<summary>" in regular_html
         assert "Tool Use:" in regular_html
         assert "Edit" in regular_html

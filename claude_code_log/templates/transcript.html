@@ -45,19 +45,64 @@
             border-left-color: #ff9800;
         }
 
-        details {
-            margin-top: 8px;
-        }
-
         details summary {
-            font-weight: 600;
             cursor: pointer;
             padding: 4px 0;
             color: #666;
         }
 
-        details[open] summary {
-            margin-bottom: 8px;
+        /* Collapsible details preview functionality */
+        .collapsible-details {
+            position: relative;
+        }
+
+        .collapsible-details summary {
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* Preview content styling - shown when closed */
+        .collapsible-details:not([open]) .preview-content {
+            margin-top: 8px;
+            padding: 6px 8px;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 3px;
+        }
+
+        /* Hide preview content when details is open */
+        .collapsible-details[open] .preview-content {
+            display: none;
+        }
+
+        /* Style the full details content */
+        .details-content {
+            margin-top: 4px;
+            padding: 6px 8px;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 3px;
+        }
+
+        /* Hide details content when closed */
+        .collapsible-details:not([open]) .details-content {
+            display: none;
+        }
+
+        /* Style pre and other elements within details content */
+        .content pre {
+            background-color: transparent;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9em;
+            color: #555;
+            line-height: 1.3;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .collapsible-details .details-content .thinking-text {
+            font-style: italic;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
         .tool-content {
@@ -234,6 +279,32 @@
 
         .scroll-top:visited {
             color: white;
+        }
+
+        .toggle-details {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #e8f4fd66;
+            color: #666;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2em;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.2s;
+            z-index: 1000;
+        }
+
+        .toggle-details:hover {
+            background-color: #e8f4fdcc;
+            transform: translateY(-2px);
         }
 
         .session-summary {
@@ -425,7 +496,51 @@
     {% endif %}
     {% endfor %}
 
-    <a class="scroll-top" href="#title">🔝</a>
+    <button class="toggle-details" id="toggleDetails" title="Toggle all details">📋</button>
+    <a class="scroll-top" title="Scroll to top" href="#title">🔝</a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.getElementById('toggleDetails');
+
+            function updateToggleButton() {
+                const allDetails = document.querySelectorAll('details.collapsible-details');
+                const openCount = document.querySelectorAll('details[open].collapsible-details').length;
+                const totalCount = allDetails.length;
+
+                if (totalCount === 0) {
+                    toggleButton.style.display = 'none';
+                    return;
+                }
+
+                // If more than half are open, show "close all" state, otherwise show "open all"
+                const mostlyOpen = openCount > totalCount / 2;
+                toggleButton.textContent = mostlyOpen ? '📦' : '🗃️';
+                toggleButton.title = mostlyOpen ? 'Close all details' : 'Open all details';
+            }
+
+            function toggleAllDetails() {
+                const allDetails = document.querySelectorAll('details.collapsible-details');
+                const openCount = document.querySelectorAll('details[open].collapsible-details').length;
+                const shouldOpen = openCount <= allDetails.length / 2;
+
+                allDetails.forEach(details => {
+                    if (shouldOpen) {
+                        details.setAttribute('open', '');
+                    } else {
+                        details.removeAttribute('open');
+                    }
+                });
+
+                updateToggleButton();
+            }
+
+            toggleButton.addEventListener('click', toggleAllDetails);
+
+            // Initialize button state
+            updateToggleButton();
+        });
+    </script>
 </body>
 
 </html>

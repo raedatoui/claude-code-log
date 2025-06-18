@@ -10,6 +10,8 @@ A Python CLI tool that converts Claude Code transcript JSONL files into readable
 
 This tool generates clean, minimalist HTML pages showing user prompts and assistant responses chronologically. It's designed to create a readable log of your Claude Code interactions with support for both individual files and entire project hierarchies.
 
+[See example log (real usage on this project).](./docs/claude-code-log-transcript.html)
+
 ## Quickstart
 
 TL;DR: run the command below and browse the pages generated from your entire Claude Code archives:

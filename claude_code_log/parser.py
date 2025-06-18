@@ -103,6 +103,7 @@ def load_transcript(jsonl_path: Path) -> List[TranscriptEntry]:
     messages: List[TranscriptEntry] = []
 
     with open(jsonl_path, "r", encoding="utf-8") as f:
+        print(f"Processing {jsonl_path}...")
         for line_no, line in enumerate(f):
             line = line.strip()
             if line:
@@ -148,8 +149,6 @@ def load_transcript(jsonl_path: Path) -> List[TranscriptEntry]:
                         f"Line {line_no} of {jsonl_path} | Unexpected error: {str(e)}"
                         "\n{traceback.format_exc()}"
                     )
-
-    print()
 
     return messages
 

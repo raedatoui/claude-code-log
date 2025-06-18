@@ -37,6 +37,41 @@ def escape_html(text: str) -> str:
     return html.escape(text)
 
 
+def create_collapsible_details(
+    summary: str, content: str, css_classes: str = ""
+) -> str:
+    """Create a collapsible details element with consistent styling and preview functionality."""
+    class_attr = ' class="collapsible-details"'
+    wrapper_classes = f"tool-content{' ' + css_classes if css_classes else ''}"
+
+    if len(content) <= 200:
+        return f"""
+        <div class="{wrapper_classes}">
+            {summary}
+            <div class="details-content">
+                {content}
+            </div>
+        </div>
+        """
+
+    # Get first ~200 characters, break at word boundaries
+    preview_text = content[:200] + "..."
+
+    return f"""
+    <div class="{wrapper_classes}">
+        <details{class_attr}>
+            <summary>
+                {summary}
+                <div class="preview-content">{preview_text}</div>
+            </summary>
+            <div class="details-content">
+                {content}
+            </div>
+        </details>
+    </div>
+    """
+
+
 def render_markdown(text: str) -> str:
     """Convert markdown text to HTML using mistune."""
     # Configure mistune with GitHub-flavored markdown features
@@ -181,17 +216,10 @@ def format_tool_use_content(tool_use: ToolUseContent) -> str:
     except (TypeError, ValueError):
         escaped_input = escape_html(str(tool_use.input))
 
-    return f"""
-    <div class="tool-content tool-use">
-        <details>
-            <summary><strong>🛠️ Tool Use:</strong> {escaped_name} (ID: {escaped_id})</summary>
-            <div class="tool-input">
-                <strong>Input:</strong>
-                <pre>{escaped_input}</pre>
-            </div>
-        </details>
-    </div>
-    """
+    summary = f"<strong>🛠️ Tool Use:</strong> {escaped_name} (ID: {escaped_id})"
+    content = f"<pre>{escaped_input}</pre>"
+
+    return create_collapsible_details(summary, content, "tool-use")
 
 
 def format_tool_result_content(tool_result: ToolResultContent) -> str:
@@ -206,37 +234,27 @@ def format_tool_result_content(tool_result: ToolResultContent) -> str:
         content_parts: List[str] = []
         for item in tool_result.content:
             if item.get("type") == "text":
-                content_parts.append(item.get("text", ""))
+                text_value = item.get("text")
+                if isinstance(text_value, str):
+                    content_parts.append(text_value)
         escaped_content = escape_html("\n".join(content_parts))
 
     error_indicator = " (🚨 Error)" if tool_result.is_error else ""
 
-    return f"""
-    <div class="tool-content tool-result">
-        <details>
-            <summary><strong>🧰 Tool Result{error_indicator}:</strong> {escaped_id}</summary>
-            <div class="tool-input">
-                <pre>{escaped_content}</pre>
-            </div>
-        </details>
-    </div>
-    """
+    summary = f"<strong>🧰 Tool Result{error_indicator}:</strong> {escaped_id}"
+    content = f"<pre>{escaped_content}</pre>"
+
+    return create_collapsible_details(summary, content, "tool-result")
 
 
 def format_thinking_content(thinking: ThinkingContent) -> str:
     """Format thinking content as HTML."""
     escaped_thinking = escape_html(thinking.thinking)
 
-    return f"""
-    <div class="tool-content thinking-content">
-        <details>
-            <summary><strong>💭 Thinking</strong></summary>
-            <div class="thinking-text">
-                <pre>{escaped_thinking}</pre>
-            </div>
-        </details>
-    </div>
-    """
+    summary = "<strong>💭 Thinking</strong>"
+    content = f'<div class="thinking-text">{escaped_thinking}</div>'
+
+    return create_collapsible_details(summary, content, "thinking-content")
 
 
 def format_image_content(image: ImageContent) -> str:
@@ -604,9 +622,10 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
             if command_args:
                 content_parts.append(f"<strong>Args:</strong> {escaped_command_args}")
             if command_contents:
-                content_parts.append(
-                    f"<details><summary>Content</summary><div class='content'>{escaped_command_contents}</div></details>"
+                details_html = create_collapsible_details(
+                    "Content", escaped_command_contents
                 )
+                content_parts.append(details_html)
 
             content_html = "<br>".join(content_parts)
             message_type = "system"

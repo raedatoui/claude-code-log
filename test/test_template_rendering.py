@@ -174,9 +174,10 @@ class TestTemplateRendering:
         assert "tool-result" in html_content
 
         # Check tool input details
-        assert "<details>" in html_content
+        assert 'class="collapsible-details"' in html_content
         assert "<summary>" in html_content
         assert "Input:" in html_content
+        assert "details-content" in html_content
 
     def test_timestamp_formatting(self):
         """Test that timestamps are formatted correctly."""
