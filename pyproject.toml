@@ -34,6 +34,9 @@ claude-code-log = "claude_code_log.cli:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build]
+exclude = ["/docs", "/test", "/scripts"]
+
 [tool.pytest.ini_options]
 testpaths = ["test"]
 asyncio_mode = "auto"
