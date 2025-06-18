@@ -58,7 +58,7 @@ render-test-data:
 style-guide:
     uv run python scripts/generate_style_guide.py
 
-# Release a new version - e.g. `just release 0.2.5`
+# Release a new version - e.g. `just release-prep 0.2.5`
 release-prep version:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -108,6 +108,7 @@ release-prep version:
         head -n 7 CHANGELOG.md
         echo ""
         cat "$NEW_ENTRY"
+        echo ""
         tail -n +8 CHANGELOG.md
     } > "$TEMP_CHANGELOG"
     
