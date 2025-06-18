@@ -150,20 +150,23 @@ TranscriptEntry = Union[
 
 def parse_content_item(item_data: Dict[str, Any]) -> ContentItem:
     """Parse a content item based on its type field."""
-    content_type = item_data.get("type", "")
+    try:
+        content_type = item_data.get("type", "")
 
-    if content_type == "text":
-        return TextContent.model_validate(item_data)
-    elif content_type == "tool_use":
-        return ToolUseContent.model_validate(item_data)
-    elif content_type == "tool_result":
-        return ToolResultContent.model_validate(item_data)
-    elif content_type == "thinking":
-        return ThinkingContent.model_validate(item_data)
-    elif content_type == "image":
-        return ImageContent.model_validate(item_data)
-    else:
-        # Fallback to text content for unknown types
+        if content_type == "text":
+            return TextContent.model_validate(item_data)
+        elif content_type == "tool_use":
+            return ToolUseContent.model_validate(item_data)
+        elif content_type == "tool_result":
+            return ToolResultContent.model_validate(item_data)
+        elif content_type == "thinking":
+            return ThinkingContent.model_validate(item_data)
+        elif content_type == "image":
+            return ImageContent.model_validate(item_data)
+        else:
+            # Fallback to text content for unknown types
+            return TextContent(type="text", text=str(item_data))
+    except AttributeError:
         return TextContent(type="text", text=str(item_data))
 
 

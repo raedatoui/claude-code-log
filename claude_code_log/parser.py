@@ -3,8 +3,8 @@
 
 import json
 from pathlib import Path
-import traceback
-from typing import List, Optional, Union, Dict
+import re
+from typing import Any, List, Optional, Union
 from datetime import datetime
 import dateparser
 
@@ -101,53 +101,55 @@ def filter_messages_by_date(
 def load_transcript(jsonl_path: Path) -> List[TranscriptEntry]:
     """Load and parse JSONL transcript file."""
     messages: List[TranscriptEntry] = []
-    unique_errors: Dict[str, int] = {}
-    unhandled_types: Dict[str, int] = {}
 
     with open(jsonl_path, "r", encoding="utf-8") as f:
-        for line in f:
+        for line_no, line in enumerate(f):
             line = line.strip()
             if line:
                 try:
-                    entry_dict = json.loads(line)
-                    entry_type = entry_dict.get("type", "unknown, missing type")
+                    entry_dict: dict[str, Any] | str = json.loads(line)
+                    if not isinstance(entry_dict, dict):
+                        print(
+                            f"Line {line_no} of {jsonl_path} is not a JSON object: {line}"
+                        )
+                        continue
+
+                    entry_type: str | None = entry_dict.get("type")
 
                     if entry_type in ["user", "assistant", "summary"]:
                         # Parse using Pydantic models
                         entry = parse_transcript_entry(entry_dict)
                         messages.append(entry)
                     else:
-                        # Track unhandled message types
-                        unhandled_types[entry_type] = (
-                            unhandled_types.get(entry_type, 0) + 1
+                        print(
+                            f"Line {line_no} of {jsonl_path} is not a recognised message type: {line}"
                         )
                 except json.JSONDecodeError as e:
-                    error_key = f"JSON decode error: {str(e)}"
-                    unique_errors[error_key] = unique_errors.get(error_key, 0) + 1
+                    print(
+                        f"Line {line_no} of {jsonl_path} | JSON decode error: {str(e)}"
+                    )
                 except ValueError as e:
                     # Extract a more descriptive error message
                     error_msg = str(e)
                     if "validation error" in error_msg.lower():
-                        error_key = f"Validation error: {str(e)[:200]}..."
+                        err_no_url = re.sub(
+                            r"    For further information visit https://errors.pydantic(.*)\n?",
+                            "",
+                            error_msg,
+                        )
+                        print(f"Line {line_no} of {jsonl_path} | {err_no_url}")
                     else:
-                        error_key = f"ValueError: {error_msg[:200]}..."
-                    unique_errors[error_key] = unique_errors.get(error_key, 0) + 1
+                        print(
+                            f"Line {line_no} of {jsonl_path} | ValueError: {error_msg}"
+                            "\n{traceback.format_exc()}"
+                        )
                 except Exception as e:
-                    error_key = f"Unexpected error: {str(e)}\n{traceback.format_exc()}"
-                    unique_errors[error_key] = unique_errors.get(error_key, 0) + 1
+                    print(
+                        f"Line {line_no} of {jsonl_path} | Unexpected error: {str(e)}"
+                        "\n{traceback.format_exc()}"
+                    )
 
-    # Print summary of errors if any occurred
-    if unique_errors or unhandled_types:
-        print(f"\nParsing summary for {jsonl_path.name}:")
-        if unhandled_types:
-            print("Unhandled message types:")
-            for msg_type, count in unhandled_types.items():
-                print(f"  - {msg_type}: {count} occurrences")
-        if unique_errors:
-            print("Parsing errors:")
-            for error, count in unique_errors.items():
-                print(f"  - {error}: {count} occurrences")
-        print()
+    print()
 
     return messages
 
