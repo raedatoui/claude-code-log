@@ -216,6 +216,13 @@ uv run claude-code-log
 
 ## TODO
 
-- **Show top level stats on index page**: token usage added up + time of last interaction
 - **In-page Filtering**: Client-side filtering and search
-- **Timeline view**: Show interaction on a timeline to get a better idea on timings and parallel calls
+- **Timeline view**: Show interaction on a timeline to get a better idea on timings and parallel calls - maybe Timeline.js optionally generated runtime?
+- document what questions does it help answering
+- filter out system message from beginning of convo to show on session navigation
+- make tool results messages be computer rather than user – or even just remove the assistant / user box around or move the tool call / result to the top?
+- integrate claude-trace request logs if present?
+- use Anthropic's own types: <https://github.com/anthropics/anthropic-sdk-python/tree/main/src/anthropic/types> – can these be used to generate Pydantic classes though?
+- Shortcut / command to resume a specific conversation by session ID $ claude --resume 550e8400-e29b-41d4-a716-446655440000?
+- Split up transcripts by jsonl files (too) as the combined ones can get quite big and add navigation to the top level
+- Localised number formatting and timezone adjustment runtime?

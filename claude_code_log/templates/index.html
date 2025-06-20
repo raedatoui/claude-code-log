@@ -49,6 +49,7 @@
             font-size: 1.2em;
             font-weight: 600;
             margin-bottom: 10px;
+            word-break: break-all;
         }
 
         .project-name a {
@@ -89,9 +90,9 @@
 
         .summary-stats {
             display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
 
         .summary-stat {
@@ -116,18 +117,32 @@
 
     <div class='summary'>
         <div class='summary-stats'>
-            <div class='summary-stat'>
-                <div class='number'>{{ summary.total_projects }}</div>
-                <div class='label'>Projects</div>
+            <div style="display: flex; gap: 3em;">
+                <div class='summary-stat'>
+                    <div class='number'>{{ summary.total_projects }}</div>
+                    <div class='label'>Projects</div>
+                </div>
+                <div class='summary-stat'>
+                    <div class='number'>{{ summary.total_jsonl }}</div>
+                    <div class='label'>Transcript Files</div>
+                </div>
+                <div class='summary-stat'>
+                    <div class='number'>{{ summary.total_messages }}</div>
+                    <div class='label'>Messages</div>
+                </div>
             </div>
+            {% if summary.token_summary %}
             <div class='summary-stat'>
-                <div class='number'>{{ summary.total_jsonl }}</div>
-                <div class='label'>Transcript Files</div>
+                <div class='number'>🪙</div>
+                <div class='label'>{{ summary.token_summary }}</div>
             </div>
+            {% endif %}
+            {% if summary.formatted_time_range %}
             <div class='summary-stat'>
-                <div class='number'>{{ summary.total_messages }}</div>
-                <div class='label'>Messages</div>
+                <div class='number'>🕐</div>
+                <div class='label'>{{ summary.formatted_time_range }}</div>
             </div>
+            {% endif %}
         </div>
     </div>
 
@@ -140,7 +155,14 @@
             <div class='project-stats'>
                 <div class='stat'>📁 {{ project.jsonl_count }} transcript files</div>
                 <div class='stat'>💬 {{ project.message_count }} messages</div>
+                {% if project.formatted_time_range %}
+                <div class='stat'>🕒 {{ project.formatted_time_range }}</div>
+                {% else %}
                 <div class='stat'>🕒 {{ project.formatted_date }}</div>
+                {% endif %}
+                {% if project.token_summary %}
+                <div class='stat'>🪙 {{ project.token_summary }}</div>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

@@ -70,7 +70,7 @@ class TestTemplateProject:
         assert project.jsonl_count == 3
         assert project.message_count == 15
         assert project.display_name == "test-project"
-        assert project.formatted_date == "2023-11-14 22:13"
+        assert project.formatted_date == "2023-11-14 22:13:20"
 
     def test_template_project_dash_formatting(self):
         """Test TemplateProject display name formatting for dashed names."""
@@ -86,7 +86,7 @@ class TestTemplateProject:
 
         assert project.name == "-user-workspace-my-app"
         assert project.display_name == "user/workspace/my/app"
-        assert project.formatted_date == "2023-11-14 22:15"
+        assert project.formatted_date == "2023-11-14 22:15:00"
 
     def test_template_project_no_leading_dash(self):
         """Test TemplateProject display name when no leading dash."""
@@ -101,6 +101,52 @@ class TestTemplateProject:
         project = TemplateProject(project_data)
 
         assert project.display_name == "simple-project-name"
+
+    def test_template_project_time_range(self):
+        """Test TemplateProject time range formatting."""
+        # Test with both earliest and latest timestamps
+        project_data = {
+            "name": "time-range-project",
+            "html_file": "time-range-project/combined_transcripts.html",
+            "jsonl_count": 1,
+            "message_count": 5,
+            "last_modified": 1700000000.0,
+            "earliest_timestamp": "2025-06-14T08:00:00Z",
+            "latest_timestamp": "2025-06-14T10:00:00Z",
+        }
+
+        project = TemplateProject(project_data)
+        assert (
+            project.formatted_time_range == "2025-06-14 08:00:00 to 2025-06-14 10:00:00"
+        )
+
+    def test_template_project_single_timestamp(self):
+        """Test TemplateProject with single timestamp (same earliest and latest)."""
+        project_data = {
+            "name": "single-time-project",
+            "html_file": "single-time-project/combined_transcripts.html",
+            "jsonl_count": 1,
+            "message_count": 1,
+            "last_modified": 1700000000.0,
+            "earliest_timestamp": "2025-06-14T08:00:00Z",
+            "latest_timestamp": "2025-06-14T08:00:00Z",
+        }
+
+        project = TemplateProject(project_data)
+        assert project.formatted_time_range == "2025-06-14 08:00:00"
+
+    def test_template_project_no_timestamps(self):
+        """Test TemplateProject with no timestamps."""
+        project_data = {
+            "name": "no-time-project",
+            "html_file": "no-time-project/combined_transcripts.html",
+            "jsonl_count": 1,
+            "message_count": 1,
+            "last_modified": 1700000000.0,
+        }
+
+        project = TemplateProject(project_data)
+        assert project.formatted_time_range == ""
 
 
 class TestTemplateSummary:

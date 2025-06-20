@@ -97,6 +97,57 @@ def process_projects_hierarchy(
                 max(f.stat().st_mtime for f in jsonl_files) if jsonl_files else 0.0
             )
 
+            # Calculate token usage aggregation and find first/last interaction timestamps
+            total_input_tokens = 0
+            total_output_tokens = 0
+            total_cache_creation_tokens = 0
+            total_cache_read_tokens = 0
+            latest_timestamp = ""
+            earliest_timestamp = ""
+
+            # Track requestIds to avoid double-counting tokens
+            seen_request_ids: set[str] = set()
+
+            for message in messages:
+                # Track latest and earliest timestamps across all messages
+                if hasattr(message, "timestamp"):
+                    message_timestamp = getattr(message, "timestamp", "")
+                    if message_timestamp:
+                        # Track latest timestamp
+                        if not latest_timestamp or message_timestamp > latest_timestamp:
+                            latest_timestamp = message_timestamp
+
+                        # Track earliest timestamp
+                        if (
+                            not earliest_timestamp
+                            or message_timestamp < earliest_timestamp
+                        ):
+                            earliest_timestamp = message_timestamp
+
+                # Calculate token usage for assistant messages
+                if message.type == "assistant" and hasattr(message, "message"):
+                    assistant_message = getattr(message, "message")
+                    request_id = getattr(message, "requestId", None)
+
+                    if (
+                        hasattr(assistant_message, "usage")
+                        and assistant_message.usage
+                        and request_id
+                        and request_id not in seen_request_ids
+                    ):
+                        # Mark requestId as seen to avoid double-counting
+                        seen_request_ids.add(request_id)
+
+                        usage = assistant_message.usage
+                        total_input_tokens += usage.input_tokens
+                        total_output_tokens += usage.output_tokens
+                        if usage.cache_creation_input_tokens:
+                            total_cache_creation_tokens += (
+                                usage.cache_creation_input_tokens
+                            )
+                        if usage.cache_read_input_tokens:
+                            total_cache_read_tokens += usage.cache_read_input_tokens
+
             project_summaries.append(
                 {
                     "name": project_dir.name,
@@ -105,6 +156,12 @@ def process_projects_hierarchy(
                     "jsonl_count": jsonl_count,
                     "message_count": len(messages),
                     "last_modified": last_modified,
+                    "total_input_tokens": total_input_tokens,
+                    "total_output_tokens": total_output_tokens,
+                    "total_cache_creation_tokens": total_cache_creation_tokens,
+                    "total_cache_read_tokens": total_cache_read_tokens,
+                    "latest_timestamp": latest_timestamp,
+                    "earliest_timestamp": earliest_timestamp,
                 }
             )
         except Exception as e:

@@ -49,6 +49,7 @@
             font-size: 1.2em;
             font-weight: 600;
             margin-bottom: 10px;
+            word-break: break-all;
         }
 
         .project-name a {
@@ -89,9 +90,9 @@
 
         .summary-stats {
             display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
 
         .summary-stat {
@@ -116,18 +117,22 @@
 
     <div class='summary'>
         <div class='summary-stats'>
-            <div class='summary-stat'>
-                <div class='number'>4</div>
-                <div class='label'>Projects</div>
+            <div style="display: flex; gap: 3em;">
+                <div class='summary-stat'>
+                    <div class='number'>4</div>
+                    <div class='label'>Projects</div>
+                </div>
+                <div class='summary-stat'>
+                    <div class='number'>28</div>
+                    <div class='label'>Transcript Files</div>
+                </div>
+                <div class='summary-stat'>
+                    <div class='number'>864</div>
+                    <div class='label'>Messages</div>
+                </div>
             </div>
-            <div class='summary-stat'>
-                <div class='number'>28</div>
-                <div class='label'>Transcript Files</div>
-            </div>
-            <div class='summary-stat'>
-                <div class='number'>864</div>
-                <div class='label'>Messages</div>
-            </div>
+            
+            
         </div>
     </div>
 
@@ -140,7 +145,10 @@
             <div class='project-stats'>
                 <div class='stat'>📁 12 transcript files</div>
                 <div class='stat'>💬 445 messages</div>
-                <div class='stat'>🕒 2023-11-15 19:03</div>
+                
+                <div class='stat'>🕒 2023-11-15 19:03:20</div>
+                
+                
             </div>
         </div>
         
@@ -151,7 +159,10 @@
             <div class='project-stats'>
                 <div class='stat'>📁 8 transcript files</div>
                 <div class='stat'>💬 203 messages</div>
-                <div class='stat'>🕒 2023-11-15 12:06</div>
+                
+                <div class='stat'>🕒 2023-11-15 12:06:40</div>
+                
+                
             </div>
         </div>
         
@@ -162,7 +173,10 @@
             <div class='project-stats'>
                 <div class='stat'>📁 3 transcript files</div>
                 <div class='stat'>💬 89 messages</div>
-                <div class='stat'>🕒 2023-11-15 05:10</div>
+                
+                <div class='stat'>🕒 2023-11-15 05:10:00</div>
+                
+                
             </div>
         </div>
         
@@ -173,7 +187,10 @@
             <div class='project-stats'>
                 <div class='stat'>📁 5 transcript files</div>
                 <div class='stat'>💬 127 messages</div>
-                <div class='stat'>🕒 2023-11-14 22:13</div>
+                
+                <div class='stat'>🕒 2023-11-14 22:13:20</div>
+                
+                
             </div>
         </div>
         

@@ -24,9 +24,13 @@ from .parser import extract_text_content
 
 
 def format_timestamp(timestamp_str: str) -> str:
-    """Format ISO timestamp for display."""
+    """Format ISO timestamp for display, converting to UTC."""
     try:
         dt = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
+        # Convert to UTC if timezone-aware
+        if dt.tzinfo is not None:
+            dt = dt.utctimetuple()
+            dt = datetime(*dt[:6])  # Convert back to naive datetime in UTC
         return dt.strftime("%Y-%m-%d %H:%M:%S")
     except (ValueError, AttributeError):
         return timestamp_str
@@ -358,6 +362,14 @@ class TemplateProject:
         self.jsonl_count = project_data["jsonl_count"]
         self.message_count = project_data["message_count"]
         self.last_modified = project_data["last_modified"]
+        self.total_input_tokens = project_data.get("total_input_tokens", 0)
+        self.total_output_tokens = project_data.get("total_output_tokens", 0)
+        self.total_cache_creation_tokens = project_data.get(
+            "total_cache_creation_tokens", 0
+        )
+        self.total_cache_read_tokens = project_data.get("total_cache_read_tokens", 0)
+        self.latest_timestamp = project_data.get("latest_timestamp", "")
+        self.earliest_timestamp = project_data.get("earliest_timestamp", "")
 
         # Format display name (remove leading dash and convert dashes to slashes)
         self.display_name = self.name
@@ -366,7 +378,46 @@ class TemplateProject:
 
         # Format last modified date
         last_modified_dt = datetime.fromtimestamp(self.last_modified)
-        self.formatted_date = last_modified_dt.strftime("%Y-%m-%d %H:%M")
+        self.formatted_date = last_modified_dt.strftime("%Y-%m-%d %H:%M:%S")
+
+        # Format interaction time range
+        if self.earliest_timestamp and self.latest_timestamp:
+            if self.earliest_timestamp == self.latest_timestamp:
+                # Single interaction
+                self.formatted_time_range = format_timestamp(self.latest_timestamp)
+            else:
+                # Time range
+                earliest_formatted = format_timestamp(self.earliest_timestamp)
+                latest_formatted = format_timestamp(self.latest_timestamp)
+                self.formatted_time_range = (
+                    f"{earliest_formatted} to {latest_formatted}"
+                )
+        elif self.latest_timestamp:
+            self.formatted_time_range = format_timestamp(self.latest_timestamp)
+        else:
+            self.formatted_time_range = ""
+
+        # Format last interaction timestamp (kept for backward compatibility)
+        if self.latest_timestamp:
+            self.formatted_last_interaction = format_timestamp(self.latest_timestamp)
+        else:
+            self.formatted_last_interaction = ""
+
+        # Format token usage
+        self.token_summary = ""
+        if self.total_input_tokens > 0 or self.total_output_tokens > 0:
+            token_parts: List[str] = []
+            if self.total_input_tokens > 0:
+                token_parts.append(f"Input: {self.total_input_tokens}")
+            if self.total_output_tokens > 0:
+                token_parts.append(f"Output: {self.total_output_tokens}")
+            if self.total_cache_creation_tokens > 0:
+                token_parts.append(
+                    f"Cache Creation: {self.total_cache_creation_tokens}"
+                )
+            if self.total_cache_read_tokens > 0:
+                token_parts.append(f"Cache Read: {self.total_cache_read_tokens}")
+            self.token_summary = " | ".join(token_parts)
 
 
 class TemplateSummary:
@@ -376,6 +427,79 @@ class TemplateSummary:
         self.total_projects = len(project_summaries)
         self.total_jsonl = sum(p["jsonl_count"] for p in project_summaries)
         self.total_messages = sum(p["message_count"] for p in project_summaries)
+
+        # Calculate aggregated token usage
+        self.total_input_tokens = sum(
+            p.get("total_input_tokens", 0) for p in project_summaries
+        )
+        self.total_output_tokens = sum(
+            p.get("total_output_tokens", 0) for p in project_summaries
+        )
+        self.total_cache_creation_tokens = sum(
+            p.get("total_cache_creation_tokens", 0) for p in project_summaries
+        )
+        self.total_cache_read_tokens = sum(
+            p.get("total_cache_read_tokens", 0) for p in project_summaries
+        )
+
+        # Find the most recent and earliest interaction timestamps across all projects
+        self.latest_interaction = ""
+        self.earliest_interaction = ""
+        for project in project_summaries:
+            # Check latest timestamp
+            latest_timestamp = project.get("latest_timestamp", "")
+            if latest_timestamp and (
+                not self.latest_interaction
+                or latest_timestamp > self.latest_interaction
+            ):
+                self.latest_interaction = latest_timestamp
+
+            # Check earliest timestamp
+            earliest_timestamp = project.get("earliest_timestamp", "")
+            if earliest_timestamp and (
+                not self.earliest_interaction
+                or earliest_timestamp < self.earliest_interaction
+            ):
+                self.earliest_interaction = earliest_timestamp
+
+        # Format the latest interaction timestamp
+        if self.latest_interaction:
+            self.formatted_latest_interaction = format_timestamp(
+                self.latest_interaction
+            )
+        else:
+            self.formatted_latest_interaction = ""
+
+        # Format the time range
+        if self.earliest_interaction and self.latest_interaction:
+            if self.earliest_interaction == self.latest_interaction:
+                # Single interaction
+                self.formatted_time_range = format_timestamp(self.latest_interaction)
+            else:
+                # Time range
+                earliest_formatted = format_timestamp(self.earliest_interaction)
+                latest_formatted = format_timestamp(self.latest_interaction)
+                self.formatted_time_range = (
+                    f"{earliest_formatted} to {latest_formatted}"
+                )
+        else:
+            self.formatted_time_range = ""
+
+        # Format token usage summary
+        self.token_summary = ""
+        if self.total_input_tokens > 0 or self.total_output_tokens > 0:
+            token_parts: List[str] = []
+            if self.total_input_tokens > 0:
+                token_parts.append(f"Input: {self.total_input_tokens}")
+            if self.total_output_tokens > 0:
+                token_parts.append(f"Output: {self.total_output_tokens}")
+            if self.total_cache_creation_tokens > 0:
+                token_parts.append(
+                    f"Cache Creation: {self.total_cache_creation_tokens}"
+                )
+            if self.total_cache_read_tokens > 0:
+                token_parts.append(f"Cache Read: {self.total_cache_read_tokens}")
+            self.token_summary = " | ".join(token_parts)
 
 
 def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) -> str:
