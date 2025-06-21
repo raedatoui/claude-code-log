@@ -135,19 +135,12 @@ def extract_command_info(text_content: str) -> tuple[str, str, str]:
 
 def format_todowrite_content(tool_use: ToolUseContent) -> str:
     """Format TodoWrite tool use content as an actual todo list with checkboxes."""
-    escaped_id = escape_html(tool_use.id)
-
     # Parse todos from input
     todos_data = tool_use.input.get("todos", [])
     if not todos_data:
-        return f"""
-        <div class="tool-content tool-use todo-write">
-            <div class="tool-header">
-                📝 Todo List (ID: {escaped_id})
-            </div>
-            <div class="todo-content">
-                <p><em>No todos found</em></p>
-            </div>
+        return """
+        <div class="todo-content">
+            <p><em>No todos found</em></p>
         </div>
         """
 
@@ -191,13 +184,8 @@ def format_todowrite_content(tool_use: ToolUseContent) -> str:
     todos_html = "".join(todo_items)
 
     return f"""
-    <div class="tool-content tool-use todo-write">
-        <div class="tool-header">
-            📝 Todo List (ID: {escaped_id})
-        </div>
-        <div class="todo-list">
-            {todos_html}
-        </div>
+    <div class="todo-list">
+        {todos_html}
     </div>
     """
 
@@ -208,28 +196,33 @@ def format_tool_use_content(tool_use: ToolUseContent) -> str:
     if tool_use.name == "TodoWrite":
         return format_todowrite_content(tool_use)
 
-    escaped_name = escape_html(tool_use.name)
-    escaped_id = escape_html(tool_use.id)
-
     # Format the input parameters
-    import json
-
     try:
         formatted_input = json.dumps(tool_use.input, indent=2)
         escaped_input = escape_html(formatted_input)
     except (TypeError, ValueError):
         escaped_input = escape_html(str(tool_use.input))
 
-    summary = f"<strong>🛠️ Tool Use:</strong> {escaped_name} (ID: {escaped_id})"
-    content = f"<pre>{escaped_input}</pre>"
+    # For simple content, show directly without collapsible wrapper
+    if len(escaped_input) <= 200:
+        return f"<pre>{escaped_input}</pre>"
 
-    return create_collapsible_details(summary, content, "tool-use")
+    # For longer content, use collapsible details but no extra wrapper
+    preview_text = escaped_input[:200] + "..."
+    return f"""
+    <details class="collapsible-details">
+        <summary>
+            <div class="preview-content"><pre>{preview_text}</pre></div>
+        </summary>
+        <div class="details-content">
+            <pre>{escaped_input}</pre>
+        </div>
+    </details>
+    """
 
 
 def format_tool_result_content(tool_result: ToolResultContent) -> str:
     """Format tool result content as HTML."""
-    escaped_id = escape_html(tool_result.tool_use_id)
-
     # Handle both string and structured content
     if isinstance(tool_result.content, str):
         escaped_content = escape_html(tool_result.content)
@@ -237,28 +230,50 @@ def format_tool_result_content(tool_result: ToolResultContent) -> str:
         # Content is a list of structured items, extract text
         content_parts: List[str] = []
         for item in tool_result.content:
-            if item.get("type") == "text":
+            if isinstance(item, dict) and item.get("type") == "text":  # type: ignore
                 text_value = item.get("text")
                 if isinstance(text_value, str):
                     content_parts.append(text_value)
         escaped_content = escape_html("\n".join(content_parts))
 
-    error_indicator = " (🚨 Error)" if tool_result.is_error else ""
+    # For simple content, show directly without collapsible wrapper
+    if len(escaped_content) <= 200:
+        return f"<pre>{escaped_content}</pre>"
 
-    summary = f"<strong>🧰 Tool Result{error_indicator}:</strong> {escaped_id}"
-    content = f"<pre>{escaped_content}</pre>"
-
-    return create_collapsible_details(summary, content, "tool-result")
+    # For longer content, use collapsible details but no extra wrapper
+    preview_text = escaped_content[:200] + "..."
+    return f"""
+    <details class="collapsible-details">
+        <summary>
+            <div class="preview-content"><pre>{preview_text}</pre></div>
+        </summary>
+        <div class="details-content">
+            <pre>{escaped_content}</pre>
+        </div>
+    </details>
+    """
 
 
 def format_thinking_content(thinking: ThinkingContent) -> str:
     """Format thinking content as HTML."""
-    escaped_thinking = escape_html(thinking.thinking)
+    escaped_thinking = escape_html(thinking.thinking.strip())
 
-    summary = "<strong>💭 Thinking</strong>"
-    content = f'<div class="thinking-text">{escaped_thinking}</div>'
+    # For simple content, show directly without collapsible wrapper
+    if len(escaped_thinking) <= 200:
+        return f'<div class="thinking-text">{escaped_thinking}</div>'
 
-    return create_collapsible_details(summary, content, "thinking-content")
+    # For longer content, use collapsible details but no extra wrapper
+    preview_text = escaped_thinking[:200] + "..."
+    return f"""
+    <details class="collapsible-details">
+        <summary>
+            <div class="preview-content"><div class="thinking-text">{preview_text}</div></div>
+        </summary>
+        <div class="details-content">
+            <div class="thinking-text">{escaped_thinking}</div>
+        </div>
+    </details>
+    """
 
 
 def format_image_content(image: ImageContent) -> str:
@@ -266,11 +281,7 @@ def format_image_content(image: ImageContent) -> str:
     # Create a data URL from the base64 image data
     data_url = f"data:{image.source.media_type};base64,{image.source.data}"
 
-    return f"""
-    <div class="image-content">
-        <img src="{data_url}" alt="Uploaded image" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; margin: 10px 0;" />
-    </div>
-    """
+    return f'<img src="{data_url}" alt="Uploaded image" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; margin: 10px 0;" />'
 
 
 def render_message_content(
@@ -569,18 +580,27 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
         message_content = message.message.content  # type: ignore
         text_content = extract_text_content(message_content)
 
-        # Check if message has tool use, tool result, thinking, or image content even if no text
-        has_tool_content = False
+        # Separate tool/thinking/image content from text content
+        tool_items: List[ContentItem] = []
+        text_only_content: Union[str, List[ContentItem]] = []
+
         if isinstance(message_content, list):
+            text_only_items: List[ContentItem] = []
             for item in message_content:
                 if isinstance(
                     item,
                     (ToolUseContent, ToolResultContent, ThinkingContent, ImageContent),
                 ):
-                    has_tool_content = True
-                    break
+                    tool_items.append(item)
+                else:
+                    text_only_items.append(item)
+            text_only_content = text_only_items
+        else:
+            # Single string content
+            text_only_content = message_content
 
-        if not text_content.strip() and not has_tool_content:
+        # Skip if no meaningful content
+        if not text_content.strip() and not tool_items:
             continue
 
         # Handle system messages with command names
@@ -772,18 +792,69 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
             message_type = "system"
         else:
             css_class = f"{message_type}"
-            content_html = render_message_content(message_content, message_type)
+            # Render only text content for the main message
+            content_html = render_message_content(text_only_content, message_type)
 
-        template_message = TemplateMessage(
-            message_type=message_type,
-            content_html=content_html,
-            formatted_timestamp=formatted_timestamp,
-            css_class=css_class,
-            session_summary=session_summary,
-            session_id=session_id,
-            token_usage=token_usage_str,
-        )
-        template_messages.append(template_message)
+        # Create main message (if it has text content)
+        if text_only_content and (
+            isinstance(text_only_content, str)
+            and text_only_content.strip()
+            or isinstance(text_only_content, list)
+            and text_only_content
+        ):
+            template_message = TemplateMessage(
+                message_type=message_type,
+                content_html=content_html,
+                formatted_timestamp=formatted_timestamp,
+                css_class=css_class,
+                session_summary=session_summary,
+                session_id=session_id,
+                token_usage=token_usage_str,
+            )
+            template_messages.append(template_message)
+
+        # Create separate messages for each tool/thinking/image item
+        for tool_item in tool_items:
+            tool_timestamp = getattr(message, "timestamp", "")
+            tool_formatted_timestamp = (
+                format_timestamp(tool_timestamp) if tool_timestamp else ""
+            )
+
+            if isinstance(tool_item, ToolUseContent):
+                tool_content_html = format_tool_use_content(tool_item)
+                escaped_name = escape_html(tool_item.name)
+                escaped_id = escape_html(tool_item.id)
+                if tool_item.name == "TodoWrite":
+                    tool_message_type = f"📝 Todo List (ID: {escaped_id})"
+                else:
+                    tool_message_type = f"Tool use: {escaped_name} (ID: {escaped_id})"
+                tool_css_class = "tool_use"
+            elif isinstance(tool_item, ToolResultContent):
+                tool_content_html = format_tool_result_content(tool_item)
+                escaped_id = escape_html(tool_item.tool_use_id)
+                error_indicator = " (🚨 Error)" if tool_item.is_error else ""
+                tool_message_type = f"Tool Result{error_indicator}: {escaped_id}"
+                tool_css_class = "tool_result"
+            elif isinstance(tool_item, ThinkingContent):
+                tool_content_html = format_thinking_content(tool_item)
+                tool_message_type = "Thinking"
+                tool_css_class = "thinking"
+            elif isinstance(tool_item, ImageContent):
+                tool_content_html = format_image_content(tool_item)
+                tool_message_type = "Image"
+                tool_css_class = "image"
+            else:
+                continue
+
+            tool_template_message = TemplateMessage(
+                message_type=tool_message_type,
+                content_html=tool_content_html,
+                formatted_timestamp=tool_formatted_timestamp,
+                css_class=tool_css_class,
+                session_summary=session_summary,
+                session_id=session_id,
+            )
+            template_messages.append(tool_template_message)
 
     # Prepare session navigation data
     session_nav: List[Dict[str, Any]] = []

@@ -254,9 +254,9 @@ class TestTemplateRendering:
         # Summary messages are now integrated into session headers
         assert "session-summary" in html_content or "Summary:" in html_content
 
-        # Check tool content classes
-        assert 'class="tool-content tool-use"' in html_content
-        assert 'class="tool-content tool-result"' in html_content
+        # Check tool message classes (tools are now top-level messages)
+        assert "class='message tool_use'" in html_content
+        assert "class='message tool_result'" in html_content
 
     def test_server_side_markdown_rendering(self):
         """Test that markdown is rendered server-side, not client-side."""

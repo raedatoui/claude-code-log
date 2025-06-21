@@ -45,10 +45,10 @@ class TestTodoWriteRendering:
 
         html = format_todowrite_content(tool_use)
 
-        # Check overall structure
-        assert 'class="tool-content tool-use todo-write"' in html
-        assert "📝 Todo List" in html
-        assert "toolu_01test123" in html
+        # Check overall structure (TodoWrite now has streamlined format)
+        assert 'class="todo-list"' in html
+        # Title and ID are now in the message header, not in content
+        assert "todo-item" in html
 
         # Check individual todo items
         assert "Implement user authentication" in html
@@ -83,9 +83,8 @@ class TestTodoWriteRendering:
 
         html = format_todowrite_content(tool_use)
 
-        assert 'class="tool-content tool-use todo-write"' in html
-        assert "📝 Todo List" in html
-        assert "toolu_empty" in html
+        assert 'class="todo-content"' in html
+        # Title and ID are now in the message header, not in content
         assert "No todos found" in html
 
     def test_format_todowrite_missing_todos(self):
@@ -96,7 +95,7 @@ class TestTodoWriteRendering:
 
         html = format_todowrite_content(tool_use)
 
-        assert 'class="tool-content tool-use todo-write"' in html
+        assert 'class="todo-content"' in html
         assert "No todos found" in html
 
     def test_format_todowrite_html_escaping(self):
@@ -206,13 +205,15 @@ class TestTodoWriteRendering:
             html_file = convert_jsonl_to_html(jsonl_file)
             html_content = html_file.read_text()
 
-            # Check TodoWrite specific rendering
-            assert "todo-write" in html_content
-            assert "📝 Todo List" in html_content
+            # Check TodoWrite specific rendering (now in message header)
+            assert "📝 Todo List" in html_content  # in message header
             assert "Create new feature" in html_content
             assert "Write tests" in html_content
             assert "🔄" in html_content  # in_progress emoji
             assert "⏳" in html_content  # pending emoji
+            assert (
+                "class='message tool_use'" in html_content
+            )  # tool as top-level message
 
             # Check CSS classes are applied
             assert "todo-item in_progress high" in html_content
@@ -258,14 +259,13 @@ class TestTodoWriteRendering:
         # Regular tool should use standard formatting
         assert 'class="collapsible-details"' in regular_html
         assert "<summary>" in regular_html
-        assert "Tool Use:" in regular_html
-        assert "Edit" in regular_html
+        # Tool name/ID no longer in content, moved to message header
 
         # TodoWrite should use special formatting
-        assert "todo-write" in todowrite_html
-        assert "📝 Todo List" in todowrite_html
+        assert "todo-list" in todowrite_html
         assert "todo-item" in todowrite_html
         assert "<details>" not in todowrite_html  # No collapsible details
+        # Title/ID no longer in content, moved to message header
 
     def test_css_classes_inclusion(self):
         """Test that TodoWrite CSS classes are included in the template."""
