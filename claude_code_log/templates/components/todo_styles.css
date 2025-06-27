@@ -1,0 +1,94 @@
+/* TodoWrite tool styling */
+.todo-write {
+    background-color: #f0f8ff66;
+    border-left: #4169e188 3px solid;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.tool-header {
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #2c3e50;
+    font-size: 1.1em;
+}
+
+.todo-list {
+    background-color: #ffffff66;
+    border-radius: 6px;
+    padding: 8px;
+    box-shadow: -7px -7px 10px #eeeeee44, 7px 7px 10px #00000011;
+    border-left: #ffffff66 1px solid;
+    border-top: #ffffff66 1px solid;
+    border-bottom: #00000017 1px solid;
+    border-right: #00000017 1px solid;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 4px;
+    border-bottom: 1px solid #f0f3f6;
+    transition: background-color 0.2s ease;
+}
+
+.todo-item:last-child {
+    border-bottom: none;
+}
+
+.todo-item:hover {
+    background-color: #f8f9fa;
+}
+
+.todo-item.completed {
+    opacity: 0.7;
+}
+
+.todo-item.completed .todo-content {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.todo-item input[type="checkbox"] {
+    margin: 0;
+    cursor: default;
+}
+
+.todo-status {
+    font-size: 1.1em;
+    line-height: 1;
+}
+
+.todo-content {
+    flex: 1;
+    color: #333;
+    font-weight: 500;
+}
+
+.todo-id {
+    font-size: 0.8em;
+    color: #6c757d;
+    font-weight: normal;
+}
+
+/* Priority-based left border colors */
+.todo-item.high {
+    border-left: 3px solid #dc3545;
+}
+
+.todo-item.medium {
+    border-left: 3px solid #ffc107;
+}
+
+.todo-item.low {
+    border-left: 3px solid #28a745;
+}
+
+/* Status-based background tints */
+.todo-item.in_progress {
+    background-color: #fff3cd;
+}
+
+.todo-item.completed {
+    background-color: #d4edda;
+}

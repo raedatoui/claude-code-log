@@ -1,0 +1,39 @@
+{# Session navigation component - can be used for ToC or expandable navigation #}
+{% macro render_session_nav(sessions, mode="toc", link_prefix="") %}
+{% if sessions and sessions|length > 0 %}
+<div class='navigation'>
+    {% if mode == "toc" %}
+    <h2>Sessions</h2>
+    <span style='font-size: 0.75em;'>↓ Click a box below to scroll down to the corresponding session</span>
+    {% elif mode == "expandable" %}
+    <h2>Session Navigation</h2>
+    <span style='font-size: 0.75em;'>↓ Click any to open individual session page</span>
+    {% endif %}
+
+    <div class='session-nav'>
+        {% for session in sessions %}
+        <a href='{{ link_prefix }}{% if mode == "expandable" %}session-{{ session.id }}.html{% else %}#session-{{ session.id }}{% endif %}'
+            class='session-link'>
+            <div class='session-link-title'>
+                {% if session.summary %}
+                {{ session.summary }} •
+                {% endif %}
+                {{ session.id[:8] }}
+            </div>
+            <div class='session-link-meta'>
+                {{ session.timestamp_range }} • {{ session.message_count }} messages
+                {% if session.token_summary %}
+                <br>{{ session.token_summary }}
+                {% endif %}
+            </div>
+            {% if session.first_user_message %}
+            <pre class='session-preview' style='font-size: 0.75em; line-height: 1.3; padding-bottom: 0;'>
+                {{- session.first_user_message[:500]|e -}}{% if session.first_user_message|length > 500 %}...{% endif %}
+            </pre>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endmacro %}

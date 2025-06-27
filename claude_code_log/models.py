@@ -71,8 +71,8 @@ class AssistantMessage(BaseModel):
     role: Literal["assistant"]
     model: str
     content: List[ContentItem]
-    stop_reason: Optional[str]
-    stop_sequence: Optional[str]
+    stop_reason: Optional[str] = None
+    stop_sequence: Optional[str] = None
     usage: Optional[UsageInfo] = None
 
 
@@ -110,7 +110,7 @@ class EditResult(BaseModel):
     userModified: Optional[bool] = None
 
 
-ToolUseResult = Union[str, FileReadResult, CommandResult, TodoResult, EditResult]
+ToolUseResult = Union[str, List[TodoItem], FileReadResult, CommandResult, TodoResult, EditResult]
 
 
 class BaseTranscriptEntry(BaseModel):

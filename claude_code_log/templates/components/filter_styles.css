@@ -1,0 +1,121 @@
+/* Filter toolbar and controls */
+.filter-toolbar {
+    background-color: #f8f9fa66;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    box-shadow: -7px -7px 10px #eeeeee44, 7px 7px 10px #00000011;
+    border-left: #ffffff66 1px solid;
+    border-top: #ffffff66 1px solid;
+    border-bottom: #00000017 1px solid;
+    border-right: #00000017 1px solid;
+    display: none;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+}
+
+.filter-toolbar.visible {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+}
+
+.filter-label {
+    white-space: nowrap;
+}
+
+.filter-toggles {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.filter-toolbar h3 {
+    margin: 0;
+    font-size: 1em;
+    color: #495057;
+    font-weight: 600;
+}
+
+.filter-toggle {
+    padding: 6px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 20px;
+    background-color: transparent;
+    color: #495057;
+    font-size: 0.85em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.filter-toggle:hover {
+    background-color: #ffffff99;
+    transform: translateY(-1px);
+}
+
+.filter-toggle.active {
+    background-color: #ffffffaa;
+}
+
+.filter-toggle.active:hover {
+    background-color: #ffffff66;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.filter-action-btn {
+    padding: 4px 8px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background-color: #ffffff66;
+    color: #6c757d;
+    font-size: 0.75em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.filter-action-btn:hover {
+    background-color: #ffffff99;
+}
+
+.filter-toggle .count {
+    opacity: 0.7;
+    font-size: 0.9em;
+    margin-left: 2px;
+}
+
+.filter-toggle.active .count {
+    opacity: 1;
+}
+
+/* Floating filter button */
+.filter-messages {
+    bottom: 140px;
+}
+
+.filter-messages.active {
+    background-color: #fff3cd66;
+}
+
+/* Floating buttons positioning */
+.scroll-top {
+    bottom: 20px;
+}
+
+.toggle-details {
+    bottom: 80px;
+}

@@ -5,109 +5,300 @@
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>Claude Code Projects (from last week to today)</title>
+    
     <style>
-        body {
-            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Ubuntu Mono', 'Cascadia Code', 'Menlo', 'Consolas', monospace;
-            line-height: 1.6;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background: linear-gradient(90deg, #f3d6d2, #f1dcce, #f0e4ca, #eeecc7, #e3ecc3, #d5eac0, #c6e8bd, #b9e6bc, #b6e3c5, #b3e1cf);
-            color: #333;
-        }
+/* Global styles shared across all templates */
+body {
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Ubuntu Mono', 'Cascadia Code', 'Menlo', 'Consolas', monospace;
+    line-height: 1.5;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+    background: linear-gradient(90deg, #f3d6d2, #f1dcce, #f0e4ca, #eeecc7, #e3ecc3, #d5eac0, #c6e8bd, #b9e6bc, #b6e3c5, #b3e1cf);
+    color: #333;
+}
 
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 30px;
-            font-size: 2em;
-        }
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
 
-        .project-list {
-            display: grid;
-            gap: 15px;
-        }
+/* Common typography */
+code {
+    background-color: #f5f5f5;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: inherit;
+}
 
-        .project-card {
-            background-color: #ffffff66;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: -7px -7px 10px #eeeeee44, 7px 7px 10px #00000011;
-            border-left: #ffffff66 1px solid;
-            border-top: #ffffff66 1px solid;
-            border-bottom: #00000017 1px solid;
-            border-right: #00000017 1px solid;
-        }
+pre {
+    background-color: #12121212;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
+    font-family: inherit;
+}
 
-        .project-card:hover {
-            box-shadow: -10px -10px 15px #eeeeee66, 10px 10px 15px #00000022;
-            transform: translateY(-1px);
-            transition: all 0.2s ease;
-        }
+/* Common card styling */
+.card-base {
+    background-color: #ffffff66;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: -7px -7px 10px #eeeeee44, 7px 7px 10px #00000011;
+    border-left: #ffffff66 1px solid;
+    border-top: #ffffff66 1px solid;
+    border-bottom: #00000017 1px solid;
+    border-right: #00000017 1px solid;
+}
 
-        .project-name {
+.card-base:hover {
+    box-shadow: -10px -10px 15px #eeeeee66, 10px 10px 15px #00000022;
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
+/* Common header styling */
+.header {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Timestamps */
+.timestamp {
+    font-size: 0.85em;
+    color: #666;
+    font-weight: normal;
+}
+
+/* Floating action buttons */
+.floating-btn {
+    position: fixed;
+    right: 20px;
+    background-color: #e8f4fd66;
+    color: #666;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.2em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.2s;
+    z-index: 1000;
+    text-decoration: none;
+}
+
+.floating-btn:hover {
+    background-color: #e8f4fdcc;
+    transform: translateY(-2px);
+}
+
+.floating-btn:visited {
+    color: #666;
+}
+/* Session navigation styles */
+.navigation {
+    background-color: #f8f9fa66;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+    box-shadow: -7px -7px 10px #eeeeee44, 7px 7px 10px #00000011;
+    border-left: #ffffff66 1px solid;
+    border-top: #ffffff66 1px solid;
+    border-bottom: #00000017 1px solid;
+    border-right: #00000017 1px solid;
+}
+
+.navigation h2 {
+    margin: 0 0 12px 0;
+    font-size: 1.2em;
+    color: #495057;
+}
+
+.session-nav {
+    margin-top: 1em;
+    display: grid;
+    gap: 8px;
+}
+
+.session-link {
+    padding: 8px 12px;
+    background-color: #ffffff66;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #495057;
+    transition: background-color 0.2s;
+}
+
+.session-link:hover {
+    background-color: #ffffff99;
+}
+
+.session-link-title {
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.session-link-meta {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-top: 2px;
+}
+
+/* Project-specific session navigation */
+.project-sessions {
+    margin-top: 15px;
+    border-top: 1px solid #dee2e6;
+    padding-top: 15px;
+}
+
+.project-sessions h4 {
+    margin: 0 0 10px 0;
+    font-size: 0.9em;
+    color: #495057;
+    font-weight: 600;
+}
+
+.project-sessions .session-link {
+    padding: 6px 8px;
+    font-size: 0.8em;
+    margin-bottom: 4px;
+}
+
+.project-sessions .session-link-title {
+    font-size: 0.85em;
+}
+
+.project-sessions .session-link-meta {
+    font-size: 0.75em;
+}
+/* Project card styles for index page */
+.project-list {
+    display: grid;
+    gap: 15px;
+}
+
+.project-card {
+    background-color: #ffffff66;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: -7px -7px 10px #eeeeee44, 7px 7px 10px #00000011;
+    border-left: #ffffff66 1px solid;
+    border-top: #ffffff66 1px solid;
+    border-bottom: #00000017 1px solid;
+    border-right: #00000017 1px solid;
+}
+
+.project-card:hover {
+    box-shadow: -10px -10px 15px #eeeeee66, 10px 10px 15px #00000022;
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
+.project-name {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 10px;
+    word-break: break-all;
+}
+
+.project-name a {
+    text-decoration: none;
+    color: #2196f3;
+}
+
+.project-name a:hover {
+    text-decoration: underline;
+}
+
+.project-stats {
+    color: #666;
+    font-size: 0.9em;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Summary section */
+.summary {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #ffffff66;
+    border-radius: 8px;
+    box-shadow: -7px -7px 10px #eeeeee44, 7px 7px 10px #00000011;
+    border-left: #ffffff66 1px solid;
+    border-top: #ffffff66 1px solid;
+    border-bottom: #00000017 1px solid;
+    border-right: #00000017 1px solid;
+}
+
+.summary-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.summary-stat {
+    text-align: center;
+}
+
+.summary-stat .number {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #2196f3;
+}
+
+.summary-stat .label {
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Session details styling within project cards */
+.project-sessions details {
+    margin-top: 15px;
+}
+
+.project-sessions details summary {
+    cursor: pointer;
+    color: #666;
+    font-size: 1.1em;
+    font-weight: 600;
+    padding: 8px 0;
+}
+
+.project-sessions details summary:hover {
+    color: #2196f3;
+}
+
+.project-sessions details[open] summary {
+    margin-bottom: 10px;
+}
+
+        /* Session navigation overrides for better text readability */
+        .project-sessions .session-link {
             font-size: 1.2em;
-            font-weight: 600;
-            margin-bottom: 10px;
-            word-break: break-all;
-        }
-
-        .project-name a {
-            text-decoration: none;
-            color: #2196f3;
-        }
-
-        .project-name a:hover {
-            text-decoration: underline;
-        }
-
-        .project-stats {
-            color: #666;
-            font-size: 0.9em;
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .stat {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .summary {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 15px;
-            background-color: #ffffff66;
-            border-radius: 8px;
-            box-shadow: -7px -7px 10px #eeeeee44, 7px 7px 10px #00000011;
-            border-left: #ffffff66 1px solid;
-            border-top: #ffffff66 1px solid;
-            border-bottom: #00000017 1px solid;
-            border-right: #00000017 1px solid;
-        }
-
-        .summary-stats {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .summary-stat {
-            text-align: center;
-        }
-
-        .summary-stat .number {
-            font-size: 1.5em;
-            font-weight: 600;
-            color: #2196f3;
-        }
-
-        .summary-stat .label {
-            color: #666;
-            font-size: 0.9em;
         }
     </style>
 </head>
@@ -141,6 +332,7 @@
         <div class='project-card'>
             <div class='project-name'>
                 <a href='-org-internal-tools-automation/combined_transcripts.html'>org/internal/tools/automation</a>
+                <span style="font-size: 0.6em; color:#666;">(← open combined transcript)</span>
             </div>
             <div class='project-stats'>
                 <div class='stat'>📁 12 transcript files</div>
@@ -150,11 +342,14 @@
                 
                 
             </div>
+
+            
         </div>
         
         <div class='project-card'>
             <div class='project-name'>
                 <a href='-user-workspace-my-web-app/combined_transcripts.html'>user/workspace/my/web/app</a>
+                <span style="font-size: 0.6em; color:#666;">(← open combined transcript)</span>
             </div>
             <div class='project-stats'>
                 <div class='stat'>📁 8 transcript files</div>
@@ -164,11 +359,14 @@
                 
                 
             </div>
+
+            
         </div>
         
         <div class='project-card'>
             <div class='project-name'>
                 <a href='data-analysis-project/combined_transcripts.html'>data-analysis-project</a>
+                <span style="font-size: 0.6em; color:#666;">(← open combined transcript)</span>
             </div>
             <div class='project-stats'>
                 <div class='stat'>📁 3 transcript files</div>
@@ -178,11 +376,14 @@
                 
                 
             </div>
+
+            
         </div>
         
         <div class='project-card'>
             <div class='project-name'>
                 <a href='claude-code-assistant/combined_transcripts.html'>claude-code-assistant</a>
+                <span style="font-size: 0.6em; color:#666;">(← open combined transcript)</span>
             </div>
             <div class='project-stats'>
                 <div class='stat'>📁 5 transcript files</div>
@@ -192,6 +393,8 @@
                 
                 
             </div>
+
+            
         </div>
         
     </div>

@@ -381,6 +381,7 @@ class TemplateProject:
         self.total_cache_read_tokens = project_data.get("total_cache_read_tokens", 0)
         self.latest_timestamp = project_data.get("latest_timestamp", "")
         self.earliest_timestamp = project_data.get("earliest_timestamp", "")
+        self.sessions = project_data.get("sessions", [])
 
         # Format display name (remove leading dash and convert dashes to slashes)
         self.display_name = self.name
@@ -513,6 +514,24 @@ class TemplateSummary:
             self.token_summary = " | ".join(token_parts)
 
 
+def generate_session_html(
+    messages: List[TranscriptEntry], session_id: str, title: Optional[str] = None
+) -> str:
+    """Generate HTML for a single session using Jinja2 templates."""
+    # Filter messages for this session only
+    session_messages = [
+        msg
+        for msg in messages
+        if hasattr(msg, "sessionId") and getattr(msg, "sessionId") == session_id
+    ]
+
+    if not session_messages:
+        return generate_html([], title or f"Session {session_id[:8]}")
+
+    # Use the existing generate_html function but with filtered messages
+    return generate_html(session_messages, title or f"Session {session_id[:8]}")
+
+
 def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) -> str:
     """Generate HTML from transcript messages using Jinja2 templates."""
     if not title:
@@ -624,7 +643,11 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
 
             # Get first user message content for preview
             first_user_message = ""
-            if message_type == "user" and hasattr(message, "message"):
+            if (
+                message_type == "user"
+                and hasattr(message, "message")
+                and not is_command_message
+            ):
                 first_user_message = extract_text_content(message.message.content)
 
             sessions[session_id] = {
@@ -900,7 +923,9 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
                 "summary": session_info["summary"],
                 "timestamp_range": timestamp_range,
                 "message_count": session_info["message_count"],
-                "first_user_message": session_info["first_user_message"],
+                "first_user_message": session_info["first_user_message"]
+                if session_info["first_user_message"] != ""
+                else "[No user message found in session.]",
                 "token_summary": token_summary,
             }
         )

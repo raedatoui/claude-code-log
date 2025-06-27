@@ -57,6 +57,11 @@ def convert_project_path_to_claude_dir(input_path: Path) -> Path:
     is_flag=True,
     help="Process all projects in ~/.claude/projects/ hierarchy and create linked HTML files",
 )
+@click.option(
+    "--no-individual-sessions",
+    is_flag=True,
+    help="Skip generating individual session HTML files (only create combined transcript)",
+)
 def main(
     input_path: Optional[Path],
     output: Optional[Path],
@@ -64,6 +69,7 @@ def main(
     from_date: Optional[str],
     to_date: Optional[str],
     all_projects: bool,
+    no_individual_sessions: bool,
 ) -> None:
     """Convert Claude transcript JSONL files to HTML.
 
@@ -123,14 +129,20 @@ def main(
                     f"Neither {input_path} nor {claude_path} exists"
                 )
 
-        output_path = convert_jsonl_to_html(input_path, output, from_date, to_date)
+        output_path = convert_jsonl_to_html(input_path, output, from_date, to_date, not no_individual_sessions)
         if input_path.is_file():
             click.echo(f"Successfully converted {input_path} to {output_path}")
         else:
             jsonl_count = len(list(input_path.glob("*.jsonl")))
-            click.echo(
-                f"Successfully combined {jsonl_count} transcript files from {input_path} to {output_path}"
-            )
+            if not no_individual_sessions:
+                session_files = list(input_path.glob("session-*.html"))
+                click.echo(
+                    f"Successfully combined {jsonl_count} transcript files from {input_path} to {output_path} and generated {len(session_files)} individual session files"
+                )
+            else:
+                click.echo(
+                    f"Successfully combined {jsonl_count} transcript files from {input_path} to {output_path}"
+                )
 
         if open_browser:
             click.launch(str(output_path))

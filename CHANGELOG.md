@@ -6,11 +6,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.2.9] - 2025-06-24
+
+### Added
+
+- **Individual Session Files**: Generate separate HTML files for each session with navigation links
+- **Cross-Session Summary Matching**: Fixed async summary generation by properly matching summaries from later sessions to their original sessions
+- **Session Navigation on Index Page**: Added expandable session lists with summaries and direct links to individual session files
+
+### Fixed
+
+- **Session Summary Display**: Session summaries now appear correctly on both index and transcript pages
+- **Session Ordering**: Sessions now appear in ascending chronological order (oldest first) on index page to match transcript page
+- **Type Safety**: Improved type checking consistency between index and transcript page processing
+
 ## [0.2.8] - 2025-06-23
+
+### Added
+
+- **Runtime Message Filtering**: JavaScript-powered filtering toolbar to show/hide message types
+  - Toggle visibility for user, assistant, system, tool use, tool results, thinking, and image messages
+  - Live message counts for each type
+  - Select All/None quick actions
+  - Floating filter button for easy access
 
 ### Changed
 
-- **Implement filtering by message type in transcripts**
+- **Enhanced UI Controls**: Added floating action buttons for better navigation
+  - Filter messages button with collapsible toolbar
+  - Toggle all details button for expanding/collapsing content
+  - Improved back-to-top button positioning
 
 
 ## [0.2.7] - 2025-06-21

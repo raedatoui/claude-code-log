@@ -23,14 +23,18 @@ uvx claude-code-log --open-browser
 ## Key Features
 
 - **Project Hierarchy Processing**: Process entire `~/.claude/projects/` directory with linked index page
+- **Individual Session Files**: Generate separate HTML files for each session with navigation links
 - **Single File or Directory Processing**: Convert individual JSONL files or specific directories
+- **Session Navigation**: Interactive table of contents with session summaries and quick navigation
+- **Token Usage Tracking**: Display token consumption for individual messages and session totals
+- **Runtime Message Filtering**: JavaScript-powered filtering to show/hide message types (user, assistant, system, tool use, etc.)
 - **Chronological Ordering**: All messages sorted by timestamp across sessions
-- **Session Demarcation**: Clear visual separators between different transcript sessions
+- **Cross-Session Summary Matching**: Properly match async-generated summaries to their original sessions
 - **Date Range Filtering**: Filter messages by date range using natural language (e.g., "today", "yesterday", "last week")
-- **Summary Support**: Display summary messages matched with corresponding sessions
-- **System Command Visibility**: Show system commands (like `init`) in expandable details
-- **Markdown Rendering**: Automatic markdown rendering in assistant message content
-- **Project Navigation**: Master index page with project statistics and quick navigation
+- **Rich Message Types**: Support for user/assistant messages, tool use/results, thinking content, images
+- **System Command Visibility**: Show system commands (like `init`) in expandable details with structured parsing
+- **Markdown Rendering**: Server-side markdown rendering with syntax highlighting using mistune
+- **Floating Navigation**: Always-available back-to-top button and filter controls
 - **Space-Efficient Layout**: Compact design optimized for content density
 - **CLI Interface**: Simple command-line tool using Click
 
@@ -57,6 +61,7 @@ This creates:
 
 - `~/.claude/projects/index.html` - Master index with project cards and statistics
 - `~/.claude/projects/project-name/combined_transcripts.html` - Individual project pages
+- `~/.claude/projects/project-name/session-{session-id}.html` - Individual session pages
 
 ### Single File or Directory Processing
 
@@ -160,42 +165,52 @@ When processing all projects, the tool generates:
 
 ```sh
 ~/.claude/projects/
-├── index.html                    # Master index with project cards
+├── index.html                           # Master index with project cards
 ├── project1/
-│   └── combined_transcripts.html # Individual project page
+│   ├── combined_transcripts.html        # Combined project page
+│   ├── session-{session-id}.html        # Individual session pages
+│   └── session-{session-id2}.html       # More session pages...
 ├── project2/
-│   └── combined_transcripts.html
+│   ├── combined_transcripts.html
+│   └── session-{session-id}.html
 └── ...
 ```
 
 ### Index Page Features
 
 - **Project Cards**: Each project shown as a clickable card with statistics
-- **Summary Statistics**: Total projects, transcript files, and message counts
+- **Session Navigation**: Expandable session list with summaries and quick access to individual session files
+- **Summary Statistics**: Total projects, transcript files, and message counts with token usage
 - **Recent Activity**: Projects sorted by last modification date
-- **Quick Navigation**: One-click access to any project's detailed transcript
+- **Quick Navigation**: One-click access to combined transcripts or individual sessions
 - **Clean URLs**: Readable project names converted from directory names
 
 ## Message Types Supported
 
 - **User Messages**: Regular user inputs and prompts
-- **Assistant Messages**: Claude's responses (when not filtered)
-- **Summary Messages**: Session summaries with special formatting
-- **System Commands**: Commands like `init` shown in expandable details
-- **Tool Use**: Tool invocations and results with proper formatting
+- **Assistant Messages**: Claude's responses with token usage display
+- **Summary Messages**: Session summaries with cross-session matching
+- **System Commands**: Commands like `init` shown in expandable details with structured parsing
+- **Tool Use**: Tool invocations with collapsible details and special TodoWrite rendering
+- **Tool Results**: Tool execution results with error handling
+- **Thinking Content**: Claude's internal reasoning processes
+- **Images**: Pasted images and screenshots
 
 ## HTML Output Features
 
 - **Responsive Design**: Works on desktop and mobile
-- **Syntax Highlighting**: Code blocks properly formatted
-- **Markdown Support**: Full markdown rendering including:
-  - Headers, lists, emphasis
+- **Runtime Message Filtering**: JavaScript controls to show/hide message types with live counts
+- **Session Navigation**: Interactive table of contents with session summaries and timestamp ranges
+- **Token Usage Display**: Individual message and session-level token consumption tracking
+- **Syntax Highlighting**: Code blocks properly formatted with markdown rendering
+- **Markdown Support**: Server-side rendering with mistune including:
+  - Headers, lists, emphasis, strikethrough
   - Code blocks and inline code
-  - Links and images
+  - Links, images, and tables
   - GitHub Flavored Markdown features
-- **Session Navigation**: Clear visual breaks between transcript sessions
-- **Command Visibility**: System commands shown with context but not cluttering the main view
-- **Tool Interactions**: Tool use and results displayed in collapsible sections
+- **Collapsible Content**: Tool use, system commands, and long content in expandable sections
+- **Floating Controls**: Always-available filter button, details toggle, and back-to-top navigation
+- **Cross-Session Features**: Summaries properly matched across async sessions
 
 ## Installation
 
@@ -216,16 +231,19 @@ uv run claude-code-log
 
 ## TODO
 
-- **In-page Filtering**: Client-side filtering and search
 - **Timeline view**: Show interaction on a timeline to get a better idea on timings and parallel calls - maybe Timeline.js optionally generated runtime?
 - document what questions does this library help answering
-- filter out system message from beginning of convo to prevent from being shown on session navigation instead of user's first prompt
-- integrate claude-trace request logs if present?
+- integrate `claude-trace` request logs if present?
 - use Anthropic's own types: <https://github.com/anthropics/anthropic-sdk-python/tree/main/src/anthropic/types> – can these be used to generate Pydantic classes though?
 - Shortcut / command to resume a specific conversation by session ID $ claude --resume 550e8400-e29b-41d4-a716-446655440000?
-- Split up transcripts by jsonl files (too) as the combined ones can get quite big and add navigation to the top level
 - Localised number formatting and timezone adjustment runtime? For this we'd need to make Jinja template variables more granular
 - get `cwd` from logs to be able to render the proper path for titles
 - handle `"isSidechain":true` for sub-agent Tasks
 - convert images to WebP as screenshots are often huge PNGs – this might be time consuming to keep redoing (so would also need some caching) and need heavy dependencies with compilation (unless there are fast pure Python conversation libraries? Or WASM?)
 - add special formatting for built-in tools: Bash, Glob, Grep, LS, exit_plan_mode, Read, Edit, MultiEdit, Write, NotebookRead, NotebookEdit, WebFetch, TodoRead, TodoWrite, WebSearch
+  - render Edit / MultiEdit as diff(s)?
+- do we need to handle compacted conversation?
+- Thinking block should have Markdown rendering as sometimes they have formatting
+- system blocks like `init` also don't render perfectly, losing new lines
+- add `ccusage` like daily summary and maybe some textual summary too based on Claude generate session summaries?
+- handle model change system message
