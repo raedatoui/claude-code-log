@@ -129,7 +129,9 @@ def main(
                     f"Neither {input_path} nor {claude_path} exists"
                 )
 
-        output_path = convert_jsonl_to_html(input_path, output, from_date, to_date, not no_individual_sessions)
+        output_path = convert_jsonl_to_html(
+            input_path, output, from_date, to_date, not no_individual_sessions
+        )
         if input_path.is_file():
             click.echo(f"Successfully converted {input_path} to {output_path}")
         else:

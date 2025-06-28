@@ -4,6 +4,7 @@
 from pathlib import Path
 import traceback
 from typing import List, Optional, Dict, Any
+from .utils import should_use_as_session_starter
 
 from .parser import (
     load_transcript,
@@ -141,13 +142,7 @@ def _collect_project_sessions(messages: List[TranscriptEntry]) -> List[Dict[str,
                 and hasattr(message, "message")
             ):
                 first_user_content = extract_text_content(message.message.content)
-                # Import and use the same system message filtering logic as the transcript page
-                from .renderer import is_system_message
-
-                if not is_system_message(first_user_content) and (
-                    "<command-name>" not in first_user_content
-                    or "<command-name>init" in first_user_content
-                ):
+                if should_use_as_session_starter(first_user_content):
                     sessions[session_id]["first_user_message"] = first_user_content[
                         :500
                     ]

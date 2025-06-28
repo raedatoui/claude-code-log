@@ -110,7 +110,9 @@ class EditResult(BaseModel):
     userModified: Optional[bool] = None
 
 
-ToolUseResult = Union[str, List[TodoItem], FileReadResult, CommandResult, TodoResult, EditResult]
+ToolUseResult = Union[
+    str, List[TodoItem], FileReadResult, CommandResult, TodoResult, EditResult
+]
 
 
 class BaseTranscriptEntry(BaseModel):

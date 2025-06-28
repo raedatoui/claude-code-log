@@ -57,7 +57,9 @@ class TestToggleFunctionality:
 
         # Check for toggle button
         assert 'id="toggleDetails"' in html, "Should contain toggle button"
-        assert 'class="toggle-details"' in html, "Should have toggle button styling"
+        assert 'class="toggle-details floating-btn"' in html, (
+            "Should have toggle button styling"
+        )
 
         # Check for JavaScript functionality
         assert "toggleAllDetails" in html, "Should contain toggle JavaScript function"
