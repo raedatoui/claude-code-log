@@ -102,20 +102,6 @@
     opacity: 1;
 }
 
-/* Floating filter button */
-.filter-messages {
-    bottom: 140px;
-}
-
 .filter-messages.active {
-    background-color: #fff3cd66;
-}
-
-/* Floating buttons positioning */
-.scroll-top {
-    bottom: 20px;
-}
-
-.toggle-details {
-    bottom: 80px;
+    background-color: #fff3cd;
 }
