@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.3.0] - 2025-06-29
+
+### Changed
+
+- **Add timeline functionality**
+- **Rewrite session starter prompt picking script and reuse between pages**
+- **Pull out CSS to composable modules + add session list to index page + docs update**
+
+
 ## [0.2.9] - 2025-06-24
 
 ### Added
