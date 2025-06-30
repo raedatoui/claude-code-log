@@ -36,7 +36,6 @@
             const timelineItems = [];
             const timelineGroups = [];
             const usedGroups = new Set();
-            const usedIds = new Set();
 
             // Clear existing mapping
             timelineIdToElement.clear();
@@ -52,25 +51,7 @@
 
                 const timestampEl = messageEl.querySelector('.timestamp');
                 if (!timestampEl) return; // Skip if no timestamp
-
                 const timestamp = timestampEl.textContent.trim();
-
-                // Generate unique ID
-                let messageId = messageEl.id;
-                if (!messageId || usedIds.has(messageId)) {
-                    messageId = `timeline-item-${index}-${Date.now()}`;
-                    // Ensure this generated ID is also unique
-                    let counter = 0;
-                    while (usedIds.has(messageId)) {
-                        messageId = `timeline-item-${index}-${Date.now()}-${counter}`;
-                        counter++;
-                    }
-                }
-                usedIds.add(messageId);
-
-                // Parse timestamp - format: "YYYY-MM-DD HH:MM:SS"
-                const parsedDate = parseTimestamp(timestamp);
-                if (!parsedDate) return; // Skip if timestamp can't be parsed
 
                 // Get message content preview
                 const contentEl = messageEl.querySelector('.content');
@@ -107,37 +88,33 @@
                 }
 
                 // Store mapping for click handling
-                timelineIdToElement.set(messageId, messageEl);
+                timelineIdToElement.set(index, messageEl);
+
+                // Strip content to make tooltip formatting more uniform
+                // TODO: this is very basic and TodoWrites have weird spacing so will need some more work
+                let title = contentEl.innerHTML.includes("<pre") ? contentEl.innerHTML : `<pre>${contentEl.innerHTML}</pre>`
+                if (title.includes("<details")) {
+                    title = title.replace(/(<summary>.*<\/summary>)/gs, '').replace(/<details class="collapsible-details">(.*?)<\/details>/gs, (m, p) => p)
+                }
+                title = title.replace(/<pre>[\s\r\n]+(.*?)[\s\r\n]+<\/pre>/gs, (m, p) => `<pre>${p}</pre>`)
 
                 // Create timeline item
                 timelineItems.push({
-                    id: messageId,
+                    id: index,
                     content: content || messageTypeGroups[messageType].content,
-                    start: parsedDate,
+                    start: timestamp,
                     group: messageType,
-                    title: `${messageTypeGroups[messageType].content}: ${content}`,
+                    tooltip: {
+                        // FIXME: This followMouse doesn't work for some reason and the tooltip box gets cut off for the bottom timeline boxes
+                        followMouse: true,
+                        overflowMethod: 'cap'
+                    },
+                    title,
                     className: `timeline-item-${messageType}`
                 });
             });
 
             return { items: timelineItems, groups: timelineGroups };
-        }
-
-        // Parse timestamp string to Date object
-        function parseTimestamp(timestamp) {
-            try {
-                // Expected format: "YYYY-MM-DD HH:MM:SS"
-                const [datePart, timePart] = timestamp.split(' ');
-                if (!datePart || !timePart) return null;
-
-                const [year, month, day] = datePart.split('-').map(Number);
-                const [hour, minute, second] = timePart.split(':').map(Number);
-
-                return new Date(year, month - 1, day, hour, minute, second || 0);
-            } catch (error) {
-                console.warn('Failed to parse timestamp:', timestamp, error);
-                return null;
-            }
         }
 
         // Filter timeline items based on current message filters
@@ -231,7 +208,6 @@
                 zoomMax: 1000 * 60 * 60 * 24 * 30, // 30 days
                 orientation: 'top',
                 align: 'left',
-                showTooltips: false,
                 margin: {
                     item: 2,
                     axis: 2

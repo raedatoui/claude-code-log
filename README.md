@@ -231,7 +231,6 @@ uv run claude-code-log
 
 ## TODO
 
-- **Timeline view**: Show interaction on a timeline to get a better idea on timings and parallel calls - maybe Timeline.js optionally generated runtime?
 - document what questions does this library help answering
 - integrate `claude-trace` request logs if present?
 - use Anthropic's own types: <https://github.com/anthropics/anthropic-sdk-python/tree/main/src/anthropic/types> – can these be used to generate Pydantic classes though?
@@ -247,3 +246,4 @@ uv run claude-code-log
 - system blocks like `init` also don't render perfectly, losing new lines
 - add `ccusage` like daily summary and maybe some textual summary too based on Claude generate session summaries?
 - handle model change system message
+– import logs from @claude Github Actions

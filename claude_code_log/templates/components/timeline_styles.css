@@ -118,3 +118,16 @@
 .vis-timeline .vis-custom-time {
     display: none !important;
 }
+
+.vis-tooltip {
+    max-width: 700px;
+    padding: 0 !important;
+}
+
+.vis-tooltip pre {
+    margin: 0;
+}
+
+.vis-tooltip img {
+    max-width: 700px;
+}
