@@ -28,14 +28,23 @@ from .utils import (
 )
 
 
-def format_timestamp(timestamp_str: str) -> str:
+def format_timestamp(timestamp_str: str | None) -> str:
     """Format ISO timestamp for display, converting to UTC."""
+    if timestamp_str is None:
+        return ""
     try:
         dt = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
         # Convert to UTC if timezone-aware
         if dt.tzinfo is not None:
-            dt = dt.utctimetuple()
-            dt = datetime(*dt[:6])  # Convert back to naive datetime in UTC
+            utc_timetuple = dt.utctimetuple()
+            dt = datetime(
+                utc_timetuple.tm_year,
+                utc_timetuple.tm_mon,
+                utc_timetuple.tm_mday,
+                utc_timetuple.tm_hour,
+                utc_timetuple.tm_min,
+                utc_timetuple.tm_sec,
+            )
         return dt.strftime("%Y-%m-%d %H:%M:%S")
     except (ValueError, AttributeError):
         return timestamp_str

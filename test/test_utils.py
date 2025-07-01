@@ -243,21 +243,21 @@ class TestEdgeCases:
         """Test that functions handle None input gracefully."""
         # Most functions should handle None by treating it as empty/false
         with pytest.raises(TypeError):
-            is_system_message(None)
+            is_system_message(None)  # type: ignore
         with pytest.raises(TypeError):
-            is_command_message(None)
+            is_command_message(None)  # type: ignore
         with pytest.raises(TypeError):
-            is_local_command_output(None)
+            is_local_command_output(None)  # type: ignore
 
     def test_functions_with_non_string_input(self):
         """Test that functions handle non-string input with TypeError."""
         # All of these should raise TypeError when using `in` with non-string types
         with pytest.raises(TypeError):
-            is_command_message(123)
+            is_command_message(123)  # type: ignore
         with pytest.raises(TypeError):
-            is_local_command_output(123)
+            is_local_command_output(123)  # type: ignore
         with pytest.raises(TypeError):
-            is_system_message(123)
+            is_system_message(123)  # type: ignore
 
     def test_should_skip_message_edge_cases(self):
         """Test edge cases for message skipping logic."""

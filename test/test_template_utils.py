@@ -175,7 +175,7 @@ class TestEdgeCases:
     def test_format_timestamp_none(self):
         """Test formatting None timestamp."""
         result = format_timestamp(None)
-        assert result is None  # The function returns None for None input
+        assert result == ""  # The function returns empty string for None input
 
     def test_extract_text_content_none(self):
         """Test extracting text content from None."""

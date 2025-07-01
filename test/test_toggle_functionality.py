@@ -1,7 +1,11 @@
 """Tests for the collapsible details toggle functionality."""
 
+from typing import Any, Dict, List
 from claude_code_log.models import (
     AssistantTranscriptEntry,
+    AssistantMessage,
+    UsageInfo,
+    parse_content_item,
 )
 from claude_code_log.renderer import generate_html
 
@@ -9,8 +13,31 @@ from claude_code_log.renderer import generate_html
 class TestToggleFunctionality:
     """Test collapsible details and toggle functionality."""
 
-    def _create_assistant_message(self, content_items):
+    def _create_assistant_message(
+        self, content_items: List[Dict[str, Any]]
+    ) -> AssistantTranscriptEntry:
         """Helper to create a properly structured AssistantTranscriptEntry."""
+        # Convert raw content items to proper ContentItem objects
+        parsed_content = [parse_content_item(item) for item in content_items]
+
+        # Create AssistantMessage with proper types
+        message = AssistantMessage(
+            id="msg_001",
+            type="message",
+            role="assistant",
+            model="claude-3-sonnet-20240229",
+            content=parsed_content,
+            stop_reason="end_turn",
+            stop_sequence=None,
+            usage=UsageInfo(
+                input_tokens=25,
+                cache_creation_input_tokens=0,
+                cache_read_input_tokens=0,
+                output_tokens=120,
+                service_tier="default",
+            ),
+        )
+
         return AssistantTranscriptEntry(
             type="assistant",
             timestamp="2025-06-14T10:00:00.000Z",
@@ -22,22 +49,7 @@ class TestToggleFunctionality:
             version="1.0.0",
             uuid="test_uuid",
             requestId="req_001",
-            message={
-                "id": "msg_001",
-                "type": "message",
-                "role": "assistant",
-                "model": "claude-3-sonnet-20240229",
-                "content": content_items,
-                "stop_reason": "end_turn",
-                "stop_sequence": None,
-                "usage": {
-                    "input_tokens": 25,
-                    "cache_creation_input_tokens": 0,
-                    "cache_read_input_tokens": 0,
-                    "output_tokens": 120,
-                    "service_tier": "default",
-                },
-            },
+            message=message,
         )
 
     def test_toggle_button_present_in_html(self):
@@ -167,8 +179,12 @@ class TestToggleFunctionality:
 
         html = generate_html([message], "Test Multiple")
 
-        # Should have multiple collapsible details
-        collapsible_count = html.count('class="collapsible-details"')
+        # Should have multiple collapsible details (only count actual HTML elements, not in JS)
+        import re
+
+        # Remove script tags and their content to avoid counting strings in JavaScript
+        html_without_scripts = re.sub(r"<script.*?</script>", "", html, flags=re.DOTALL)
+        collapsible_count = html_without_scripts.count('class="collapsible-details"')
         assert collapsible_count == 3, (
             f"Should have 3 collapsible details, got {collapsible_count}"
         )

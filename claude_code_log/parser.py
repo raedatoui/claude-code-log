@@ -18,8 +18,10 @@ from .models import (
 )
 
 
-def extract_text_content(content: Union[str, List[ContentItem]]) -> str:
+def extract_text_content(content: Union[str, List[ContentItem], None]) -> str:
     """Extract text content from Claude message content structure."""
+    if content is None:
+        return ""
     if isinstance(content, list):
         text_parts: List[str] = []
         for item in content:

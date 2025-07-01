@@ -97,7 +97,7 @@ HTML coverage reports are generated in `htmlcov/index.html`.
 
 - **Format code**: `ruff format`
 - **Lint and fix**: `ruff check --fix`
-- **Type checking**: `uv run pyright`
+- **Type checking**: `uv run pyright` and `uv run ty check`
 
 ### Testing & Style Guide
 
