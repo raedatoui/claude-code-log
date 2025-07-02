@@ -989,6 +989,13 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
                     tool_content_html = format_image_content(tool_item)
                 tool_message_type = "Image"
                 tool_css_class = "image"
+            else:
+                # Handle unknown content types
+                tool_content_html = (
+                    f"<p>Unknown content type: {escape_html(str(type(tool_item)))}</p>"
+                )
+                tool_message_type = "Unknown Content"
+                tool_css_class = "unknown"
 
             # Preserve sidechain context for tool/thinking/image content within sidechain messages
             if getattr(message, "isSidechain", False):
