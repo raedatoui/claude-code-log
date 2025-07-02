@@ -101,4 +101,5 @@ dev = [
     "pyright>=1.1.350",
     "vulture>=2.14",
     "ty>=0.0.1a12",
+    "pytest-playwright>=0.7.0",
 ]

@@ -28,7 +28,8 @@
             'tool_result': { id: 'tool_result', content: '🧰 Tool Result', style: 'background-color: #e8f5e8;' },
             'thinking': { id: 'thinking', content: '💭 Thinking', style: 'background-color: #fce4ec;' },
             'system': { id: 'system', content: '⚙️ System', style: 'background-color: #f5f5f5;' },
-            'image': { id: 'image', content: '🖼️ Image', style: 'background-color: #e1f5fe;' }
+            'image': { id: 'image', content: '🖼️ Image', style: 'background-color: #e1f5fe;' },
+            'sidechain': { id: 'sidechain', content: '🔗 Sub-assistant', style: 'background-color: #e8f5e8;' }
         };
 
         // Build timeline data from messages
@@ -44,10 +45,21 @@
             const messages = document.querySelectorAll('.message:not(.session-header)');
 
             messages.forEach((messageEl, index) => {
-                // Extract message data
-                const messageType = Array.from(messageEl.classList).find(cls =>
-                    Object.keys(messageTypeGroups).includes(cls)
-                ) || 'system';
+                // Extract message data - handle both simple and complex CSS classes
+                const classList = Array.from(messageEl.classList);
+                let messageType = 'system'; // Default fallback
+                
+                // Check for sidechain first (sub-assistant messages)
+                if (classList.includes('sidechain')) {
+                    messageType = 'sidechain';
+                } else if (classList.includes('system-warning') || classList.includes('system-error') || classList.includes('system-info')) {
+                    messageType = 'system';
+                } else {
+                    // Look for standard message types
+                    messageType = classList.find(cls =>
+                        ['user', 'assistant', 'tool_use', 'tool_result', 'thinking', 'system', 'image'].includes(cls)
+                    ) || 'system';
+                }
 
                 const timestampEl = messageEl.querySelector('.timestamp');
                 if (!timestampEl) return; // Skip if no timestamp
@@ -57,7 +69,17 @@
                 const contentEl = messageEl.querySelector('.content');
                 let content = '';
                 if (contentEl) {
-                    const textContent = contentEl.textContent || contentEl.innerText || '';
+                    let textContent = contentEl.textContent || contentEl.innerText || '';
+                    
+                    // For system messages, try to extract just the message without the prefix
+                    if (messageType === 'system') {
+                        // System messages often have format like "⚠️ System Warning: message content"
+                        const systemMatch = textContent.match(/^[⚠️❌ℹ️]?\s*System\s+\w+:\s*(.+)$/);
+                        if (systemMatch) {
+                            textContent = systemMatch[1];
+                        }
+                    }
+                    
                     content = textContent.length > 100 ? textContent.substring(0, 100) + '...' : textContent;
                 }
 
@@ -98,10 +120,32 @@
                 }
                 title = title.replace(/<pre>[\s\r\n]+(.*?)[\s\r\n]+<\/pre>/gs, (m, p) => `<pre>${p}</pre>`)
 
+                // Adjust content display based on message type
+                let displayContent = content || messageTypeGroups[messageType].content;
+                
+                // Check for sidechain context regardless of primary message type
+                if (classList.includes('sidechain')) {
+                    // Override group for sidechain messages, but preserve the content
+                    messageType = 'sidechain';
+                    
+                    // For sidechain messages, prefix with appropriate icon based on original type
+                    if (classList.includes('user')) {
+                        displayContent = '📝 ' + (content || 'Sub-assistant prompt');
+                    } else if (classList.includes('assistant')) {
+                        displayContent = '🔗 ' + (content || 'Sub-assistant response');
+                    } else if (classList.includes('tool_use')) {
+                        displayContent = '🔗 ' + (content || 'Sub-assistant tool use');
+                    } else if (classList.includes('tool_result')) {
+                        displayContent = '🔗 ' + (content || 'Sub-assistant tool result');
+                    } else {
+                        displayContent = '🔗 ' + (content || 'Sub-assistant');
+                    }
+                }
+
                 // Create timeline item
-                timelineItems.push({
+                const timelineItem = {
                     id: index,
-                    content: content || messageTypeGroups[messageType].content,
+                    content: displayContent,
                     start: timestamp,
                     group: messageType,
                     tooltip: {
@@ -111,7 +155,9 @@
                     },
                     title,
                     className: `timeline-item-${messageType}`
-                });
+                };
+                
+                timelineItems.push(timelineItem);
             });
 
             return { items: timelineItems, groups: timelineGroups };
@@ -213,7 +259,7 @@
                     axis: 2
                 },
                 groupOrder: (a, b) => {
-                    const order = ['user', 'assistant', 'tool_use', 'tool_result', 'thinking', 'system', 'image'];
+                    const order = ['user', 'assistant', 'sidechain', 'tool_use', 'tool_result', 'thinking', 'system', 'image'];
                     return order.indexOf(a.id) - order.indexOf(b.id);
                 }
             };

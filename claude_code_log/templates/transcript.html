@@ -31,6 +31,8 @@
             <button class="filter-toggle active" data-type="user">🤷 User <span class="count">(0)</span></button>
             <button class="filter-toggle active" data-type="assistant">🤖 Assistant <span
                     class="count">(0)</span></button>
+            <button class="filter-toggle active" data-type="sidechain">🔗 Sub-assistant <span
+                    class="count">(0)</span></button>
             <button class="filter-toggle active" data-type="system">⚙️ System <span class="count">(0)</span></button>
             <button class="filter-toggle active" data-type="tool_use">🛠️ Tool Use <span
                     class="count">(0)</span></button>
@@ -160,7 +162,7 @@
 
             // Count messages by type and update button labels
             function updateMessageCounts() {
-                const messageTypes = ['user', 'assistant', 'system', 'tool_use', 'tool_result', 'thinking', 'image'];
+                const messageTypes = ['user', 'assistant', 'sidechain', 'system', 'tool_use', 'tool_result', 'thinking', 'image'];
 
                 messageTypes.forEach(type => {
                     const messages = document.querySelectorAll(`.message.${type}:not(.session-header)`);
@@ -190,7 +192,17 @@
                 // Show/hide messages based on active toggle buttons
                 const allMessages = document.querySelectorAll('.message:not(.session-header)');
                 allMessages.forEach(message => {
-                    const shouldShow = activeTypes.some(type => message.classList.contains(type));
+                    let shouldShow = false;
+                    
+                    // Special handling for sidechain messages
+                    if (message.classList.contains('sidechain')) {
+                        // For sidechain messages, only show if sidechain filter is active
+                        shouldShow = activeTypes.includes('sidechain');
+                    } else {
+                        // For non-sidechain messages, show if any of their types are active
+                        shouldShow = activeTypes.some(type => message.classList.contains(type));
+                    }
+                    
                     if (shouldShow) {
                         message.classList.remove('filtered-hidden');
                     } else {
@@ -211,7 +223,7 @@
             }
 
             function updateVisibleCounts() {
-                const messageTypes = ['user', 'assistant', 'system', 'tool_use', 'tool_result', 'thinking', 'image'];
+                const messageTypes = ['user', 'assistant', 'sidechain', 'system', 'tool_use', 'tool_result', 'thinking', 'image'];
 
                 messageTypes.forEach(type => {
                     const visibleMessages = document.querySelectorAll(`.message.${type}:not(.session-header):not(.filtered-hidden)`);

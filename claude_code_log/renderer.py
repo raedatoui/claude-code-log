@@ -989,8 +989,10 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
                     tool_content_html = format_image_content(tool_item)
                 tool_message_type = "Image"
                 tool_css_class = "image"
-            else:
-                continue
+
+            # Preserve sidechain context for tool/thinking/image content within sidechain messages
+            if getattr(message, "isSidechain", False):
+                tool_css_class += " sidechain"
 
             tool_template_message = TemplateMessage(
                 message_type=tool_message_type,
