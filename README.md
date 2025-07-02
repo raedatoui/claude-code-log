@@ -29,14 +29,27 @@ uvx claude-code-log --open-browser
 - **Token Usage Tracking**: Display token consumption for individual messages and session totals
 - **Runtime Message Filtering**: JavaScript-powered filtering to show/hide message types (user, assistant, system, tool use, etc.)
 - **Chronological Ordering**: All messages sorted by timestamp across sessions
+- **Interactive timeline**: Generate an interactive, zoomable timeline grouped by message times to navigate conversations visually
 - **Cross-Session Summary Matching**: Properly match async-generated summaries to their original sessions
 - **Date Range Filtering**: Filter messages by date range using natural language (e.g., "today", "yesterday", "last week")
 - **Rich Message Types**: Support for user/assistant messages, tool use/results, thinking content, images
 - **System Command Visibility**: Show system commands (like `init`) in expandable details with structured parsing
 - **Markdown Rendering**: Server-side markdown rendering with syntax highlighting using mistune
 - **Floating Navigation**: Always-available back-to-top button and filter controls
-- **Space-Efficient Layout**: Compact design optimized for content density
 - **CLI Interface**: Simple command-line tool using Click
+
+## What Problems Does This Solve?
+
+This tool helps you answer questions like:
+
+- **"How can I review all my Claude Code conversations?"**
+- **"What did I work on with Claude yesterday/last week?"**
+- **"How much are my Claude Code sessions costing?"**
+- **"How can I search through my entire Claude Code history?"**
+- **"What tools did Claude use in this project?"**
+- **"How can I share my Claude Code conversation with others?"**
+- **"What's the timeline of my project development?"**
+- **"How can I analyse patterns in my Claude Code usage?"**
 
 ## Usage
 
@@ -52,15 +65,18 @@ claude-code-log --all-projects
 # Process all projects and open in browser
 claude-code-log --open-browser
 
-# Process all projects with date filtering
+# Process all projects with date filtering  
 claude-code-log --from-date "yesterday" --to-date "today"
 claude-code-log --from-date "last week"
+
+# Skip individual session files (only create combined transcripts)
+claude-code-log --no-individual-sessions
 ```
 
 This creates:
 
-- `~/.claude/projects/index.html` - Master index with project cards and statistics
-- `~/.claude/projects/project-name/combined_transcripts.html` - Individual project pages
+- `~/.claude/projects/index.html` - Top level index with project cards and statistics
+- `~/.claude/projects/project-name/combined_transcripts.html` - Individual project pages (these can be several megabytes)
 - `~/.claude/projects/project-name/session-{session-id}.html` - Individual session pages
 
 ### Single File or Directory Processing
@@ -220,10 +236,16 @@ Install using pip:
 pip install claude-code-log
 ```
 
+Or run directly with uvx (no installation required):
+
+```bash
+uvx claude-code-log
+```
+
 Or install from source:
 
 ```bash
-git clone https://github.com/your-username/claude-code-log.git
+git clone https://github.com/daaain/claude-code-log.git
 cd claude-code-log
 uv sync
 uv run claude-code-log
@@ -231,7 +253,6 @@ uv run claude-code-log
 
 ## TODO
 
-- document what questions does this library help answering
 - integrate `claude-trace` request logs if present?
 - Shortcut / command to resume a specific conversation by session ID $ claude --resume 550e8400-e29b-41d4-a716-446655440000?
 - Localised number formatting and timezone adjustment runtime? For this we'd need to make Jinja template variables more granular

@@ -8,25 +8,57 @@ This tool processes Claude Code transcript files (stored as JSONL) and generates
 
 ## Key Features
 
-- **Single File or Directory Processing**: Convert individual JSONL files or entire directories
-- **Chronological Ordering**: All messages sorted by timestamp across sessions
+- **Project Hierarchy Processing**: Process entire `~/.claude/projects/` directory with linked index page
+- **Individual Session Files**: Generate separate HTML files for each session with navigation links
+- **Single File or Directory Processing**: Convert individual JSONL files or specific directories
 - **Session Navigation**: Interactive table of contents with session summaries and quick navigation
 - **Token Usage Tracking**: Display token consumption for individual messages and session totals
-- **Timestamp Ranges**: Show first-to-last timestamp ranges for each session in navigation
-- **Rich Message Types**: Support for user/assistant messages, tool use/results, thinking content, images
+- **Runtime Message Filtering**: JavaScript-powered filtering to show/hide message types (user, assistant, system, tool use, etc.)
+- **Chronological Ordering**: All messages sorted by timestamp across sessions
+- **Cross-Session Summary Matching**: Properly match async-generated summaries to their original sessions
 - **Date Range Filtering**: Filter messages by date range using natural language (e.g., "today", "yesterday", "last week")
-- **Markdown Rendering**: Client-side markdown rendering with syntax highlighting
-- **Floating Navigation**: Always-available back-to-top button for easy navigation
-- **Space-Efficient Layout**: Compact design optimized for content density
+- **Rich Message Types**: Support for user/assistant messages, tool use/results, thinking content, images
+- **System Command Visibility**: Show system commands (like `init`) in expandable details with structured parsing
+- **Markdown Rendering**: Server-side markdown rendering with syntax highlighting using mistune
+- **Floating Navigation**: Always-available back-to-top button and filter controls
+- **Space-Efficient Layout**: Compact design optimised for content density
 - **CLI Interface**: Simple command-line tool using Click
 
 ## Usage
+
+### Default Behavior (Process All Projects)
+
+```bash
+# Process all projects in ~/.claude/projects/ (default behavior)
+claude-code-log
+
+# Explicitly process all projects
+claude-code-log --all-projects
+
+# Process all projects and open in browser
+claude-code-log --open-browser
+
+# Process all projects with date filtering
+claude-code-log --from-date "yesterday" --to-date "today"
+claude-code-log --from-date "last week"
+
+# Skip individual session files (only create combined transcripts)
+claude-code-log --no-individual-sessions
+```
+
+This creates:
+
+- `~/.claude/projects/index.html` - Master index with project cards and statistics
+- `~/.claude/projects/project-name/combined_transcripts.html` - Individual project pages
+- `~/.claude/projects/project-name/session-{session-id}.html` - Individual session pages
+
+### Single File or Directory Processing
 
 ```bash
 # Single file
 claude-code-log transcript.jsonl
 
-# Entire directory
+# Specific directory
 claude-code-log /path/to/transcript/directory
 
 # Custom output location
@@ -37,8 +69,6 @@ claude-code-log /path/to/directory --open-browser
 
 # Filter by date range (supports natural language)
 claude-code-log /path/to/directory --from-date "yesterday" --to-date "today"
-claude-code-log /path/to/directory --from-date "last week"
-claude-code-log /path/to/directory --to-date "2025-06-01"
 claude-code-log /path/to/directory --from-date "3 days ago" --to-date "yesterday"
 ```
 
@@ -47,7 +77,7 @@ claude-code-log /path/to/directory --from-date "3 days ago" --to-date "yesterday
 - `claude_code_log/parser.py` - Data extraction and parsing from JSONL files
 - `claude_code_log/renderer.py` - HTML generation and template rendering
 - `claude_code_log/converter.py` - High-level conversion orchestration
-- `claude_code_log/cli.py` - Command-line interface
+- `claude_code_log/cli.py` - Command-line interface with project discovery
 - `claude_code_log/models.py` - Pydantic models for transcript data structures
 - `claude_code_log/templates/` - Jinja2 HTML templates
   - `transcript.html` - Main transcript viewer template
@@ -58,13 +88,14 @@ claude-code-log /path/to/directory --from-date "3 days ago" --to-date "yesterday
 
 The project uses:
 
-- Python 3.12+
-- Click for CLI interface
-- Pydantic for data validation and parsing
+- Python 3.12+ with uv package management
+- Click for CLI interface and argument parsing
+- Pydantic for robust data modelling and validation
 - Jinja2 for HTML template rendering
 - dateparser for natural language date parsing
 - Standard library for JSON/HTML processing
-- Client-side: marked.js for markdown rendering
+- Minimal dependencies for portability
+- mistune for quick Markdown rendering
 
 ## Development Commands
 
