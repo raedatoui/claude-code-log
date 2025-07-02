@@ -19,16 +19,27 @@ from .models import (
 
 
 def extract_text_content(content: Union[str, List[ContentItem], None]) -> str:
-    """Extract text content from Claude message content structure."""
+    """Extract text content from Claude message content structure (supports both custom and Anthropic types)."""
     if content is None:
         return ""
     if isinstance(content, list):
         text_parts: List[str] = []
         for item in content:
+            # Handle both custom TextContent and official Anthropic TextBlock
             if isinstance(item, TextContent):
                 text_parts.append(item.text)
+            elif (
+                hasattr(item, "type")
+                and hasattr(item, "text")
+                and getattr(item, "type") == "text"
+            ):
+                # Official Anthropic TextBlock
+                text_parts.append(getattr(item, "text"))
             elif isinstance(item, ThinkingContent):
                 # Skip thinking content in main text extraction
+                continue
+            elif hasattr(item, "type") and getattr(item, "type") == "thinking":
+                # Skip official Anthropic thinking content too
                 continue
         return "\n".join(text_parts)
     else:
@@ -119,7 +130,7 @@ def load_transcript(jsonl_path: Path) -> List[TranscriptEntry]:
 
                     entry_type: str | None = entry_dict.get("type")
 
-                    if entry_type in ["user", "assistant", "summary"]:
+                    if entry_type in ["user", "assistant", "summary", "system"]:
                         # Parse using Pydantic models
                         entry = parse_transcript_entry(entry_dict)
                         messages.append(entry)

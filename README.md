@@ -233,11 +233,9 @@ uv run claude-code-log
 
 - document what questions does this library help answering
 - integrate `claude-trace` request logs if present?
-- use Anthropic's own types: <https://github.com/anthropics/anthropic-sdk-python/tree/main/src/anthropic/types> – can these be used to generate Pydantic classes though?
 - Shortcut / command to resume a specific conversation by session ID $ claude --resume 550e8400-e29b-41d4-a716-446655440000?
 - Localised number formatting and timezone adjustment runtime? For this we'd need to make Jinja template variables more granular
 - get `cwd` from logs to be able to render the proper path for titles
-- handle `"isSidechain":true` for sub-agent Tasks
 - convert images to WebP as screenshots are often huge PNGs – this might be time consuming to keep redoing (so would also need some caching) and need heavy dependencies with compilation (unless there are fast pure Python conversation libraries? Or WASM?)
 - add special formatting for built-in tools: Bash, Glob, Grep, LS, exit_plan_mode, Read, Edit, MultiEdit, Write, NotebookRead, NotebookEdit, WebFetch, TodoRead, TodoWrite, WebSearch
   - render Edit / MultiEdit as diff(s)?
@@ -245,5 +243,4 @@ uv run claude-code-log
 - Thinking block should have Markdown rendering as sometimes they have formatting
 - system blocks like `init` also don't render perfectly, losing new lines
 - add `ccusage` like daily summary and maybe some textual summary too based on Claude generate session summaries?
-- handle model change system message
 – import logs from @claude Github Actions

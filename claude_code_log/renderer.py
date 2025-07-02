@@ -13,6 +13,7 @@ from .models import (
     AssistantTranscriptEntry,
     TranscriptEntry,
     SummaryTranscriptEntry,
+    SystemTranscriptEntry,
     ContentItem,
     TextContent,
     ToolResultContent,
@@ -315,20 +316,64 @@ def render_message_content(
     rendered_parts: List[str] = []
 
     for item in content:
-        if type(item) is TextContent:
+        # Handle both custom and Anthropic types
+        item_type = getattr(item, "type", None)
+
+        if type(item) is TextContent or (
+            hasattr(item, "type") and hasattr(item, "text") and item_type == "text"
+        ):
+            # Handle both TextContent and Anthropic TextBlock
+            text_value = getattr(item, "text", str(item))
             if message_type == "user":
                 # User messages are shown as-is in preformatted blocks
-                escaped_text = escape_html(item.text)
+                escaped_text = escape_html(text_value)
                 rendered_parts.append("<pre>" + escaped_text + "</pre>")
             else:
                 # Assistant messages get markdown rendering
-                rendered_parts.append(render_markdown(item.text))
-        elif type(item) is ToolUseContent:
-            rendered_parts.append(format_tool_use_content(item))  # type: ignore
-        elif type(item) is ToolResultContent:
-            rendered_parts.append(format_tool_result_content(item))  # type: ignore
-        elif type(item) is ThinkingContent:
-            rendered_parts.append(format_thinking_content(item))  # type: ignore
+                rendered_parts.append(render_markdown(text_value))
+        elif type(item) is ToolUseContent or (
+            hasattr(item, "type") and item_type == "tool_use"
+        ):
+            # Handle both ToolUseContent and Anthropic ToolUseBlock
+            # Convert Anthropic type to our format if necessary
+            if not isinstance(item, ToolUseContent):
+                # Create a ToolUseContent from Anthropic ToolUseBlock
+                tool_use_item = ToolUseContent(
+                    type="tool_use",
+                    id=getattr(item, "id", ""),
+                    name=getattr(item, "name", ""),
+                    input=getattr(item, "input", {}),
+                )
+            else:
+                tool_use_item = item
+            rendered_parts.append(format_tool_use_content(tool_use_item))  # type: ignore
+        elif type(item) is ToolResultContent or (
+            hasattr(item, "type") and item_type == "tool_result"
+        ):
+            # Handle both ToolResultContent and Anthropic types
+            if not isinstance(item, ToolResultContent):
+                # Convert from Anthropic type if needed
+                tool_result_item = ToolResultContent(
+                    type="tool_result",
+                    tool_use_id=getattr(item, "tool_use_id", ""),
+                    content=getattr(item, "content", ""),
+                    is_error=getattr(item, "is_error", False),
+                )
+            else:
+                tool_result_item = item
+            rendered_parts.append(format_tool_result_content(tool_result_item))  # type: ignore
+        elif type(item) is ThinkingContent or (
+            hasattr(item, "type") and item_type == "thinking"
+        ):
+            # Handle both ThinkingContent and Anthropic ThinkingBlock
+            if not isinstance(item, ThinkingContent):
+                # Convert from Anthropic type if needed
+                thinking_item = ThinkingContent(
+                    type="thinking", thinking=getattr(item, "thinking", str(item))
+                )
+            else:
+                thinking_item = item
+            rendered_parts.append(format_thinking_content(thinking_item))  # type: ignore
         elif type(item) is ImageContent:
             rendered_parts.append(format_image_content(item))  # type: ignore
 
@@ -597,6 +642,30 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
         if isinstance(message, SummaryTranscriptEntry):
             continue
 
+        # Handle system messages separately
+        if isinstance(message, SystemTranscriptEntry):
+            session_id = getattr(message, "sessionId", "unknown")
+            timestamp = getattr(message, "timestamp", "")
+            formatted_timestamp = format_timestamp(timestamp) if timestamp else ""
+
+            # Create level-specific styling and icons
+            level = getattr(message, "level", "info")
+            level_icon = {"warning": "⚠️", "error": "❌", "info": "ℹ️"}.get(level, "ℹ️")
+            level_css = f"system system-{level}"
+
+            escaped_content = escape_html(message.content)
+            content_html = f"<strong>{level_icon} System {level.title()}:</strong> {escaped_content}"
+
+            system_template_message = TemplateMessage(
+                message_type=f"System {level.title()}",
+                content_html=content_html,
+                formatted_timestamp=formatted_timestamp,
+                css_class=level_css,
+                session_id=session_id,
+            )
+            template_messages.append(system_template_message)
+            continue
+
         # Extract message content first to check for duplicates
         # Must be UserTranscriptEntry or AssistantTranscriptEntry
         message_content = message.message.content  # type: ignore
@@ -609,10 +678,14 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
         if isinstance(message_content, list):
             text_only_items: List[ContentItem] = []
             for item in message_content:
-                if isinstance(
+                # Check for both custom types and Anthropic types
+                item_type = getattr(item, "type", None)
+                is_tool_item = isinstance(
                     item,
                     (ToolUseContent, ToolResultContent, ThinkingContent, ImageContent),
-                ):
+                ) or item_type in ("tool_use", "tool_result", "thinking", "image")
+
+                if is_tool_item:
                     tool_items.append(item)
                 else:
                     text_only_items.append(item)
@@ -816,8 +889,16 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
             message_type = "system"
         else:
             css_class = f"{message_type}"
-            # Render only text content for the main message
             content_html = render_message_content(text_only_content, message_type)
+            if getattr(message, "isSidechain", False):
+                css_class = f"{message_type} sidechain"
+
+                # Update message type for display
+                message_type = (
+                    "📝 Sub-assistant prompt"
+                    if message_type == "user"
+                    else "🔗 Sub-assistant"
+                )
 
         # Create main message (if it has text content)
         if text_only_content and (
@@ -844,27 +925,68 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
                 format_timestamp(tool_timestamp) if tool_timestamp else ""
             )
 
-            if isinstance(tool_item, ToolUseContent):
-                tool_content_html = format_tool_use_content(tool_item)
-                escaped_name = escape_html(tool_item.name)
-                escaped_id = escape_html(tool_item.id)
-                if tool_item.name == "TodoWrite":
+            # Handle both custom types and Anthropic types
+            item_type = getattr(tool_item, "type", None)
+
+            if isinstance(tool_item, ToolUseContent) or item_type == "tool_use":
+                # Convert Anthropic type to our format if necessary
+                if not isinstance(tool_item, ToolUseContent):
+                    tool_use_converted = ToolUseContent(
+                        type="tool_use",
+                        id=getattr(tool_item, "id", ""),
+                        name=getattr(tool_item, "name", ""),
+                        input=getattr(tool_item, "input", {}),
+                    )
+                else:
+                    tool_use_converted = tool_item
+
+                tool_content_html = format_tool_use_content(tool_use_converted)
+                escaped_name = escape_html(tool_use_converted.name)
+                escaped_id = escape_html(tool_use_converted.id)
+                if tool_use_converted.name == "TodoWrite":
                     tool_message_type = f"📝 Todo List (ID: {escaped_id})"
                 else:
-                    tool_message_type = f"Tool use: {escaped_name} (ID: {escaped_id})"
+                    tool_message_type = f"Tool Use: {escaped_name} (ID: {escaped_id})"
                 tool_css_class = "tool_use"
-            elif isinstance(tool_item, ToolResultContent):
-                tool_content_html = format_tool_result_content(tool_item)
-                escaped_id = escape_html(tool_item.tool_use_id)
-                error_indicator = " (🚨 Error)" if tool_item.is_error else ""
+            elif isinstance(tool_item, ToolResultContent) or item_type == "tool_result":
+                # Convert Anthropic type to our format if necessary
+                if not isinstance(tool_item, ToolResultContent):
+                    tool_result_converted = ToolResultContent(
+                        type="tool_result",
+                        tool_use_id=getattr(tool_item, "tool_use_id", ""),
+                        content=getattr(tool_item, "content", ""),
+                        is_error=getattr(tool_item, "is_error", False),
+                    )
+                else:
+                    tool_result_converted = tool_item
+
+                tool_content_html = format_tool_result_content(tool_result_converted)
+                escaped_id = escape_html(tool_result_converted.tool_use_id)
+                error_indicator = (
+                    " (🚨 Error)" if tool_result_converted.is_error else ""
+                )
                 tool_message_type = f"Tool Result{error_indicator}: {escaped_id}"
                 tool_css_class = "tool_result"
-            elif isinstance(tool_item, ThinkingContent):
-                tool_content_html = format_thinking_content(tool_item)
+            elif isinstance(tool_item, ThinkingContent) or item_type == "thinking":
+                # Convert Anthropic type to our format if necessary
+                if not isinstance(tool_item, ThinkingContent):
+                    thinking_converted = ThinkingContent(
+                        type="thinking",
+                        thinking=getattr(tool_item, "thinking", str(tool_item)),
+                    )
+                else:
+                    thinking_converted = tool_item
+
+                tool_content_html = format_thinking_content(thinking_converted)
                 tool_message_type = "Thinking"
                 tool_css_class = "thinking"
-            elif isinstance(tool_item, ImageContent):
-                tool_content_html = format_image_content(tool_item)
+            elif isinstance(tool_item, ImageContent) or item_type == "image":
+                # Convert Anthropic type to our format if necessary
+                if not isinstance(tool_item, ImageContent):
+                    # For now, skip Anthropic image types - we'll handle when we encounter them
+                    continue
+                else:
+                    tool_content_html = format_image_content(tool_item)
                 tool_message_type = "Image"
                 tool_css_class = "image"
             else:

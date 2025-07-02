@@ -30,7 +30,8 @@ code {
     background-color: #f5f5f5;
     padding: 2px 4px;
     border-radius: 3px;
-    font-family: inherit;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Ubuntu Mono', 'Cascadia Code', 'Menlo', 'Consolas', monospace;
+    line-height: 1.5;
 }
 
 pre {
@@ -40,7 +41,8 @@ pre {
     white-space: pre-wrap;
     word-wrap: break-word;
     word-break: break-word;
-    font-family: inherit;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', 'Ubuntu Mono', 'Cascadia Code', 'Menlo', 'Consolas', monospace;
+    line-height: 1.5;
 }
 
 /* Common card styling */
@@ -157,12 +159,45 @@ pre {
     border-left-color: #ff9800;
 }
 
+.system-warning {
+    border-left-color: #ff9800;
+    background-color: #fff3e088;
+}
+
+.system-error {
+    border-left-color: #f44336;
+    background-color: #ffebee88;
+}
+
+.system-info {
+    border-left-color: #2196f3;
+    background-color: #e3f2fd88;
+}
+
 .tool_use {
     border-left-color: #e91e63;
 }
 
 .tool_result {
     border-left-color: #4caf50;
+}
+
+/* Sidechain message styling */
+.sidechain {
+    opacity: 0.85;
+    background-color: #f8f9fa88;
+    border-left-width: 2px;
+    border-left-style: dashed;
+}
+
+.sidechain .sidechain-indicator {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    padding: 2px 6px;
+    background-color: #e9ecef88;
+    border-radius: 3px;
+    display: inline-block;
 }
 
 .thinking {
@@ -196,7 +231,7 @@ pre {
     word-wrap: break-word;
 }
 
-.content > pre {
+.content>pre {
     background-color: transparent;
     padding: 0;
     border-radius: 0;
@@ -309,7 +344,6 @@ details summary {
     background-color: transparent;
     padding: 0;
     margin: 0;
-    font-size: 0.9em;
     color: #555;
     line-height: 1.3;
     white-space: pre-wrap;
@@ -718,6 +752,19 @@ details summary {
 .vis-timeline .vis-custom-time {
     display: none !important;
 }
+
+.vis-tooltip {
+    max-width: 700px;
+    padding: 0 !important;
+}
+
+.vis-tooltip pre {
+    margin: 0;
+}
+
+.vis-tooltip img {
+    max-width: 700px;
+}
     </style>
 </head>
 
@@ -763,7 +810,6 @@ details summary {
             const timelineItems = [];
             const timelineGroups = [];
             const usedGroups = new Set();
-            const usedIds = new Set();
 
             // Clear existing mapping
             timelineIdToElement.clear();
@@ -779,25 +825,7 @@ details summary {
 
                 const timestampEl = messageEl.querySelector('.timestamp');
                 if (!timestampEl) return; // Skip if no timestamp
-
                 const timestamp = timestampEl.textContent.trim();
-
-                // Generate unique ID
-                let messageId = messageEl.id;
-                if (!messageId || usedIds.has(messageId)) {
-                    messageId = `timeline-item-${index}-${Date.now()}`;
-                    // Ensure this generated ID is also unique
-                    let counter = 0;
-                    while (usedIds.has(messageId)) {
-                        messageId = `timeline-item-${index}-${Date.now()}-${counter}`;
-                        counter++;
-                    }
-                }
-                usedIds.add(messageId);
-
-                // Parse timestamp - format: "YYYY-MM-DD HH:MM:SS"
-                const parsedDate = parseTimestamp(timestamp);
-                if (!parsedDate) return; // Skip if timestamp can't be parsed
 
                 // Get message content preview
                 const contentEl = messageEl.querySelector('.content');
@@ -834,37 +862,33 @@ details summary {
                 }
 
                 // Store mapping for click handling
-                timelineIdToElement.set(messageId, messageEl);
+                timelineIdToElement.set(index, messageEl);
+
+                // Strip content to make tooltip formatting more uniform
+                // TODO: this is very basic and TodoWrites have weird spacing so will need some more work
+                let title = contentEl.innerHTML.includes("<pre") ? contentEl.innerHTML : `<pre>${contentEl.innerHTML}</pre>`
+                if (title.includes("<details")) {
+                    title = title.replace(/(<summary>.*<\/summary>)/gs, '').replace(/<details class="collapsible-details">(.*?)<\/details>/gs, (m, p) => p)
+                }
+                title = title.replace(/<pre>[\s\r\n]+(.*?)[\s\r\n]+<\/pre>/gs, (m, p) => `<pre>${p}</pre>`)
 
                 // Create timeline item
                 timelineItems.push({
-                    id: messageId,
+                    id: index,
                     content: content || messageTypeGroups[messageType].content,
-                    start: parsedDate,
+                    start: timestamp,
                     group: messageType,
-                    title: `${messageTypeGroups[messageType].content}: ${content}`,
+                    tooltip: {
+                        // FIXME: This followMouse doesn't work for some reason and the tooltip box gets cut off for the bottom timeline boxes
+                        followMouse: true,
+                        overflowMethod: 'cap'
+                    },
+                    title,
                     className: `timeline-item-${messageType}`
                 });
             });
 
             return { items: timelineItems, groups: timelineGroups };
-        }
-
-        // Parse timestamp string to Date object
-        function parseTimestamp(timestamp) {
-            try {
-                // Expected format: "YYYY-MM-DD HH:MM:SS"
-                const [datePart, timePart] = timestamp.split(' ');
-                if (!datePart || !timePart) return null;
-
-                const [year, month, day] = datePart.split('-').map(Number);
-                const [hour, minute, second] = timePart.split(':').map(Number);
-
-                return new Date(year, month - 1, day, hour, minute, second || 0);
-            } catch (error) {
-                console.warn('Failed to parse timestamp:', timestamp, error);
-                return null;
-            }
         }
 
         // Filter timeline items based on current message filters
@@ -958,7 +982,6 @@ details summary {
                 zoomMax: 1000 * 60 * 60 * 24 * 30, // 30 days
                 orientation: 'top',
                 align: 'left',
-                showTooltips: false,
                 margin: {
                     item: 2,
                     axis: 2
