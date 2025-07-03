@@ -26,6 +26,8 @@ from .utils import (
     is_command_message,
     is_local_command_output,
     should_skip_message,
+    should_use_as_session_starter,
+    extract_init_command_description,
 )
 
 
@@ -720,9 +722,10 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
             if (
                 message_type == "user"
                 and hasattr(message, "message")
-                and not is_command_message(text_content)
+                and should_use_as_session_starter(text_content)
             ):
-                first_user_message = extract_text_content(message.message.content)
+                content = extract_text_content(message.message.content)
+                first_user_message = extract_init_command_description(content)
 
             sessions[session_id] = {
                 "id": session_id,
@@ -762,9 +765,12 @@ def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None) 
         # Update first user message if this is a user message and we don't have one yet
         elif message_type == "user" and not sessions[session_id]["first_user_message"]:
             if hasattr(message, "message"):
-                sessions[session_id]["first_user_message"] = extract_text_content(
-                    message.message.content
-                )[:500]  # type: ignore
+                first_user_content = extract_text_content(message.message.content)
+                if should_use_as_session_starter(first_user_content):
+                    preview_content = extract_init_command_description(
+                        first_user_content
+                    )
+                    sessions[session_id]["first_user_message"] = preview_content[:500]
 
         sessions[session_id]["message_count"] += 1
 

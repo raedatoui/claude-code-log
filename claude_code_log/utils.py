@@ -39,6 +39,17 @@ def should_skip_message(text_content: str) -> bool:
     return is_system and not is_command
 
 
+def extract_init_command_description(text_content: str) -> str:
+    """
+    Extract a meaningful description from init command content.
+
+    Returns a user-friendly description for init commands instead of raw XML.
+    """
+    if "<command-name>init" in text_content and "<command-contents>" in text_content:
+        return "Claude Initializes Codebase Documentation Guide (/init command)"
+    return text_content
+
+
 def should_use_as_session_starter(text_content: str) -> bool:
     """
     Determine if a user message should be used as a session starter preview.

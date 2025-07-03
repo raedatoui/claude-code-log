@@ -189,8 +189,8 @@ class TestTemplateRendering:
         html_content = html_file.read_text()
 
         # Check timestamp format (YYYY-MM-DD HH:MM:SS)
-        assert "2025-06-14 10:00:00" in html_content
-        assert "2025-06-14 10:00:30" in html_content
+        assert "2025-07-03 15:50:07" in html_content
+        assert "2025-07-03 15:52:07" in html_content
         assert "class='timestamp'" in html_content
 
     def test_index_template_rendering(self):

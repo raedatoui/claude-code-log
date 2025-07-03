@@ -34,6 +34,7 @@
 
         // Build timeline data from messages
         function buildTimelineData() {
+            let latestTimeString = '1970-01-01 00:00:00';
             const timelineItems = [];
             const timelineGroups = [];
             const usedGroups = new Set();
@@ -48,7 +49,7 @@
                 // Extract message data - handle both simple and complex CSS classes
                 const classList = Array.from(messageEl.classList);
                 let messageType = 'system'; // Default fallback
-                
+
                 // Check for sidechain first (sub-assistant messages)
                 if (classList.includes('sidechain')) {
                     messageType = 'sidechain';
@@ -64,13 +65,14 @@
                 const timestampEl = messageEl.querySelector('.timestamp');
                 if (!timestampEl) return; // Skip if no timestamp
                 const timestamp = timestampEl.textContent.trim();
+                if (timestamp > latestTimeString) latestTimeString = timestamp;
 
                 // Get message content preview
                 const contentEl = messageEl.querySelector('.content');
                 let content = '';
                 if (contentEl) {
                     let textContent = contentEl.textContent || contentEl.innerText || '';
-                    
+
                     // For system messages, try to extract just the message without the prefix
                     if (messageType === 'system') {
                         // System messages often have format like "⚠️ System Warning: message content"
@@ -79,7 +81,7 @@
                             textContent = systemMatch[1];
                         }
                     }
-                    
+
                     content = textContent.length > 100 ? textContent.substring(0, 100) + '...' : textContent;
                 }
 
@@ -122,12 +124,12 @@
 
                 // Adjust content display based on message type
                 let displayContent = content || messageTypeGroups[messageType].content;
-                
+
                 // Check for sidechain context regardless of primary message type
                 if (classList.includes('sidechain')) {
                     // Override group for sidechain messages, but preserve the content
                     messageType = 'sidechain';
-                    
+
                     // For sidechain messages, prefix with appropriate icon based on original type
                     if (classList.includes('user')) {
                         displayContent = '📝 ' + (content || 'Sub-assistant prompt');
@@ -156,11 +158,15 @@
                     title,
                     className: `timeline-item-${messageType}`
                 };
-                
+
                 timelineItems.push(timelineItem);
             });
 
-            return { items: timelineItems, groups: timelineGroups };
+            // Set timeline window to show last hour by default
+            const timelineEnd = new Date(latestTimeString);
+            const timelineStart = new Date(timelineEnd.getTime() - 60 * 60 * 1000); // 1 hour before latest
+
+            return { items: timelineItems, groups: timelineGroups, timelineEnd, timelineStart };
         }
 
         // Filter timeline items based on current message filters
@@ -235,15 +241,11 @@
             }
 
             // Build timeline data
-            const timelineData = buildTimelineData();
-            if (timelineData.items.length === 0) {
+            const { items, groups, timelineEnd, timelineStart } = buildTimelineData();
+            if (items.length === 0) {
                 console.warn('No timeline items found');
                 return;
             }
-
-            // Create DataSets
-            items = new vis.DataSet(timelineData.items);
-            groups = new vis.DataSet(timelineData.groups);
 
             // Timeline options
             const options = {
@@ -252,6 +254,8 @@
                 showCurrentTime: true,
                 zoomMin: 1000 * 1, // 1 second
                 zoomMax: 1000 * 60 * 60 * 24 * 30, // 30 days
+                start: timelineStart,
+                end: timelineEnd,
                 orientation: 'top',
                 align: 'left',
                 margin: {
@@ -265,7 +269,7 @@
             };
 
             // Create timeline
-            timeline = new vis.Timeline(container, items, groups, options);
+            timeline = new vis.Timeline(container, new vis.DataSet(items), new vis.DataSet(groups), options);
 
             // Add event listeners
             timeline.on('select', onTimelineSelect);
@@ -273,7 +277,7 @@
             // Apply current filters
             applyFilters();
 
-            console.log('Timeline initialized with', timelineData.items.length, 'items and', timelineData.groups.length, 'groups');
+            console.log('Timeline initialized with', items.length, 'items and', groups.length, 'groups');
         }
 
         // Load vis-timeline library dynamically

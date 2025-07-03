@@ -4,7 +4,7 @@
 from pathlib import Path
 import traceback
 from typing import List, Optional, Dict, Any
-from .utils import should_use_as_session_starter
+from .utils import should_use_as_session_starter, extract_init_command_description
 
 from .parser import (
     load_transcript,
@@ -143,9 +143,10 @@ def _collect_project_sessions(messages: List[TranscriptEntry]) -> List[Dict[str,
             ):
                 first_user_content = extract_text_content(message.message.content)
                 if should_use_as_session_starter(first_user_content):
-                    sessions[session_id]["first_user_message"] = first_user_content[
-                        :500
-                    ]
+                    preview_content = extract_init_command_description(
+                        first_user_content
+                    )
+                    sessions[session_id]["first_user_message"] = preview_content[:500]
 
     # Convert to list format with formatted timestamps
     session_list: List[Dict[str, Any]] = []

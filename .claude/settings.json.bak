@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ruff format"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ruff check --fix"
+          },
+          {
+            "type": "command",
+            "command": "uv run ty check"
+          },
+          {
+            "type": "command",
+            "command": "uv run pyright"
+          },
+          {
+            "type": "command",
+            "command": "uv run pytest"
+          }
+        ]
+      }
+    ]
+  }
+}
