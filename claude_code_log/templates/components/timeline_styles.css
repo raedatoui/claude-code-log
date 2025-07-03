@@ -121,13 +121,21 @@
 
 .vis-tooltip {
     max-width: 700px;
-    padding: 0 !important;
+    padding: 1em !important;
+    white-space: normal !important;
+    font-family: inherit !important;
 }
 
 .vis-tooltip pre {
     margin: 0;
+    padding: 0;
+    background-color: transparent;
 }
 
 .vis-tooltip img {
     max-width: 700px;
+}
+
+.vis-tooltip div {
+    white-space: normal;
 }

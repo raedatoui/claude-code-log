@@ -114,13 +114,17 @@
                 // Store mapping for click handling
                 timelineIdToElement.set(index, messageEl);
 
-                // Strip content to make tooltip formatting more uniform
-                // TODO: this is very basic and TodoWrites have weird spacing so will need some more work
-                let title = contentEl.innerHTML.includes("<pre") ? contentEl.innerHTML : `<pre>${contentEl.innerHTML}</pre>`
+                // Format tooltip content with proper containment and styling
+                let title = contentEl.innerHTML;
+                title = title.includes("<pre") ? title : `<pre>${title}</pre>`;
+
+                // Clean up collapsible details for tooltip display
                 if (title.includes("<details")) {
                     title = title.replace(/(<summary>.*<\/summary>)/gs, '').replace(/<details class="collapsible-details">(.*?)<\/details>/gs, (m, p) => p)
                 }
-                title = title.replace(/<pre>[\s\r\n]+(.*?)[\s\r\n]+<\/pre>/gs, (m, p) => `<pre>${p}</pre>`)
+
+                // Clean up excessive whitespace in pre tags
+                title = title.replace(/<pre([^>]*)>[\s\r\n]+(.*?)[\s\r\n]+<\/pre>/gs, (m, attrs, content) => `<pre${attrs}>${content}</pre>`)
 
                 // Adjust content display based on message type
                 let displayContent = content || messageTypeGroups[messageType].content;
@@ -150,11 +154,6 @@
                     content: displayContent,
                     start: timestamp,
                     group: messageType,
-                    tooltip: {
-                        // FIXME: This followMouse doesn't work for some reason and the tooltip box gets cut off for the bottom timeline boxes
-                        followMouse: true,
-                        overflowMethod: 'cap'
-                    },
                     title,
                     className: `timeline-item-${messageType}`
                 };
@@ -195,7 +194,6 @@
             const filteredItems = items.get().filter(item => {
                 return activeTypes.includes(item.group);
             });
-
             timeline.setItems(new vis.DataSet(filteredItems));
         }
 
@@ -258,6 +256,11 @@
                 end: timelineEnd,
                 orientation: 'top',
                 align: 'left',
+                tooltip: {
+                    // FIXME: This followMouse doesn't work for some reason and the tooltip box gets cut off for the bottom timeline boxes
+                    followMouse: true,
+                    overflowMethod: 'cap'
+                },
                 margin: {
                     item: 2,
                     axis: 2
@@ -270,6 +273,9 @@
 
             // Create timeline
             timeline = new vis.Timeline(container, new vis.DataSet(items), new vis.DataSet(groups), options);
+
+            // Make timeline available globally for debugging
+            window.timeline = timeline;
 
             // Add event listeners
             timeline.on('select', onTimelineSelect);
