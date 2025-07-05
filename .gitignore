@@ -178,3 +178,4 @@ test_output
 .DS_Store
 test/test_data/*.html
 .claude-trace
+.specstory

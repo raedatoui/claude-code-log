@@ -253,6 +253,32 @@ uv run claude-code-log
 
 ## TODO
 
+- handle new(?) message format
+
+```sh
+9 validation errors for UserTranscriptEntry
+toolUseResult.str
+  Input should be a valid string [type=string_type, input_value=[{'type': 'text', 'text':...it could be acquired.'}], input_type=list]
+toolUseResult.list[TodoItem].0.id
+  Field required [type=missing, input_value={'type': 'text', 'text': ... it could be acquired.'}, input_type=dict]
+toolUseResult.list[TodoItem].0.content
+  Field required [type=missing, input_value={'type': 'text', 'text': ... it could be acquired.'}, input_type=dict]
+toolUseResult.list[TodoItem].0.status
+  Field required [type=missing, input_value={'type': 'text', 'text': ... it could be acquired.'}, input_type=dict]
+toolUseResult.list[TodoItem].0.priority
+  Field required [type=missing, input_value={'type': 'text', 'text': ... it could be acquired.'}, input_type=dict]
+toolUseResult.FileReadResult
+  Input should be a valid dictionary or instance of FileReadResult [type=model_type, input_value=[{'type': 'text', 'text':...it could be acquired.'}], input_type=list]
+toolUseResult.CommandResult
+  Input should be a valid dictionary or instance of CommandResult [type=model_type, input_value=[{'type': 'text', 'text':...it could be acquired.'}], input_type=list]
+toolUseResult.TodoResult
+  Input should be a valid dictionary or instance of TodoResult [type=model_type, input_value=[{'type': 'text', 'text':...it could be acquired.'}], input_type=list]
+toolUseResult.EditResult
+  Input should be a valid dictionary or instance of EditResult [type=model_type, input_value=[{'type': 'text', 'text':...it could be acquired.'}], input_type=list]
+```
+
+- add a bit of padding to the last message time so the timeline doesn't look empty when opening
+- tutorial overlay
 - integrate `claude-trace` request logs if present?
 - Shortcut / command to resume a specific conversation by session ID $ claude --resume 550e8400-e29b-41d4-a716-446655440000?
 - Localised number formatting and timezone adjustment runtime? For this we'd need to make Jinja template variables more granular
@@ -265,3 +291,6 @@ uv run claude-code-log
 - system blocks like `init` also don't render perfectly, losing new lines
 - add `ccusage` like daily summary and maybe some textual summary too based on Claude generate session summaries?
 – import logs from @claude Github Actions
+- stream logs from @claude Github Actions, see [octotail](https://github.com/getbettr/octotail)
+- extend into a VS Code extension that reads the JSONL real-time and displays stats like current context usage and implements a UI to see messages, todos, permissions, config, MCP status, etc
+- feed the filtered user messages to headless claude CLI to distill the user intent from the session

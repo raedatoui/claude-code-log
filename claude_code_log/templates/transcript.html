@@ -196,8 +196,12 @@
                     
                     // Special handling for sidechain messages
                     if (message.classList.contains('sidechain')) {
-                        // For sidechain messages, only show if sidechain filter is active
-                        shouldShow = activeTypes.includes('sidechain');
+                        // For sidechain messages, show if both sidechain filter is active AND their message type filter is active
+                        const sidechainActive = activeTypes.includes('sidechain');
+                        const messageTypeActive = activeTypes.some(type => 
+                            type !== 'sidechain' && message.classList.contains(type)
+                        );
+                        shouldShow = sidechainActive && messageTypeActive;
                     } else {
                         // For non-sidechain messages, show if any of their types are active
                         shouldShow = activeTypes.some(type => message.classList.contains(type));

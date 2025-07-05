@@ -27,9 +27,9 @@
             'tool_use': { id: 'tool_use', content: '🛠️ Tool Use', style: 'background-color: #fff3e0;' },
             'tool_result': { id: 'tool_result', content: '🧰 Tool Result', style: 'background-color: #e8f5e8;' },
             'thinking': { id: 'thinking', content: '💭 Thinking', style: 'background-color: #fce4ec;' },
-            'system': { id: 'system', content: '⚙️ System', style: 'background-color: #f5f5f5;' },
+            'system': { id: 'system', content: '⚙️ System', style: 'background-color: #ffeee1;' },
             'image': { id: 'image', content: '🖼️ Image', style: 'background-color: #e1f5fe;' },
-            'sidechain': { id: 'sidechain', content: '🔗 Sub-assistant', style: 'background-color: #e8f5e8;' }
+            'sidechain': { id: 'sidechain', content: '🔗 Sub-assistant', style: 'background-color: #f5f5f5;' }
         };
 
         // Build timeline data from messages
@@ -42,7 +42,7 @@
             // Clear existing mapping
             timelineIdToElement.clear();
 
-            // Get all messages from the page
+            // Get all messages from the page (including filtered ones - we'll hide them with CSS)
             const messages = document.querySelectorAll('.message:not(.session-header)');
 
             messages.forEach((messageEl, index) => {
@@ -165,36 +165,25 @@
             const timelineEnd = new Date(latestTimeString);
             const timelineStart = new Date(timelineEnd.getTime() - 60 * 60 * 1000); // 1 hour before latest
 
-            return { items: timelineItems, groups: timelineGroups, timelineEnd, timelineStart };
+            return { timelineItems, timelineGroups, timelineEnd, timelineStart };
         }
 
         // Filter timeline items based on current message filters
         function applyFilters() {
-            if (!timeline || !items) return;
+            if (!timeline || !groups) return;
 
-            // Get active filter types
-            const filterToggles = document.querySelectorAll('.filter-toggle');
-            const activeTypes = [];
-            let hasActiveFilters = false;
+            // Get active filter types from filter toggles
+            const activeTypes = Array.from(document.querySelectorAll('.filter-toggle.active'))
+                .map(toggle => toggle.dataset.type);
 
-            filterToggles.forEach(toggle => {
-                if (toggle.classList.contains('active')) {
-                    activeTypes.push(toggle.dataset.type);
-                    hasActiveFilters = true;
-                }
-            });
+            // Update groups visibility based on filter states
+            const updatedGroups = groups.map(group => ({
+                ...group,
+                visible: activeTypes.includes(group.id)
+            }));
 
-            // If no filters are active, show all items
-            if (!hasActiveFilters) {
-                timeline.setItems(items);
-                return;
-            }
-
-            // Filter items based on active types
-            const filteredItems = items.get().filter(item => {
-                return activeTypes.includes(item.group);
-            });
-            timeline.setItems(new vis.DataSet(filteredItems));
+            // Update timeline groups
+            timeline.setGroups(updatedGroups);
         }
 
         // Handle timeline item click - scroll to corresponding message
@@ -239,7 +228,9 @@
             }
 
             // Build timeline data
-            const { items, groups, timelineEnd, timelineStart } = buildTimelineData();
+            const { timelineItems, timelineGroups, timelineEnd, timelineStart } = buildTimelineData();
+            items = timelineItems
+            groups = timelineGroups
             if (items.length === 0) {
                 console.warn('No timeline items found');
                 return;
