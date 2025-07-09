@@ -253,30 +253,6 @@ uv run claude-code-log
 
 ## TODO
 
-- handle new(?) message format
-
-```sh
-9 validation errors for UserTranscriptEntry
-toolUseResult.str
-  Input should be a valid string [type=string_type, input_value=[{'type': 'text', 'text':...it could be acquired.'}], input_type=list]
-toolUseResult.list[TodoItem].0.id
-  Field required [type=missing, input_value={'type': 'text', 'text': ... it could be acquired.'}, input_type=dict]
-toolUseResult.list[TodoItem].0.content
-  Field required [type=missing, input_value={'type': 'text', 'text': ... it could be acquired.'}, input_type=dict]
-toolUseResult.list[TodoItem].0.status
-  Field required [type=missing, input_value={'type': 'text', 'text': ... it could be acquired.'}, input_type=dict]
-toolUseResult.list[TodoItem].0.priority
-  Field required [type=missing, input_value={'type': 'text', 'text': ... it could be acquired.'}, input_type=dict]
-toolUseResult.FileReadResult
-  Input should be a valid dictionary or instance of FileReadResult [type=model_type, input_value=[{'type': 'text', 'text':...it could be acquired.'}], input_type=list]
-toolUseResult.CommandResult
-  Input should be a valid dictionary or instance of CommandResult [type=model_type, input_value=[{'type': 'text', 'text':...it could be acquired.'}], input_type=list]
-toolUseResult.TodoResult
-  Input should be a valid dictionary or instance of TodoResult [type=model_type, input_value=[{'type': 'text', 'text':...it could be acquired.'}], input_type=list]
-toolUseResult.EditResult
-  Input should be a valid dictionary or instance of EditResult [type=model_type, input_value=[{'type': 'text', 'text':...it could be acquired.'}], input_type=list]
-```
-
 - add a bit of padding to the last message time so the timeline doesn't look empty when opening
 - tutorial overlay
 - integrate `claude-trace` request logs if present?

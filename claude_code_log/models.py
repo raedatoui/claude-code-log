@@ -176,7 +176,13 @@ class EditResult(BaseModel):
 
 
 ToolUseResult = Union[
-    str, List[TodoItem], FileReadResult, CommandResult, TodoResult, EditResult
+    str,
+    List[TodoItem],
+    FileReadResult,
+    CommandResult,
+    TodoResult,
+    EditResult,
+    List[ContentItem],
 ]
 
 
@@ -341,6 +347,22 @@ def parse_transcript_entry(data: Dict[str, Any]) -> TranscriptEntry:
             data_copy["message"]["content"] = parse_message_content(
                 data_copy["message"]["content"]
             )
+        # Parse toolUseResult if present and it's a list of content items
+        if "toolUseResult" in data_copy and isinstance(
+            data_copy["toolUseResult"], list
+        ):
+            # Check if it's a list of content items (MCP tool results)
+            tool_use_result = cast(List[Any], data_copy["toolUseResult"])
+            if (
+                tool_use_result
+                and isinstance(tool_use_result[0], dict)
+                and "type" in tool_use_result[0]
+            ):
+                data_copy["toolUseResult"] = [
+                    parse_content_item(cast(Dict[str, Any], item))
+                    for item in tool_use_result
+                    if isinstance(item, dict)
+                ]
         return UserTranscriptEntry.model_validate(data_copy)
 
     elif entry_type == "assistant":
