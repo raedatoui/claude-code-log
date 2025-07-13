@@ -1,0 +1,1124 @@
+{
+  "version": "0.3.3",
+  "cache_created": "2025-07-13T21:55:23.103795",
+  "last_updated": "2025-07-13T22:28:47.516795",
+  "project_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log",
+  "cached_files": {
+    "07f2e15c-a38b-454b-9148-60edc06de401.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/07f2e15c-a38b-454b-9148-60edc06de401.jsonl",
+      "source_mtime": 1750288868.0617466,
+      "cached_mtime": 1752440123.142816,
+      "message_count": 57,
+      "session_ids": [
+        "07f2e15c-a38b-454b-9148-60edc06de401"
+      ]
+    },
+    "858d9e0c-1f3f-4b19-ac5c-b0573d8f5ec3.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/858d9e0c-1f3f-4b19-ac5c-b0573d8f5ec3.jsonl",
+      "source_mtime": 1750984419.0423524,
+      "cached_mtime": 1752440123.194383,
+      "message_count": 447,
+      "session_ids": [
+        "07047a7d-ecbf-4e09-9f96-43949ae2e4f4",
+        "858d9e0c-1f3f-4b19-ac5c-b0573d8f5ec3",
+        "080fa927-769a-438a-a133-a297802dca50"
+      ]
+    },
+    "86f53fcb-7d2f-46a6-a662-20597451bd94.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/86f53fcb-7d2f-46a6-a662-20597451bd94.jsonl",
+      "source_mtime": 1751156463.8896484,
+      "cached_mtime": 1752440123.2169495,
+      "message_count": 175,
+      "session_ids": [
+        "86f53fcb-7d2f-46a6-a662-20597451bd94"
+      ]
+    },
+    "a790dc9e-eb86-4146-a3e9-52d3aecbcc3f.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/a790dc9e-eb86-4146-a3e9-52d3aecbcc3f.jsonl",
+      "source_mtime": 1751586089.5266278,
+      "cached_mtime": 1752440123.2479935,
+      "message_count": 249,
+      "session_ids": [
+        "a790dc9e-eb86-4146-a3e9-52d3aecbcc3f"
+      ]
+    },
+    "0d3a8e6f-290f-4105-a327-a2496e5e2a83.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/0d3a8e6f-290f-4105-a327-a2496e5e2a83.jsonl",
+      "source_mtime": 1751745912.1099885,
+      "cached_mtime": 1752440123.2595625,
+      "message_count": 68,
+      "session_ids": [
+        "0d3a8e6f-290f-4105-a327-a2496e5e2a83"
+      ]
+    },
+    "5027f309-99b0-41ff-865e-0f62d2f799e1.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/5027f309-99b0-41ff-865e-0f62d2f799e1.jsonl",
+      "source_mtime": 1750635545.682709,
+      "cached_mtime": 1752440123.2860396,
+      "message_count": 176,
+      "session_ids": [
+        "5027f309-99b0-41ff-865e-0f62d2f799e1"
+      ]
+    },
+    "fe869ecb-c176-478f-9734-7e4b8ef12cff.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/fe869ecb-c176-478f-9734-7e4b8ef12cff.jsonl",
+      "source_mtime": 1749945652.0183456,
+      "cached_mtime": 1752440123.2998052,
+      "message_count": 111,
+      "session_ids": [
+        "fe869ecb-c176-478f-9734-7e4b8ef12cff"
+      ]
+    },
+    "cd8ca5c4-6a1d-4ea2-a90d-d406827468ed.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/cd8ca5c4-6a1d-4ea2-a90d-d406827468ed.jsonl",
+      "source_mtime": 1750554176.5963707,
+      "cached_mtime": 1752440123.3727403,
+      "message_count": 278,
+      "session_ids": [
+        "9c14e24e-e2b3-4916-bf3b-5b545018fd1d",
+        "cd8ca5c4-6a1d-4ea2-a90d-d406827468ed"
+      ]
+    },
+    "40f8af00-d071-46a6-8682-dd2aaf944ee3.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/40f8af00-d071-46a6-8682-dd2aaf944ee3.jsonl",
+      "source_mtime": 1751455729.311505,
+      "cached_mtime": 1752440123.3808491,
+      "message_count": 24,
+      "session_ids": [
+        "40f8af00-d071-46a6-8682-dd2aaf944ee3"
+      ]
+    },
+    "f5f78e6f-89ba-447c-a58e-c19689698a7a.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/f5f78e6f-89ba-447c-a58e-c19689698a7a.jsonl",
+      "source_mtime": 1751934463.3385134,
+      "cached_mtime": 1752440123.3889427,
+      "message_count": 124,
+      "session_ids": [
+        "f5f78e6f-89ba-447c-a58e-c19689698a7a"
+      ]
+    },
+    "a3a5adc4-3fe2-4303-9110-fe6492006a0e.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/a3a5adc4-3fe2-4303-9110-fe6492006a0e.jsonl",
+      "source_mtime": 1749900724.6798153,
+      "cached_mtime": 1752440123.398867,
+      "message_count": 115,
+      "session_ids": [
+        "295968bb-8a55-4f5c-b81f-77169dad0b5c",
+        "a3a5adc4-3fe2-4303-9110-fe6492006a0e"
+      ]
+    },
+    "b6ba7dfb-c1e6-4eb8-8863-bf37d24626eb.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/b6ba7dfb-c1e6-4eb8-8863-bf37d24626eb.jsonl",
+      "source_mtime": 1751128265.0499268,
+      "cached_mtime": 1752440123.4306698,
+      "message_count": 102,
+      "session_ids": [
+        "b6ba7dfb-c1e6-4eb8-8863-bf37d24626eb"
+      ]
+    },
+    "d1268aa4-6e4a-4835-bf89-8ad849b99128.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/d1268aa4-6e4a-4835-bf89-8ad849b99128.jsonl",
+      "source_mtime": 1750456210.6237395,
+      "cached_mtime": 1752440123.4702852,
+      "message_count": 201,
+      "session_ids": [
+        "d1268aa4-6e4a-4835-bf89-8ad849b99128"
+      ]
+    },
+    "728a480d-b722-48ab-a2ce-c1e942363456.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/728a480d-b722-48ab-a2ce-c1e942363456.jsonl",
+      "source_mtime": 1751120299.7909935,
+      "cached_mtime": 1752440123.4752214,
+      "message_count": 7,
+      "session_ids": []
+    },
+    "8027006e-7ffa-453f-a332-33fed37a0abc.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/8027006e-7ffa-453f-a332-33fed37a0abc.jsonl",
+      "source_mtime": 1750197939.7668402,
+      "cached_mtime": 1752440123.481446,
+      "message_count": 2,
+      "session_ids": []
+    },
+    "d54b93ef-f571-457a-9eb1-12fb982250d6.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/d54b93ef-f571-457a-9eb1-12fb982250d6.jsonl",
+      "source_mtime": 1750065435.4041123,
+      "cached_mtime": 1752440123.586692,
+      "message_count": 916,
+      "session_ids": [
+        "3fb19c57-f854-4622-89e0-5f644ff20433",
+        "99746cff-1ce8-421a-9e06-8a78b00cad61",
+        "4089ec24-5170-4fa2-9a7a-6b285f807988",
+        "f701f264-5ec2-4a71-b176-da81a31a80e9",
+        "99e74ceb-52c3-4917-bc56-648c78f5c0e8",
+        "d54b93ef-f571-457a-9eb1-12fb982250d6",
+        "0ec35b61-4e55-4b7c-95cf-7537b180fcdb",
+        "833beedd-024b-48c6-afbd-318e3daaef4a",
+        "68963133-a096-4403-8b8d-921535a28985"
+      ]
+    },
+    "1b6cf74c-6350-40c0-91c1-d75c257c0729.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/1b6cf74c-6350-40c0-91c1-d75c257c0729.jsonl",
+      "source_mtime": 1749944135.930347,
+      "cached_mtime": 1752440123.694716,
+      "message_count": 1487,
+      "session_ids": [
+        "1b6cf74c-6350-40c0-91c1-d75c257c0729",
+        "a251827b-3255-476e-a239-9ad5c3620f30",
+        "6d8a1e12-5edd-4d49-8332-fca726c37521",
+        "4f600503-a7d7-4165-aa44-4ba4c937d5ce",
+        "6a52c8bf-9cd1-47d2-8380-b8edfd5de0ae",
+        "9b1e9b37-40ab-4af2-b3aa-873b6813bfbc",
+        "f1a464da-f2bb-4c9b-ad0a-b5ca330b621a",
+        "6eea7c3d-687b-472f-9f21-57337d423d2a"
+      ]
+    },
+    "1767af99-cb03-45a0-a56e-e53aefabc084.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/1767af99-cb03-45a0-a56e-e53aefabc084.jsonl",
+      "source_mtime": 1751456029.4152212,
+      "cached_mtime": 1752440123.7032592,
+      "message_count": 45,
+      "session_ids": [
+        "1767af99-cb03-45a0-a56e-e53aefabc084",
+        "40f8af00-d071-46a6-8682-dd2aaf944ee3"
+      ]
+    },
+    "11250327-31b5-42fd-94b1-84c91090e1fc.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/11250327-31b5-42fd-94b1-84c91090e1fc.jsonl",
+      "source_mtime": 1749987843.5611892,
+      "cached_mtime": 1752440123.7309623,
+      "message_count": 294,
+      "session_ids": [
+        "11250327-31b5-42fd-94b1-84c91090e1fc"
+      ]
+    },
+    "057f45a2-5fa5-421f-a665-8ad7b66ba376.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/057f45a2-5fa5-421f-a665-8ad7b66ba376.jsonl",
+      "source_mtime": 1749899399.4325323,
+      "cached_mtime": 1752440123.7420914,
+      "message_count": 114,
+      "session_ids": [
+        "057f45a2-5fa5-421f-a665-8ad7b66ba376"
+      ]
+    },
+    "df749439-8556-41bf-9965-9f49cf38bf2a.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/df749439-8556-41bf-9965-9f49cf38bf2a.jsonl",
+      "source_mtime": 1751412012.3157387,
+      "cached_mtime": 1752440123.8362908,
+      "message_count": 831,
+      "session_ids": [
+        "fd2d8ab2-1e49-4004-9e79-cb4c8819572f",
+        "df749439-8556-41bf-9965-9f49cf38bf2a",
+        "66953f1b-124e-460e-8978-316d761ff7fb"
+      ]
+    },
+    "3a55cb70-2bd3-4b89-9c38-c15fb63c9c55.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/3a55cb70-2bd3-4b89-9c38-c15fb63c9c55.jsonl",
+      "source_mtime": 1751456046.9552162,
+      "cached_mtime": 1752440123.8381257,
+      "message_count": 3,
+      "session_ids": [
+        "3a55cb70-2bd3-4b89-9c38-c15fb63c9c55"
+      ]
+    },
+    "f4ca848b-13d3-4f4d-87aa-852d947525b8.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/f4ca848b-13d3-4f4d-87aa-852d947525b8.jsonl",
+      "source_mtime": 1751456136.432266,
+      "cached_mtime": 1752440123.842654,
+      "message_count": 54,
+      "session_ids": [
+        "f4ca848b-13d3-4f4d-87aa-852d947525b8",
+        "1767af99-cb03-45a0-a56e-e53aefabc084",
+        "40f8af00-d071-46a6-8682-dd2aaf944ee3"
+      ]
+    },
+    "20c93d4a-df96-4b03-9124-a1b9d476b29f.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/20c93d4a-df96-4b03-9124-a1b9d476b29f.jsonl",
+      "source_mtime": 1751450549.9851637,
+      "cached_mtime": 1752440123.8881214,
+      "message_count": 289,
+      "session_ids": [
+        "20c93d4a-df96-4b03-9124-a1b9d476b29f",
+        "4498c5fb-de7e-4a20-bbf0-5f29da27c848"
+      ]
+    },
+    "44dfe01a-c8c0-418f-b610-3d144dfbd84e.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/44dfe01a-c8c0-418f-b610-3d144dfbd84e.jsonl",
+      "source_mtime": 1750287390.3004534,
+      "cached_mtime": 1752440123.914568,
+      "message_count": 276,
+      "session_ids": [
+        "64ec1799-bfc0-46ef-bada-acfc9f548543",
+        "44dfe01a-c8c0-418f-b610-3d144dfbd84e"
+      ]
+    },
+    "a6c02863-096b-42a5-8c37-8978840971c7.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/a6c02863-096b-42a5-8c37-8978840971c7.jsonl",
+      "source_mtime": 1751472506.4119601,
+      "cached_mtime": 1752440123.920026,
+      "message_count": 62,
+      "session_ids": [
+        "f4ca848b-13d3-4f4d-87aa-852d947525b8",
+        "a6c02863-096b-42a5-8c37-8978840971c7",
+        "8e0444c5-50a8-4e7e-81a9-976fe38146b1",
+        "40f8af00-d071-46a6-8682-dd2aaf944ee3",
+        "1767af99-cb03-45a0-a56e-e53aefabc084"
+      ]
+    },
+    "6edde77a-53a7-4df7-9b08-219fa7a84e39.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/6edde77a-53a7-4df7-9b08-219fa7a84e39.jsonl",
+      "source_mtime": 1750104802.0800073,
+      "cached_mtime": 1752440123.9618268,
+      "message_count": 362,
+      "session_ids": [
+        "6edde77a-53a7-4df7-9b08-219fa7a84e39"
+      ]
+    },
+    "8e0444c5-50a8-4e7e-81a9-976fe38146b1.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/8e0444c5-50a8-4e7e-81a9-976fe38146b1.jsonl",
+      "source_mtime": 1751456351.1712973,
+      "cached_mtime": 1752440123.9914203,
+      "message_count": 53,
+      "session_ids": [
+        "f4ca848b-13d3-4f4d-87aa-852d947525b8",
+        "8e0444c5-50a8-4e7e-81a9-976fe38146b1",
+        "1767af99-cb03-45a0-a56e-e53aefabc084",
+        "40f8af00-d071-46a6-8682-dd2aaf944ee3"
+      ]
+    },
+    "078d4af7-499e-4c8b-b3e2-5d4c301d436a.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/078d4af7-499e-4c8b-b3e2-5d4c301d436a.jsonl",
+      "source_mtime": 1751492249.524338,
+      "cached_mtime": 1752440124.0214438,
+      "message_count": 69,
+      "session_ids": [
+        "078d4af7-499e-4c8b-b3e2-5d4c301d436a"
+      ]
+    },
+    "227c98ff-9a6f-4325-81e6-38616bf825dc.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/227c98ff-9a6f-4325-81e6-38616bf825dc.jsonl",
+      "source_mtime": 1752440625.4518704,
+      "cached_mtime": 1752440640.29005,
+      "message_count": 377,
+      "session_ids": [
+        "227c98ff-9a6f-4325-81e6-38616bf825dc"
+      ]
+    },
+    "2f5b4461-b1de-414e-ab21-5f96fd0db9d6.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/2f5b4461-b1de-414e-ab21-5f96fd0db9d6.jsonl",
+      "source_mtime": 1750677754.017169,
+      "cached_mtime": 1752440124.1044436,
+      "message_count": 363,
+      "session_ids": [
+        "2f5b4461-b1de-414e-ab21-5f96fd0db9d6"
+      ]
+    },
+    "7f7ba7e8-d8ca-42f6-9a30-57cbd8051e9f.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/7f7ba7e8-d8ca-42f6-9a30-57cbd8051e9f.jsonl",
+      "source_mtime": 1750452673.891654,
+      "cached_mtime": 1752440124.1103582,
+      "message_count": 1,
+      "session_ids": []
+    },
+    "e6d88a68-3793-4d6c-bdf1-a4e70ad531d3.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/e6d88a68-3793-4d6c-bdf1-a4e70ad531d3.jsonl",
+      "source_mtime": 1751491645.558422,
+      "cached_mtime": 1752440124.2837758,
+      "message_count": 1023,
+      "session_ids": [
+        "0e8a1542-bb37-4ceb-ad31-2630ca9c6454",
+        "f4ca848b-13d3-4f4d-87aa-852d947525b8",
+        "97d59289-cbb2-4b20-8123-f7ba0f465dfe",
+        "2f82cbc5-d9f1-462d-b8c4-3ebe5df7157c",
+        "a6c02863-096b-42a5-8c37-8978840971c7",
+        "e6d88a68-3793-4d6c-bdf1-a4e70ad531d3",
+        "8e0444c5-50a8-4e7e-81a9-976fe38146b1",
+        "40f8af00-d071-46a6-8682-dd2aaf944ee3",
+        "1767af99-cb03-45a0-a56e-e53aefabc084"
+      ]
+    },
+    "2934a2ea-db67-4b2d-8991-a39057ef774a.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/2934a2ea-db67-4b2d-8991-a39057ef774a.jsonl",
+      "source_mtime": 1751584284.8742318,
+      "cached_mtime": 1752440124.3329175,
+      "message_count": 417,
+      "session_ids": [
+        "70d392d2-ef2b-4796-9df1-a3908e11bcdb",
+        "2a8bdfa3-5440-4c56-9e8b-1a7509a27c96",
+        "8aa7b9fd-0e02-4353-95ef-3fef16f30524",
+        "078d4af7-499e-4c8b-b3e2-5d4c301d436a",
+        "2934a2ea-db67-4b2d-8991-a39057ef774a"
+      ]
+    },
+    "0ca402b9-a179-4018-9e5c-ad6e974633d6.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/0ca402b9-a179-4018-9e5c-ad6e974633d6.jsonl",
+      "source_mtime": 1752441190.0052843,
+      "cached_mtime": 1752442124.895731,
+      "message_count": 115,
+      "session_ids": [
+        "0ca402b9-a179-4018-9e5c-ad6e974633d6"
+      ]
+    },
+    "326189cf-5676-4237-8cde-1ce80aae4a9f.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/326189cf-5676-4237-8cde-1ce80aae4a9f.jsonl",
+      "source_mtime": 1752441564.8050497,
+      "cached_mtime": 1752442124.6936207,
+      "message_count": 54,
+      "session_ids": [
+        "326189cf-5676-4237-8cde-1ce80aae4a9f"
+      ]
+    }
+  },
+  "total_message_count": 9341,
+  "total_input_tokens": 35673,
+  "total_output_tokens": 237851,
+  "total_cache_creation_tokens": 9032980,
+  "total_cache_read_tokens": 173975704,
+  "sessions": {
+    "057f45a2-5fa5-421f-a665-8ad7b66ba376": {
+      "session_id": "057f45a2-5fa5-421f-a665-8ad7b66ba376",
+      "summary": "Claude Logbook Converter: New Features & Tests",
+      "first_timestamp": "2025-06-13T23:34:17.628Z",
+      "last_timestamp": "2025-06-14T11:09:59.153Z",
+      "message_count": 114,
+      "first_user_message": "read CLAUDE.md, based on .examples/init.jsonl add support for summary type in @claude_logbook/converter.py and also don't discard system message, but instead show the command name in a detail element where the rest of the system message can be seen after expanding. Oh, and please add Markdown rendering support in the HTML, probably the simplest would be to use Marked as ESM module like:\\\n\\\n<script type=\"module\">\n  import { marked } from \"https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js\";\n  ",
+      "total_input_tokens": 198,
+      "total_output_tokens": 2370,
+      "total_cache_creation_tokens": 49077,
+      "total_cache_read_tokens": 1466843
+    },
+    "a3a5adc4-3fe2-4303-9110-fe6492006a0e": {
+      "session_id": "a3a5adc4-3fe2-4303-9110-fe6492006a0e",
+      "summary": "Pytest Migration, Test Fixes, and Docs Update",
+      "first_timestamp": "2025-06-14T11:10:08.902Z",
+      "last_timestamp": "2025-06-14T11:28:07.021Z",
+      "message_count": 82,
+      "first_user_message": "Please migrate the test files in the repo root to be proper Pytest files and live under test/ and update the pytest.ini_options in pyproject.yaml. Also, move the documentation of commands from codemcp.toml into README.md and CLAUDE.md. There seem to be 2 failing tests, please also fix those.",
+      "total_input_tokens": 84,
+      "total_output_tokens": 1626,
+      "total_cache_creation_tokens": 43358,
+      "total_cache_read_tokens": 839879
+    },
+    "295968bb-8a55-4f5c-b81f-77169dad0b5c": {
+      "session_id": "295968bb-8a55-4f5c-b81f-77169dad0b5c",
+      "summary": "HTML Escaping and Rendering Fixes for Claude Log",
+      "first_timestamp": "2025-06-14T11:30:31.101Z",
+      "last_timestamp": "2025-06-14T11:32:04.656Z",
+      "message_count": 32,
+      "first_user_message": "There are a couple of rendering issues I'd like your help with please. First, we need to escape XML / HTML tags, otherwise the browser will try to interpret them. Also - and this might be the same issue - the system messages render in a strange way:\\\n\\\nSystem\n2025-06-11 22:42:55\nCommand: init\ninit is analyzing your codebase\u2026\n                      init\n                      \n                          {\n  \"type\": \"text\",\n  \"text\": \"Please analyze this codebase and create a CLAUDE.md file, which wi",
+      "total_input_tokens": 65,
+      "total_output_tokens": 118,
+      "total_cache_creation_tokens": 19632,
+      "total_cache_read_tokens": 240143
+    },
+    "1b6cf74c-6350-40c0-91c1-d75c257c0729": {
+      "session_id": "1b6cf74c-6350-40c0-91c1-d75c257c0729",
+      "summary": "System Message Parsing and HTML Rendering Upgrade",
+      "first_timestamp": "2025-06-14T11:40:01.695Z",
+      "last_timestamp": "2025-06-14T11:47:03.766Z",
+      "message_count": 50,
+      "first_user_message": "Can you please implement custom handling for system messages? See .examples/init.jsonl, it has a mixture of XML tags and JSON content that currently gets rendered raw. It would be nicer to show the command name and args as the top level and then the content text rendered without the escaping and with proper new lines (I guess might need to be <br>s?)",
+      "total_input_tokens": 51,
+      "total_output_tokens": 385,
+      "total_cache_creation_tokens": 35807,
+      "total_cache_read_tokens": 417079
+    },
+    "4f600503-a7d7-4165-aa44-4ba4c937d5ce": {
+      "session_id": "4f600503-a7d7-4165-aa44-4ba4c937d5ce",
+      "summary": "Pydantic Models Fix Linting, Render Command Output",
+      "first_timestamp": "2025-06-14T11:40:01.695Z",
+      "last_timestamp": "2025-06-14T12:19:11.212Z",
+      "message_count": 303,
+      "first_user_message": "Please help fixing all the linting (type) errors. I've added a longer example to .examples/full.jsonl, please use the JSON object shapes to create Pydantic classes to represent all the different properties. I think we'd be better off creating a new file and not putting this in converter.py. My idea is that we'd somehow map each line to a certaing Pydantic class so we can handle their parsing and rendering in a much cleaner way in the converter. I don't know if it's possible to have a dict parsed",
+      "total_input_tokens": 613,
+      "total_output_tokens": 5476,
+      "total_cache_creation_tokens": 182311,
+      "total_cache_read_tokens": 4375981
+    },
+    "a251827b-3255-476e-a239-9ad5c3620f30": {
+      "session_id": "a251827b-3255-476e-a239-9ad5c3620f30",
+      "summary": "Tool Use Rendering for Claude Code Log Converter",
+      "first_timestamp": "2025-06-14T11:40:01.695Z",
+      "last_timestamp": "2025-06-14T12:47:10.027Z",
+      "message_count": 152,
+      "first_user_message": "Can you please implement rendering of tool use? There are both the calls and the results. The content can be quite big chunk of text, so we should hide with the detail element. Here are some examples:\\\n\\\n{\"parentUuid\":\"69b34896-3549-48f8-ad9f-64d4be1cac95\",\"isSidechain\":false,\"userType\":\"external\",\"cwd\":\"/Users/dain/workspace/claude-code-log\",\"sessionId\":\"1b6cf74c-6350-40c0-91c1-d75c257c0729\",\"version\":\"1.0.24\",\"type\":\"user\",\"message\":{\"role\":\"user\",\"content\":[{\"tool_use_id\":\"toolu_01LRCsYX5dNHN",
+      "total_input_tokens": 135,
+      "total_output_tokens": 576,
+      "total_cache_creation_tokens": 74524,
+      "total_cache_read_tokens": 3079976
+    },
+    "9b1e9b37-40ab-4af2-b3aa-873b6813bfbc": {
+      "session_id": "9b1e9b37-40ab-4af2-b3aa-873b6813bfbc",
+      "summary": "HTML Escaping Fix for Claude Code Log Converter",
+      "first_timestamp": "2025-06-14T11:40:01.695Z",
+      "last_timestamp": "2025-06-14T12:59:35.442Z",
+      "message_count": 137,
+      "first_user_message": "I noticed that for very simple user messages we aren't escaping HTML somehow, the <br> in this one gets rendered as an actual line break:\\\n\\\n{\"parentUuid\":null,\"isSidechain\":false,\"userType\":\"external\",\"cwd\":\"/Users/dain/workspace/claude-code-log\",\"sessionId\":\"1b6cf74c-6350-40c0-91c1-d75c257c0729\",\"version\":\"1.0.24\",\"type\":\"user\",\"message\":{\"role\":\"user\",\"content\":\"Can you please implement custom handling for system messages? See .examples/init.jsonl, it has a mixture of XML tags and JSON conten",
+      "total_input_tokens": 246,
+      "total_output_tokens": 1130,
+      "total_cache_creation_tokens": 54096,
+      "total_cache_read_tokens": 1877540
+    },
+    "6d8a1e12-5edd-4d49-8332-fca726c37521": {
+      "session_id": "6d8a1e12-5edd-4d49-8332-fca726c37521",
+      "summary": "HTML Escaping Fix for Nested Markdown Divs",
+      "first_timestamp": "2025-06-14T11:40:01.695Z",
+      "last_timestamp": "2025-06-14T21:27:53.012Z",
+      "message_count": 80,
+      "first_user_message": "I noticed that for very simple user messages we aren't escaping HTML somehow,\n   the <br> in this one gets rendered as an actual line break:\\\n  \\\n  {\"parentUuid\":null,\"isSidechain\":false,\"userType\":\"external\",\"cwd\":\"/Users/da\n  in/workspace/claude-code-log\",\"sessionId\":\"1b6cf74c-6350-40c0-91c1-d75c257c07\n  29\",\"version\":\"1.0.24\",\"type\":\"user\",\"message\":{\"role\":\"user\",\"content\":\"Can \n  you please implement custom handling for system messages? See \n  .examples/init.jsonl, it has a mixture of XML t",
+      "total_input_tokens": 147,
+      "total_output_tokens": 227,
+      "total_cache_creation_tokens": 41568,
+      "total_cache_read_tokens": 810049
+    },
+    "6a52c8bf-9cd1-47d2-8380-b8edfd5de0ae": {
+      "session_id": "6a52c8bf-9cd1-47d2-8380-b8edfd5de0ae",
+      "summary": "Claude Code Log: Hierarchical Project Processing CLI Tool",
+      "first_timestamp": "2025-06-14T11:40:01.695Z",
+      "last_timestamp": "2025-06-14T22:00:09.643Z",
+      "message_count": 105,
+      "first_user_message": "As CLI tool default, process entire `~/.claude/projects/` directory hierarchy and render as multiple linked HTML files. These is how mine looks like (it seems to be just one level, so the top level HTML just need to link to the ones for each directory):\\\n\\\n\u251c\u2500\u2500 projects\n\u2502   \u251c\u2500\u2500 -Users-dain-Desktop\n\u2502   \u2502   \u2514\u2500\u2500 e8da354a-157f-473c-b0be-0cb6231b344d.jsonl\n\u2502   \u251c\u2500\u2500 -Users-dain-workspace-claude-code-log\n\u2502   \u2502   \u251c\u2500\u2500 1b6cf74c-6350-40c0-91c1-d75c257c0729.jsonl\n\u2502   \u2502   \u2514\u2500\u2500 combined_transcripts.html\n\u2502   \u251c\u2500\u2500 ",
+      "total_input_tokens": 125,
+      "total_output_tokens": 1741,
+      "total_cache_creation_tokens": 166214,
+      "total_cache_read_tokens": 1781468
+    },
+    "f1a464da-f2bb-4c9b-ad0a-b5ca330b621a": {
+      "session_id": "f1a464da-f2bb-4c9b-ad0a-b5ca330b621a",
+      "summary": "Template Testing & Style Guide for Code Log Project",
+      "first_timestamp": "2025-06-14T11:40:01.695Z",
+      "last_timestamp": "2025-06-14T23:05:06.868Z",
+      "message_count": 311,
+      "first_user_message": "Let's move the inline HTML template string out of converter.py and use something like a Jinja template instead. So we'd have 2 templates so far, one for the index and one for the transcript page.",
+      "total_input_tokens": 511,
+      "total_output_tokens": 1597,
+      "total_cache_creation_tokens": 405591,
+      "total_cache_read_tokens": 7887435
+    },
+    "6eea7c3d-687b-472f-9f21-57337d423d2a": {
+      "session_id": "6eea7c3d-687b-472f-9f21-57337d423d2a",
+      "summary": "Test Suite Reorganization: Improved Test File Structure",
+      "first_timestamp": "2025-06-14T23:11:55.901Z",
+      "last_timestamp": "2025-06-14T23:35:35.874Z",
+      "message_count": 349,
+      "first_user_message": "I managed to fix a venv issue and Pytest is working again, but that highlighted a failing test. Can you please fix tests and see if there's something more to cover? In particular, we could add to unit tests to the test data for template generation?",
+      "total_input_tokens": 332,
+      "total_output_tokens": 3144,
+      "total_cache_creation_tokens": 335297,
+      "total_cache_read_tokens": 8699411
+    },
+    "fe869ecb-c176-478f-9734-7e4b8ef12cff": {
+      "session_id": "fe869ecb-c176-478f-9734-7e4b8ef12cff",
+      "summary": "GitHub Action CI: Tests, Linting, Type Checks",
+      "first_timestamp": "2025-06-14T23:42:08.134Z",
+      "last_timestamp": "2025-06-15T00:00:51.982Z",
+      "message_count": 96,
+      "first_user_message": "Hey Claude, can you please add a Github Action to run tests and linting? You can test it with `act`.",
+      "total_input_tokens": 279,
+      "total_output_tokens": 465,
+      "total_cache_creation_tokens": 83966,
+      "total_cache_read_tokens": 1164952
+    },
+    "11250327-31b5-42fd-94b1-84c91090e1fc": {
+      "session_id": "11250327-31b5-42fd-94b1-84c91090e1fc",
+      "summary": "Session Navigation & Summary Handling Improvements",
+      "first_timestamp": "2025-06-15T00:17:05.590Z",
+      "last_timestamp": "2025-06-15T11:44:03.525Z",
+      "message_count": 293,
+      "first_user_message": "I realised that the `summary` type is a special one that doesn't belong in the normal conversation flow, but instead it's done in the background, often for previous sessions. So we shouldn't render them where they appear, but instead use their \"leafUuid\" to find which session file contained them and render the summary on top of those.\\\n\\\nOh, and that makes me realise that I also wanted us to create a session navigation so that it's possible to jump to anchor links within these combined transcrip",
+      "total_input_tokens": 392,
+      "total_output_tokens": 1859,
+      "total_cache_creation_tokens": 300450,
+      "total_cache_read_tokens": 6824021
+    },
+    "d54b93ef-f571-457a-9eb1-12fb982250d6": {
+      "session_id": "d54b93ef-f571-457a-9eb1-12fb982250d6",
+      "summary": "Pydantic Parsing Fixes for Transcript Validation",
+      "first_timestamp": "2025-06-15T17:26:02.885Z",
+      "last_timestamp": "2025-06-15T18:30:10.986Z",
+      "message_count": 245,
+      "first_user_message": "Hey Claude, I'd like to handle thinking tokens and also usage metadata (which can be in any assistant response, not just thinking). Here's a sample JSON:\\\n\\\n{\"parentUuid\":\"9524e747-14cb-4e66-a91f-f0f0ef1147fb\",\"isSidechain\":false,\"userType\":\"external\",\"cwd\":\"/Users/dain/workspace/claude-code-log\",\"sessionId\":\"4f600503-a7d7-4165-aa44-4ba4c937d5ce\",\"version\":\"1.0.24\",\"message\":{\"id\":\"msg_014UkiCvABoncgruUvEAEQe7\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"claude-sonnet-4-20250514\",\"content\":[{\"t",
+      "total_input_tokens": 389,
+      "total_output_tokens": 785,
+      "total_cache_creation_tokens": 289265,
+      "total_cache_read_tokens": 4408403
+    },
+    "99e74ceb-52c3-4917-bc56-648c78f5c0e8": {
+      "session_id": "99e74ceb-52c3-4917-bc56-648c78f5c0e8",
+      "summary": "Image Support Added to Claude Transcript Converter",
+      "first_timestamp": "2025-06-15T17:26:02.885Z",
+      "last_timestamp": "2025-06-15T18:46:31.270Z",
+      "message_count": 68,
+      "first_user_message": "It's possible to paste images into the input, so we sometimes get a user message like:\\\n\\\nUser\n2025-06-15 10:42:05\n{'type': 'image', 'source': {'type': 'base64', 'media_type': 'image/png', 'data': 'iVBORw0KGgoAAAANSUhEUgAACYQAAAZuCAYAAAD+BrD8AAAMTmlDQ1BJQ0MgUHJvZmlsZQAASImVVwdYU8kWnltSIQQIREBK6E0QkRJASggtgPQuKiEJEEqMCUHFjiyu4NpFBMuKroIoWFZAFhvqqiuLYu+LBRVlXVwXu/ImBNBlX/nefN/c+e8/Z/4559yZe+8AQO/iS6W\\\n\\\nCan you please handle this case and render the image itself instead?",
+      "total_input_tokens": 161,
+      "total_output_tokens": 403,
+      "total_cache_creation_tokens": 41211,
+      "total_cache_read_tokens": 787557
+    },
+    "4089ec24-5170-4fa2-9a7a-6b285f807988": {
+      "session_id": "4089ec24-5170-4fa2-9a7a-6b285f807988",
+      "summary": "Enhancing Transcript Navigation: Timestamps, Tokens, Docs",
+      "first_timestamp": "2025-06-15T17:26:02.885Z",
+      "last_timestamp": "2025-06-15T19:47:23.346Z",
+      "message_count": 101,
+      "first_user_message": "Can you please show the timestamp of not just the first, but the last message in the ToC boxes in the transcript with a dash in between?\\\n\\\nAlso, can you please display the token usage on the messages where it's given and tally them up for sessions and show these sums on the session ToC boxes?",
+      "total_input_tokens": 169,
+      "total_output_tokens": 2115,
+      "total_cache_creation_tokens": 98579,
+      "total_cache_read_tokens": 1417561
+    },
+    "f701f264-5ec2-4a71-b176-da81a31a80e9": {
+      "session_id": "f701f264-5ec2-4a71-b176-da81a31a80e9",
+      "summary": "Token Usage Deduplication in Claude Code Log",
+      "first_timestamp": "2025-06-15T17:26:02.885Z",
+      "last_timestamp": "2025-06-15T20:32:39.302Z",
+      "message_count": 53,
+      "first_user_message": "I noticed that sometimes token usage is duplicated when there's tool use, but luckily there's a requestId to see if it was the same request. Can you please check for this and only show and tally up for the session the first message with the stats? See for example:\\\n\\\n{\"parentUuid\":\"abc19627-5799-440c-9736-361f3eb2d3da\",\"isSidechain\":false,\"userType\":\"external\",\"cwd\":\"/Users/dain/workspace/claude-code-log\",\"sessionId\":\"1b6cf74c-6350-40c0-91c1-d75c257c0729\",\"version\":\"1.0.24\",\"message\":{\"id\":\"msg_",
+      "total_input_tokens": 134,
+      "total_output_tokens": 392,
+      "total_cache_creation_tokens": 42860,
+      "total_cache_read_tokens": 622250
+    },
+    "833beedd-024b-48c6-afbd-318e3daaef4a": {
+      "session_id": "833beedd-024b-48c6-afbd-318e3daaef4a",
+      "summary": "Modular Refactor: Tests, Coverage, and CI Improvements",
+      "first_timestamp": "2025-06-15T17:26:02.885Z",
+      "last_timestamp": "2025-06-15T20:59:06.886Z",
+      "message_count": 125,
+      "first_user_message": "We neglected the unit tests for a while and I think it would also be good to split up @claude_code_log/converter.py as it's starting to grow big. What do you think about splitting it by extracting data from the JSONL files and rendering to HTML? Also, let's add test coverage tracking.",
+      "total_input_tokens": 458,
+      "total_output_tokens": 996,
+      "total_cache_creation_tokens": 140973,
+      "total_cache_read_tokens": 2244380
+    },
+    "3fb19c57-f854-4622-89e0-5f644ff20433": {
+      "session_id": "3fb19c57-f854-4622-89e0-5f644ff20433",
+      "summary": "TodoWrite Rendering: Markdown Fix and Styling",
+      "first_timestamp": "2025-06-15T17:26:02.885Z",
+      "last_timestamp": "2025-06-15T22:14:34.564Z",
+      "message_count": 162,
+      "first_user_message": "Can you please implement rendering for TodoWrite tool use as actual todo list with checkboxes? You can use emojis for the states",
+      "total_input_tokens": 238,
+      "total_output_tokens": 3725,
+      "total_cache_creation_tokens": 181817,
+      "total_cache_read_tokens": 2680361
+    },
+    "99746cff-1ce8-421a-9e06-8a78b00cad61": {
+      "session_id": "99746cff-1ce8-421a-9e06-8a78b00cad61",
+      "summary": "Changelog Update and README Link for Project Release",
+      "first_timestamp": "2025-06-15T17:26:02.885Z",
+      "last_timestamp": "2025-06-15T23:36:31.076Z",
+      "message_count": 28,
+      "first_user_message": "Can you please update the @CHANGELOG.md? 0.2.0 was a dud so skip it and write up what's changed in 0.2.1 since 0.1.0 already in the changelog. Please also link the changelog from @README.md ",
+      "total_input_tokens": 53,
+      "total_output_tokens": 34,
+      "total_cache_creation_tokens": 23561,
+      "total_cache_read_tokens": 168471
+    },
+    "0ec35b61-4e55-4b7c-95cf-7537b180fcdb": {
+      "session_id": "0ec35b61-4e55-4b7c-95cf-7537b180fcdb",
+      "summary": "Server-Side Markdown Rendering with Mistune",
+      "first_timestamp": "2025-06-15T17:26:02.885Z",
+      "last_timestamp": "2025-06-16T09:11:01.170Z",
+      "message_count": 126,
+      "first_user_message": "I just realised that doing the Markdown rendering runtime in the browser introduces difficult to track down bugs because we can't see the results in the static HTML. So let's remove Marked and do the conversion in Python instead. I found a good library:\\\n\\\nInstall\n\nTo install mistune:\n\n$ pip install mistune\n\nOverview\n\nConvert Markdown to HTML with ease:\n\nimport mistune\n\nmistune.html(your_markdown_text)",
+      "total_input_tokens": 991,
+      "total_output_tokens": 560,
+      "total_cache_creation_tokens": 66365,
+      "total_cache_read_tokens": 2069170
+    },
+    "68963133-a096-4403-8b8d-921535a28985": {
+      "session_id": "68963133-a096-4403-8b8d-921535a28985",
+      "summary": "Styling Upgrade: Glass UI and Emoji Enhancements",
+      "first_timestamp": "2025-06-16T09:16:19.310Z",
+      "last_timestamp": "2025-06-16T09:17:15.388Z",
+      "message_count": 7,
+      "first_user_message": "If you do a git diff you can see that I started to change the design to be see through boxes rather than opaque colourful backgrounds. Can you please continue with the styling for the rest of the inner elements like details boxes? Start with @claude_code_log/templates/transcript.html and then use the same styles in @claude_code_log/templates/index.html.\\\n\\\nAlso, since now the contrast between User, Assistant, System, and Tool use boxes is less strong, maybe we should add emojis before the titles",
+      "total_input_tokens": 18,
+      "total_output_tokens": 30,
+      "total_cache_creation_tokens": 25103,
+      "total_cache_read_tokens": 46322
+    },
+    "6edde77a-53a7-4df7-9b08-219fa7a84e39": {
+      "session_id": "6edde77a-53a7-4df7-9b08-219fa7a84e39",
+      "summary": "Details Preview: Markdown, Styling, and Content Refactor",
+      "first_timestamp": "2025-06-16T17:59:37.525Z",
+      "last_timestamp": "2025-06-16T20:13:22.033Z",
+      "message_count": 343,
+      "first_user_message": "Hey Claude, please help me implement a preview for `details` elements. Currently, a user needs to toggle them open to see, but what I'd love to have is showing the first 3-5 lines and then fading the text out on the bottom, and when the element is clicked, still fully opening it.",
+      "total_input_tokens": 160,
+      "total_output_tokens": 3801,
+      "total_cache_creation_tokens": 417462,
+      "total_cache_read_tokens": 7155801
+    },
+    "44dfe01a-c8c0-418f-b610-3d144dfbd84e": {
+      "session_id": "44dfe01a-c8c0-418f-b610-3d144dfbd84e",
+      "summary": "Automate Release Process with Justfile Command",
+      "first_timestamp": "2025-06-18T16:45:49.834Z",
+      "last_timestamp": "2025-06-18T17:39:19.809Z",
+      "message_count": 34,
+      "first_user_message": "Hey Claude, I'd like to automate the release process into one `justfile` command taking a new version number as arg, doing the following steps:\\\n- Check that there are no git changes and abort if there are\\\n- Update the version number in `pyproject.toml` and doing `uv sync` to reflect it in `uv.lock`\\\n- Update `CHANGELOG.md` based on the commit messages since the last tag\\\n- Commit the changes in these 3 files\\\n- Push the commit\\\n- Tag the commit with `Release x.x.x`\\\n- Push the tag to `origin`",
+      "total_input_tokens": 1261,
+      "total_output_tokens": 151,
+      "total_cache_creation_tokens": 28967,
+      "total_cache_read_tokens": 223094
+    },
+    "64ec1799-bfc0-46ef-bada-acfc9f548543": {
+      "session_id": "64ec1799-bfc0-46ef-bada-acfc9f548543",
+      "summary": "Transcript Entry Structure in Test Data Files",
+      "first_timestamp": "2025-06-18T16:45:49.834Z",
+      "last_timestamp": "2025-06-18T22:56:30.184Z",
+      "message_count": 242,
+      "first_user_message": "Hey Claude, can you please check the changes in git to get some context on some previous work we did together, basically I'm trying to get a preview rendered for `details` elements or even just doing away with them entirely if the outputs is not too long.\\\n\\\nIt's almost there, but there are still some small visual differences between details summary and the expanded content. Also, I think we should remove the \"Input:\" line for tool use as it doesn't really add much.\\\n\\\nIf it's easy to do without",
+      "total_input_tokens": 626,
+      "total_output_tokens": 1729,
+      "total_cache_creation_tokens": 247963,
+      "total_cache_read_tokens": 3943691
+    },
+    "07f2e15c-a38b-454b-9148-60edc06de401": {
+      "session_id": "07f2e15c-a38b-454b-9148-60edc06de401",
+      "summary": "Token Usage Tracking and Index Page Aggregation",
+      "first_timestamp": "2025-06-18T23:17:59.336Z",
+      "last_timestamp": "2025-06-18T23:21:08.014Z",
+      "message_count": 53,
+      "first_user_message": "Can you please update the top level index.html to contain all the token usage numbers added up and also the time of last interaction? These are relatively new features in the transcript pages, but we haven't implemented the aggregation to the index page.",
+      "total_input_tokens": 48,
+      "total_output_tokens": 230,
+      "total_cache_creation_tokens": 48669,
+      "total_cache_read_tokens": 691169
+    },
+    "d1268aa4-6e4a-4835-bf89-8ad849b99128": {
+      "session_id": "d1268aa4-6e4a-4835-bf89-8ad849b99128",
+      "summary": "Styling & Time Formatting for Project Index Page",
+      "first_timestamp": "2025-06-20T21:02:53.538Z",
+      "last_timestamp": "2025-06-20T21:50:10.609Z",
+      "message_count": 201,
+      "first_user_message": "Please check git log for some current changes, we've been implementing top level stats on index page: token usage added up + time of last interaction. The last interaction times look a bit suss, but also could just be merged with the old time so we get an interval between first and last message / interaction.\\\n\\\nAlso need to make the top box content stay stacked vertical on wide screens like it is on the narrow, see screenshots below.\\\n\\\nI also noticed that we need to break word on the project /",
+      "total_input_tokens": 393,
+      "total_output_tokens": 19421,
+      "total_cache_creation_tokens": 232652,
+      "total_cache_read_tokens": 2163758
+    },
+    "9c14e24e-e2b3-4916-bf3b-5b545018fd1d": {
+      "session_id": "9c14e24e-e2b3-4916-bf3b-5b545018fd1d",
+      "summary": null,
+      "first_timestamp": "2025-06-21T10:08:44.855Z",
+      "last_timestamp": "2025-06-22T01:02:56.227Z",
+      "message_count": 3,
+      "first_user_message": "",
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_cache_creation_tokens": 0,
+      "total_cache_read_tokens": 0
+    },
+    "cd8ca5c4-6a1d-4ea2-a90d-d406827468ed": {
+      "session_id": "cd8ca5c4-6a1d-4ea2-a90d-d406827468ed",
+      "summary": null,
+      "first_timestamp": "2025-06-21T10:11:23.407Z",
+      "last_timestamp": "2025-06-21T16:22:31.790Z",
+      "message_count": 270,
+      "first_user_message": "I realised it doesn't really make sense to wrap the tool use and result boxes into assistant and user ones, so we should somehow have these rendered as top level message types",
+      "total_input_tokens": 627,
+      "total_output_tokens": 18099,
+      "total_cache_creation_tokens": 314524,
+      "total_cache_read_tokens": 6502970
+    },
+    "5027f309-99b0-41ff-865e-0f62d2f799e1": {
+      "session_id": "5027f309-99b0-41ff-865e-0f62d2f799e1",
+      "summary": "Runtime Message Filtering with Toolbar & Counts",
+      "first_timestamp": "2025-06-22T15:34:27.735Z",
+      "last_timestamp": "2025-06-22T23:39:05.650Z",
+      "message_count": 176,
+      "first_user_message": "I have an interesting feature for today! We should implement runtime message filtering with Javascript, so people can toggle each message type and be able to see only certain types. I'm not settled on the UI though, we might need to hide the filters by default and open some overlay on a button press to show all the options. Maybe we can start with a filtering button above the details toggle button in the bottom right?",
+      "total_input_tokens": 56,
+      "total_output_tokens": 11190,
+      "total_cache_creation_tokens": 176384,
+      "total_cache_read_tokens": 3374071
+    },
+    "2f5b4461-b1de-414e-ab21-5f96fd0db9d6": {
+      "session_id": "2f5b4461-b1de-414e-ab21-5f96fd0db9d6",
+      "summary": null,
+      "first_timestamp": "2025-06-23T09:21:18.359Z",
+      "last_timestamp": "2025-06-23T11:22:34.011Z",
+      "message_count": 362,
+      "first_user_message": "I think we should split up transcripts by jsonl files too as the combined ones can get quite big and add navigation to the top level. So the way I imagine it is that we'd have not just `combined_transcripts.html` in the project directories, but one for each session id. These could use the same transcript.html template, just not have more than one session's messages.\\\n\\\nThe bit I'm unsure about it what to do with the top index, maybe we could have an expandable session ToC similar to the top of t",
+      "total_input_tokens": 2671,
+      "total_output_tokens": 25326,
+      "total_cache_creation_tokens": 569240,
+      "total_cache_read_tokens": 11596107
+    },
+    "080fa927-769a-438a-a133-a297802dca50": {
+      "session_id": "080fa927-769a-438a-a133-a297802dca50",
+      "summary": "Collapsible Sessions: Improving Index Page Navigation",
+      "first_timestamp": "2025-06-23T11:54:26.432Z",
+      "last_timestamp": "2025-06-26T22:58:16.894Z",
+      "message_count": 30,
+      "first_user_message": "I like our new top level session list on the index page, but I realised we had lots of session on some of the projects so now it takes ages to scroll...\\\n\\\nWe should probably hide the session list inside these project boxes with a detail, similar to what we have for the message boxes on the transcript pages.",
+      "total_input_tokens": 53,
+      "total_output_tokens": 32,
+      "total_cache_creation_tokens": 22563,
+      "total_cache_read_tokens": 147571
+    },
+    "07047a7d-ecbf-4e09-9f96-43949ae2e4f4": {
+      "session_id": "07047a7d-ecbf-4e09-9f96-43949ae2e4f4",
+      "summary": "Refactor Utils: Centralize Message Filtering, Fix Types",
+      "first_timestamp": "2025-06-23T11:54:26.432Z",
+      "last_timestamp": "2025-06-27T00:33:38.997Z",
+      "message_count": 225,
+      "first_user_message": "[Image #1][Image #2]\\\n\\\nCan you please compare the logic how we pick which message is displayed as the session starter? On the first screenshot (on the transcript page) we've developed a way to skip the system messages, but in the (new) index page session it's not the same.",
+      "total_input_tokens": 255,
+      "total_output_tokens": 2733,
+      "total_cache_creation_tokens": 220202,
+      "total_cache_read_tokens": 4393725
+    },
+    "858d9e0c-1f3f-4b19-ac5c-b0573d8f5ec3": {
+      "session_id": "858d9e0c-1f3f-4b19-ac5c-b0573d8f5ec3",
+      "summary": "Fixing Session Summaries & Docs for Claude Logbook",
+      "first_timestamp": "2025-06-23T23:46:44.687Z",
+      "last_timestamp": "2025-06-24T00:26:36.192Z",
+      "message_count": 192,
+      "first_user_message": "Search the codebase for where session data structures are defined and how the session.summary field is populated. I need to understand why session summaries appear in the combined transcript page but not on the index page. Look specifically for:\n\n1. Where session objects are created/populated  \n2. How the session.summary field gets set\n3. Any differences between how sessions are processed for index vs transcript pages\n4. Session-related classes or data structures\n\nFocus on renderer.py, converter",
+      "total_input_tokens": 2249,
+      "total_output_tokens": 3967,
+      "total_cache_creation_tokens": 208995,
+      "total_cache_read_tokens": 2285584
+    },
+    "b6ba7dfb-c1e6-4eb8-8863-bf37d24626eb": {
+      "session_id": "b6ba7dfb-c1e6-4eb8-8863-bf37d24626eb",
+      "summary": "TimelineJS Integration for Transcript Navigation",
+      "first_timestamp": "2025-06-28T15:21:30.810Z",
+      "last_timestamp": "2025-06-28T16:31:05.019Z",
+      "message_count": 102,
+      "first_user_message": "I have a really exciting feature for today, but it's quite chunky so we'll need a proper plan (see plan template).\\\n\\\nI'd like to have a horizontal timeline for the transcript, built with TimelineJS. Since some of the transcripts can be quite big, we should build it dynamically runtime fully on demand to not impact page load times. I think having the HTML self-contained is still a useful goal so the script to build this should be inlined (but live in a separate template file), and then we could ",
+      "total_input_tokens": 237,
+      "total_output_tokens": 13565,
+      "total_cache_creation_tokens": 299504,
+      "total_cache_read_tokens": 1902838
+    },
+    "86f53fcb-7d2f-46a6-a662-20597451bd94": {
+      "session_id": "86f53fcb-7d2f-46a6-a662-20597451bd94",
+      "summary": null,
+      "first_timestamp": "2025-06-28T21:32:57.730Z",
+      "last_timestamp": "2025-06-29T00:21:03.859Z",
+      "message_count": 174,
+      "first_user_message": "I have a really exciting feature for today, but it's quite chunky so we'll need a proper plan (see plan template).\n\nPlease do a git diff to see where we got with an aborted attempt to use TimelineJS.\n\nI'd like to have a horizontal timeline for the transcript, built with vis-timeline. Since some of the transcripts can be quite big, we should build it dynamically runtime fully on demand to not impact page load times. I think having the HTML self-contained is still a useful goal so the script to bu",
+      "total_input_tokens": 291,
+      "total_output_tokens": 8957,
+      "total_cache_creation_tokens": 294542,
+      "total_cache_read_tokens": 3051728
+    },
+    "fd2d8ab2-1e49-4004-9e79-cb4c8819572f": {
+      "session_id": "fd2d8ab2-1e49-4004-9e79-cb4c8819572f",
+      "summary": "Anthropic Types Integration: Hybrid Parsing & Validation",
+      "first_timestamp": "2025-07-01T09:39:27.891Z",
+      "last_timestamp": "2025-07-01T23:19:41.973Z",
+      "message_count": 595,
+      "first_user_message": "Please have a look in .venv/lib/python3.12/site-packages/anthropic/types and see if we could generate our Pydantic classes in @claude_code_log/models.py somehow so we can benefit from always having the latest, full types from Anthropic rather than having to infer from what I personally have encountered in the JSONL files.",
+      "total_input_tokens": 1247,
+      "total_output_tokens": 43483,
+      "total_cache_creation_tokens": 504859,
+      "total_cache_read_tokens": 13785847
+    },
+    "66953f1b-124e-460e-8978-316d761ff7fb": {
+      "session_id": "66953f1b-124e-460e-8978-316d761ff7fb",
+      "summary": "Terminal Command Execution and Screen Clearing",
+      "first_timestamp": "2025-07-01T09:39:27.891Z",
+      "last_timestamp": "2025-07-01T23:20:11.587Z",
+      "message_count": 3,
+      "first_user_message": "",
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_cache_creation_tokens": 0,
+      "total_cache_read_tokens": 0
+    },
+    "df749439-8556-41bf-9965-9f49cf38bf2a": {
+      "session_id": "df749439-8556-41bf-9965-9f49cf38bf2a",
+      "summary": "Type Errors Fixed: Robust Typing in Python Project",
+      "first_timestamp": "2025-07-01T09:42:27.307Z",
+      "last_timestamp": "2025-07-01T10:01:35.545Z",
+      "message_count": 233,
+      "first_user_message": "Hey Claude, can you please fix the failing test? I'm a bit concerned why it started suddenly failing though, if anything there should be fewer collapsible details because we have removed the details element for messages that are short enough. Please have a look at the git log to see what it could be",
+      "total_input_tokens": 247,
+      "total_output_tokens": 13031,
+      "total_cache_creation_tokens": 113341,
+      "total_cache_read_tokens": 2846105
+    },
+    "4498c5fb-de7e-4a20-bbf0-5f29da27c848": {
+      "session_id": "4498c5fb-de7e-4a20-bbf0-5f29da27c848",
+      "summary": null,
+      "first_timestamp": "2025-07-01T23:21:37.522Z",
+      "last_timestamp": "2025-07-02T10:02:29.190Z",
+      "message_count": 5,
+      "first_user_message": "",
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_cache_creation_tokens": 0,
+      "total_cache_read_tokens": 0
+    },
+    "20c93d4a-df96-4b03-9124-a1b9d476b29f": {
+      "session_id": "20c93d4a-df96-4b03-9124-a1b9d476b29f",
+      "summary": null,
+      "first_timestamp": "2025-07-01T23:27:13.089Z",
+      "last_timestamp": "2025-07-01T23:46:10.931Z",
+      "message_count": 277,
+      "first_user_message": "Hey Claude, we started to refactor our library to use the anthropic library because it has types for various parts of the responses. From the README:\\\n\\\nUsing types\n\nNested request parameters are TypedDicts. Responses are Pydantic models which also provide helper methods for things like:\n\n    Serializing back into JSON, model.to_json()\n    Converting to a dictionary, model.to_dict()\n\nTyped requests and responses provide autocomplete and documentation within your editor. If you would like to see ",
+      "total_input_tokens": 392,
+      "total_output_tokens": 15701,
+      "total_cache_creation_tokens": 171321,
+      "total_cache_read_tokens": 5877974
+    },
+    "40f8af00-d071-46a6-8682-dd2aaf944ee3": {
+      "session_id": "40f8af00-d071-46a6-8682-dd2aaf944ee3",
+      "summary": "Local Command Execution: Doctor Command Attempted",
+      "first_timestamp": "2025-07-02T10:02:46.038Z",
+      "last_timestamp": "2025-07-02T11:28:49.300Z",
+      "message_count": 33,
+      "first_user_message": "Hey Claude, I'd like to update the documentation to make sure it's keepinkg up with recent changes. But I'd also like you to help document what questions does this library help answering, so people can find it when they search for those.",
+      "total_input_tokens": 26,
+      "total_output_tokens": 57,
+      "total_cache_creation_tokens": 22715,
+      "total_cache_read_tokens": 76080
+    },
+    "1767af99-cb03-45a0-a56e-e53aefabc084": {
+      "session_id": "1767af99-cb03-45a0-a56e-e53aefabc084",
+      "summary": null,
+      "first_timestamp": "2025-07-02T11:29:05.868Z",
+      "last_timestamp": "2025-07-02T11:33:49.401Z",
+      "message_count": 42,
+      "first_user_message": "I edited it a bit, but please continue",
+      "total_input_tokens": 48,
+      "total_output_tokens": 114,
+      "total_cache_creation_tokens": 27663,
+      "total_cache_read_tokens": 173480
+    },
+    "3a55cb70-2bd3-4b89-9c38-c15fb63c9c55": {
+      "session_id": "3a55cb70-2bd3-4b89-9c38-c15fb63c9c55",
+      "summary": "Local Command Execution: Doctor Command Attempted",
+      "first_timestamp": "2025-07-02T11:33:53.929Z",
+      "last_timestamp": "2025-07-02T11:34:06.124Z",
+      "message_count": 3,
+      "first_user_message": "",
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_cache_creation_tokens": 0,
+      "total_cache_read_tokens": 0
+    },
+    "f4ca848b-13d3-4f4d-87aa-852d947525b8": {
+      "session_id": "f4ca848b-13d3-4f4d-87aa-852d947525b8",
+      "summary": null,
+      "first_timestamp": "2025-07-02T11:34:22.402Z",
+      "last_timestamp": "2025-07-02T11:35:36.312Z",
+      "message_count": 54,
+      "first_user_message": "Hey Claude, I'd like to update the documentation to make sure it's keepinkg up with recent changes. But I'd also like you to help document what questions does this library help answering, so people can find it when they search for those.",
+      "total_input_tokens": 10,
+      "total_output_tokens": 2,
+      "total_cache_creation_tokens": 5889,
+      "total_cache_read_tokens": 50278
+    },
+    "8e0444c5-50a8-4e7e-81a9-976fe38146b1": {
+      "session_id": "8e0444c5-50a8-4e7e-81a9-976fe38146b1",
+      "summary": "Markdown Docs Update: Library Features & Discoverability",
+      "first_timestamp": "2025-07-02T11:38:48.903Z",
+      "last_timestamp": "2025-07-02T11:39:11.156Z",
+      "message_count": 52,
+      "first_user_message": "Hey Claude, I'd like to update the documentation to make sure it's keepinkg up with recent changes. But I'd also like you to help document what questions does this library help answering, so people can find it when they search for those.",
+      "total_input_tokens": 4,
+      "total_output_tokens": 1,
+      "total_cache_creation_tokens": 18851,
+      "total_cache_read_tokens": 10530
+    },
+    "a6c02863-096b-42a5-8c37-8978840971c7": {
+      "session_id": "a6c02863-096b-42a5-8c37-8978840971c7",
+      "summary": null,
+      "first_timestamp": "2025-07-02T16:08:09.080Z",
+      "last_timestamp": "2025-07-02T16:08:26.397Z",
+      "message_count": 60,
+      "first_user_message": "Hey Claude, I'd like to update the documentation to make sure it's keepinkg up with recent changes. But I'd also like you to help document what questions does this library help answering, so people can find it when they search for those.",
+      "total_input_tokens": 11,
+      "total_output_tokens": 27,
+      "total_cache_creation_tokens": 31313,
+      "total_cache_read_tokens": 30937
+    },
+    "2f82cbc5-d9f1-462d-b8c4-3ebe5df7157c": {
+      "session_id": "2f82cbc5-d9f1-462d-b8c4-3ebe5df7157c",
+      "summary": "Timeline Browser Tests: Fixing Sidechain Message Rendering",
+      "first_timestamp": "2025-07-02T16:20:01.573Z",
+      "last_timestamp": "2025-07-02T19:14:43.298Z",
+      "message_count": 399,
+      "first_user_message": "Hey Claude, the changes we did in commit d8936c3 seems to be only applied to the main transcript, but not the timeline. Namely, we need to handle isSidechain sub-assistant chains (where the initial prompt incorrectly shows up as a users message) and system messages like used up Opus usage that have a bit different data structure. \\\n\\\n[Image #1][Image #2]",
+      "total_input_tokens": 668,
+      "total_output_tokens": 1507,
+      "total_cache_creation_tokens": 375792,
+      "total_cache_read_tokens": 12147443
+    },
+    "97d59289-cbb2-4b20-8123-f7ba0f465dfe": {
+      "session_id": "97d59289-cbb2-4b20-8123-f7ba0f465dfe",
+      "summary": "Sub-assistant Filtering: Tests, Fixes, Cleanup",
+      "first_timestamp": "2025-07-02T16:20:01.573Z",
+      "last_timestamp": "2025-07-02T20:27:17.055Z",
+      "message_count": 525,
+      "first_user_message": "Can you please expand the tests in @test/test_timeline_browser.py to make sure that the sub-assistant message shows up in the right group? We have a test that checks for the content, but not the group / class and for some reason with the real data in my home directory it still doesn't work, even though the sidechain.jsonl data is copied from the same transcript. \\\n\\\n[Image #1]",
+      "total_input_tokens": 16099,
+      "total_output_tokens": 10181,
+      "total_cache_creation_tokens": 669468,
+      "total_cache_read_tokens": 15826047
+    },
+    "0e8a1542-bb37-4ceb-ad31-2630ca9c6454": {
+      "session_id": "0e8a1542-bb37-4ceb-ad31-2630ca9c6454",
+      "summary": "Pyright Fixes: Renderer Type Errors Resolved",
+      "first_timestamp": "2025-07-02T16:20:01.573Z",
+      "last_timestamp": "2025-07-02T21:27:25.545Z",
+      "message_count": 22,
+      "first_user_message": "<bash-input>uv run pyright</bash-input>",
+      "total_input_tokens": 39,
+      "total_output_tokens": 6,
+      "total_cache_creation_tokens": 20836,
+      "total_cache_read_tokens": 92909
+    },
+    "e6d88a68-3793-4d6c-bdf1-a4e70ad531d3": {
+      "session_id": "e6d88a68-3793-4d6c-bdf1-a4e70ad531d3",
+      "summary": "Docs Update: Markdown Conversation Review Tool Improvements",
+      "first_timestamp": "2025-07-02T16:20:16.026Z",
+      "last_timestamp": "2025-07-02T16:21:05.790Z",
+      "message_count": 69,
+      "first_user_message": "Hey Claude, I'd like to update the documentation to make sure it's keepinkg up with recent changes. But I'd also like you to help document what questions does this library help answering, so people can find it when they search for those.",
+      "total_input_tokens": 40,
+      "total_output_tokens": 89,
+      "total_cache_creation_tokens": 34435,
+      "total_cache_read_tokens": 197202
+    },
+    "078d4af7-499e-4c8b-b3e2-5d4c301d436a": {
+      "session_id": "078d4af7-499e-4c8b-b3e2-5d4c301d436a",
+      "summary": null,
+      "first_timestamp": "2025-07-02T21:34:34.180Z",
+      "last_timestamp": "2025-07-02T21:37:29.513Z",
+      "message_count": 62,
+      "first_user_message": "I need to find where the session description/preview text is generated in the codebase. This is the text that appears in the session navigation boxes. Look for code that:\n1. Generates the preview text for sessions\n2. Handles the first message selection for display\n3. Processes message content for session summaries\n\nSearch through the codebase for functions that create session descriptions, handle first message display, or generate session previews. Focus on the renderer and parser modules.",
+      "total_input_tokens": 490,
+      "total_output_tokens": 2461,
+      "total_cache_creation_tokens": 62307,
+      "total_cache_read_tokens": 440770
+    },
+    "2a8bdfa3-5440-4c56-9e8b-1a7509a27c96": {
+      "session_id": "2a8bdfa3-5440-4c56-9e8b-1a7509a27c96",
+      "summary": "Timeline Generation: Optimizing Timestamp Handling",
+      "first_timestamp": "2025-07-02T21:37:42.958Z",
+      "last_timestamp": "2025-07-03T17:08:48.652Z",
+      "message_count": 123,
+      "first_user_message": "Hey Claude, I added start and end to the timeline generation because for big transcripts it now takes up to half a minute to generate, so bounding the bit displayed helps a lot. But I need your help to set these times to start at last message time - 1 hour to end at the time of last message so as a starting point the user would see their last session and then can zoom out if needed, but it sounds like a useful default.\\\n\\\nThis also seems to have broken some of the tests on @test/test_timeline_br",
+      "total_input_tokens": 354,
+      "total_output_tokens": 1780,
+      "total_cache_creation_tokens": 169401,
+      "total_cache_read_tokens": 1619579
+    },
+    "70d392d2-ef2b-4796-9df1-a3908e11bcdb": {
+      "session_id": "70d392d2-ef2b-4796-9df1-a3908e11bcdb",
+      "summary": "Vis-Timeline Tooltip Fix: Enhanced Markdown Display",
+      "first_timestamp": "2025-07-02T21:37:42.958Z",
+      "last_timestamp": "2025-07-03T19:31:35.011Z",
+      "message_count": 216,
+      "first_user_message": "Hey Claude, the last message in sub-agent chains in the timeline seems to be Markdown formatted, which is good, but since the content isn't wrapped in a <pre> like most of the other tooltip contents, it overflows the parent. Any ideas how to fix?\\\n\\\n[Image #1]",
+      "total_input_tokens": 307,
+      "total_output_tokens": 2533,
+      "total_cache_creation_tokens": 163061,
+      "total_cache_read_tokens": 3643518
+    },
+    "8aa7b9fd-0e02-4353-95ef-3fef16f30524": {
+      "session_id": "8aa7b9fd-0e02-4353-95ef-3fef16f30524",
+      "summary": "Terminal Command Execution and Screen Clearing",
+      "first_timestamp": "2025-07-02T21:37:42.958Z",
+      "last_timestamp": "2025-07-03T23:11:24.014Z",
+      "message_count": 3,
+      "first_user_message": "",
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_cache_creation_tokens": 0,
+      "total_cache_read_tokens": 0
+    },
+    "2934a2ea-db67-4b2d-8991-a39057ef774a": {
+      "session_id": "2934a2ea-db67-4b2d-8991-a39057ef774a",
+      "summary": "Session Preview Fixes: Renderer and Converter Logic",
+      "first_timestamp": "2025-07-02T21:37:50.018Z",
+      "last_timestamp": "2025-07-02T21:43:52.403Z",
+      "message_count": 73,
+      "first_user_message": "Please continue",
+      "total_input_tokens": 115,
+      "total_output_tokens": 229,
+      "total_cache_creation_tokens": 21861,
+      "total_cache_read_tokens": 555009
+    },
+    "a790dc9e-eb86-4146-a3e9-52d3aecbcc3f": {
+      "session_id": "a790dc9e-eb86-4146-a3e9-52d3aecbcc3f",
+      "summary": null,
+      "first_timestamp": "2025-07-03T23:13:04.452Z",
+      "last_timestamp": "2025-07-03T23:41:29.422Z",
+      "message_count": 243,
+      "first_user_message": "Hey Claude, the filtering in the timeline doesn't seem to work, can you        \u2502\n\u2502   please write some tests in @test/test_timeline_browser.py?",
+      "total_input_tokens": 349,
+      "total_output_tokens": 2718,
+      "total_cache_creation_tokens": 192294,
+      "total_cache_read_tokens": 3895393
+    },
+    "0d3a8e6f-290f-4105-a327-a2496e5e2a83": {
+      "session_id": "0d3a8e6f-290f-4105-a327-a2496e5e2a83",
+      "summary": "Timeline Filtering and Color Matching in Vis-Timeline",
+      "first_timestamp": "2025-07-05T19:36:37.219Z",
+      "last_timestamp": "2025-07-05T20:05:11.481Z",
+      "message_count": 68,
+      "first_user_message": "Hey Claude, I'd like your help with refactoring the timeline filtering so that we hide the group instead of all items that belong to a group as that would also collapse the row in the timeline. Find `// TODO: hide vis-group instead` in @claude_code_log/templates/components/timeline.html \\\n\\\nAlso, I noticed that the colour of the group header cell (.vis-label.vis-group-level-0) isn't the same as the items (.vis-item.timeline-item-sidechain), can you please make it the same as the items?",
+      "total_input_tokens": 138,
+      "total_output_tokens": 1142,
+      "total_cache_creation_tokens": 85100,
+      "total_cache_read_tokens": 348985
+    },
+    "f5f78e6f-89ba-447c-a58e-c19689698a7a": {
+      "session_id": "f5f78e6f-89ba-447c-a58e-c19689698a7a",
+      "summary": null,
+      "first_timestamp": "2025-07-08T00:18:18.319Z",
+      "last_timestamp": "2025-07-08T00:27:43.278Z",
+      "message_count": 121,
+      "first_user_message": "We're getting errors like this:\\\n\\\nLine 166 of /Users/dain/.claude/projects/-Users-dain-workspace-platform-frontend-next/b17d7dc1-fb0c-46aa-a4bf-df424789f4a4.jsonl | 9 validation errors for UserTranscriptEntry\ntoolUseResult.str\n  Input should be a valid string [type=string_type, input_value=[{'type': 'text', 'text':.../Base\"], \"files\": []}'}], input_type=list]\ntoolUseResult.list[TodoItem].0.id\n  Field required [type=missing, input_value={'type': 'text', 'text': ...s/Base\"], \"files\": []}'}, input",
+      "total_input_tokens": 46,
+      "total_output_tokens": 640,
+      "total_cache_creation_tokens": 42715,
+      "total_cache_read_tokens": 1224876
+    },
+    "227c98ff-9a6f-4325-81e6-38616bf825dc": {
+      "session_id": "227c98ff-9a6f-4325-81e6-38616bf825dc",
+      "summary": "Claude Code Log: Timestamp-Based Caching Implementation",
+      "first_timestamp": "2025-07-13T12:37:14.615Z",
+      "last_timestamp": "2025-07-13T21:03:45.263Z",
+      "message_count": 377,
+      "first_user_message": "As my Claude Code sessions are increasing, reprocessing the all the logs takes several seconds. So I thought we should introduce some caching. We should create a `cache` directory inside each project directory in `~.claude/projects` and then write the data in the normalised format we need for the logs and then only process JSONL files incrementally based on last modified dates and line timestamps inside.\\\n\\\nCan you please draw up a plan on the caching mechanism, time comparison and incremental u",
+      "total_input_tokens": 151,
+      "total_output_tokens": 1414,
+      "total_cache_creation_tokens": 454641,
+      "total_cache_read_tokens": 8535613
+    },
+    "0ca402b9-a179-4018-9e5c-ad6e974633d6": {
+      "session_id": "0ca402b9-a179-4018-9e5c-ad6e974633d6",
+      "summary": "Local Command Execution and Screen Clearing",
+      "first_timestamp": "2025-07-13T12:37:14.615Z",
+      "last_timestamp": "2025-07-13T21:13:09.939Z",
+      "message_count": 115,
+      "first_user_message": "<bash-input>uv run ruff check --fix</bash-input>",
+      "total_input_tokens": 133,
+      "total_output_tokens": 1293,
+      "total_cache_creation_tokens": 36248,
+      "total_cache_read_tokens": 956548
+    },
+    "326189cf-5676-4237-8cde-1ce80aae4a9f": {
+      "session_id": "326189cf-5676-4237-8cde-1ce80aae4a9f",
+      "summary": null,
+      "first_timestamp": "2025-07-13T21:17:00.244Z",
+      "last_timestamp": "2025-07-13T21:19:24.776Z",
+      "message_count": 50,
+      "first_user_message": "<bash-input>uv run ty check</bash-input>",
+      "total_input_tokens": 43,
+      "total_output_tokens": 487,
+      "total_cache_creation_tokens": 25577,
+      "total_cache_read_tokens": 299222
+    }
+  },
+  "earliest_timestamp": "2025-06-13T23:34:17.628Z",
+  "latest_timestamp": "2025-07-13T21:19:24.776Z"
+}

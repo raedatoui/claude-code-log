@@ -2,8 +2,8 @@
 default:
   @just --list
 
-gen:
-    uv run claude-code-log
+cli *ARGS:
+    uv run claude-code-log {{ARGS}}
 
 test:
     uv run pytest
@@ -146,5 +146,9 @@ release-push:
 
 copy-example:
     rsync ~/.claude/projects/-Users-dain-workspace-claude-code-log/combined_transcripts.html ./docs/claude-code-log-transcript.html
+    rsync -r ~/.claude/projects/-Users-dain-workspace-claude-code-log/cache ./docs/
 
-regen-all: render-test-data style-guide gen copy-example
+backup:
+    rsync -r ~/.claude/projects ~/.claude/backup
+
+regen-all: backup render-test-data style-guide cli copy-example

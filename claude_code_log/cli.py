@@ -8,6 +8,7 @@ from typing import Optional
 import click
 
 from .converter import convert_jsonl_to_html, process_projects_hierarchy
+from .cache import CacheManager, get_library_version
 
 
 def convert_project_path_to_claude_dir(input_path: Path) -> Path:
@@ -27,6 +28,43 @@ def convert_project_path_to_claude_dir(input_path: Path) -> Path:
     claude_projects_dir = Path.home() / ".claude" / "projects" / claude_project_name
 
     return claude_projects_dir
+
+
+def _clear_caches(input_path: Path, all_projects: bool) -> None:
+    """Clear cache directories for the specified path."""
+    try:
+        library_version = get_library_version()
+
+        if all_projects:
+            # Clear cache for all project directories
+            click.echo("Clearing caches for all projects...")
+            project_dirs = [
+                d
+                for d in input_path.iterdir()
+                if d.is_dir() and list(d.glob("*.jsonl"))
+            ]
+
+            for project_dir in project_dirs:
+                try:
+                    cache_manager = CacheManager(project_dir, library_version)
+                    cache_manager.clear_cache()
+                    click.echo(f"  Cleared cache for {project_dir.name}")
+                except Exception as e:
+                    click.echo(
+                        f"  Warning: Failed to clear cache for {project_dir.name}: {e}"
+                    )
+
+        elif input_path.is_dir():
+            # Clear cache for single directory
+            click.echo(f"Clearing cache for {input_path}...")
+            cache_manager = CacheManager(input_path, library_version)
+            cache_manager.clear_cache()
+        else:
+            # Single file - no cache to clear
+            click.echo("Cache clearing not applicable for single files.")
+
+    except Exception as e:
+        click.echo(f"Warning: Failed to clear cache: {e}")
 
 
 @click.command()
@@ -62,6 +100,16 @@ def convert_project_path_to_claude_dir(input_path: Path) -> Path:
     is_flag=True,
     help="Skip generating individual session HTML files (only create combined transcript)",
 )
+@click.option(
+    "--no-cache",
+    is_flag=True,
+    help="Disable caching and force reprocessing of all files",
+)
+@click.option(
+    "--clear-cache",
+    is_flag=True,
+    help="Clear all cache directories before processing",
+)
 def main(
     input_path: Optional[Path],
     output: Optional[Path],
@@ -70,6 +118,8 @@ def main(
     to_date: Optional[str],
     all_projects: bool,
     no_individual_sessions: bool,
+    no_cache: bool,
+    clear_cache: bool,
 ) -> None:
     """Convert Claude transcript JSONL files to HTML.
 
@@ -81,13 +131,23 @@ def main(
             input_path = Path.home() / ".claude" / "projects"
             all_projects = True
 
+        # Handle cache clearing
+        if clear_cache:
+            _clear_caches(input_path, all_projects)
+            if clear_cache and not (from_date or to_date or input_path.is_file()):
+                # If only clearing cache, exit after clearing
+                click.echo("Cache cleared successfully.")
+                return
+
         # Handle --all-projects flag or default behavior
         if all_projects:
             if not input_path.exists():
                 raise FileNotFoundError(f"Projects directory not found: {input_path}")
 
             click.echo(f"Processing all projects in {input_path}...")
-            output_path = process_projects_hierarchy(input_path, from_date, to_date)
+            output_path = process_projects_hierarchy(
+                input_path, from_date, to_date, not no_cache
+            )
 
             # Count processed projects
             project_count = len(
@@ -130,7 +190,12 @@ def main(
                 )
 
         output_path = convert_jsonl_to_html(
-            input_path, output, from_date, to_date, not no_individual_sessions
+            input_path,
+            output,
+            from_date,
+            to_date,
+            not no_individual_sessions,
+            not no_cache,
         )
         if input_path.is_file():
             click.echo(f"Successfully converted {input_path} to {output_path}")

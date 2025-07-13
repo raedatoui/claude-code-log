@@ -4,7 +4,7 @@
 import json
 from pathlib import Path
 import re
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, TYPE_CHECKING
 from datetime import datetime
 import dateparser
 
@@ -16,6 +16,9 @@ from .models import (
     TextContent,
     ThinkingContent,
 )
+
+if TYPE_CHECKING:
+    from .cache import CacheManager
 
 
 def extract_text_content(content: Union[str, List[ContentItem], None]) -> str:
@@ -111,8 +114,28 @@ def filter_messages_by_date(
     return filtered_messages
 
 
-def load_transcript(jsonl_path: Path) -> List[TranscriptEntry]:
-    """Load and parse JSONL transcript file."""
+def load_transcript(
+    jsonl_path: Path,
+    cache_manager: Optional["CacheManager"] = None,
+    from_date: Optional[str] = None,
+    to_date: Optional[str] = None,
+) -> List[TranscriptEntry]:
+    """Load and parse JSONL transcript file, using cache if available."""
+    # Try to load from cache first
+    if cache_manager is not None:
+        # Use filtered loading if date parameters are provided
+        if from_date or to_date:
+            cached_entries = cache_manager.load_cached_entries_filtered(
+                jsonl_path, from_date, to_date
+            )
+        else:
+            cached_entries = cache_manager.load_cached_entries(jsonl_path)
+
+        if cached_entries is not None:
+            print(f"Loading {jsonl_path} from cache...")
+            return cached_entries
+
+    # Parse from source file
     messages: List[TranscriptEntry] = []
 
     with open(jsonl_path, "r", encoding="utf-8") as f:
@@ -163,10 +186,19 @@ def load_transcript(jsonl_path: Path) -> List[TranscriptEntry]:
                         "\n{traceback.format_exc()}"
                     )
 
+    # Save to cache if cache manager is available
+    if cache_manager is not None:
+        cache_manager.save_cached_entries(jsonl_path, messages)
+
     return messages
 
 
-def load_directory_transcripts(directory_path: Path) -> List[TranscriptEntry]:
+def load_directory_transcripts(
+    directory_path: Path,
+    cache_manager: Optional["CacheManager"] = None,
+    from_date: Optional[str] = None,
+    to_date: Optional[str] = None,
+) -> List[TranscriptEntry]:
     """Load all JSONL transcript files from a directory and combine them."""
     all_messages: List[TranscriptEntry] = []
 
@@ -174,7 +206,7 @@ def load_directory_transcripts(directory_path: Path) -> List[TranscriptEntry]:
     jsonl_files = list(directory_path.glob("*.jsonl"))
 
     for jsonl_file in jsonl_files:
-        messages = load_transcript(jsonl_file)
+        messages = load_transcript(jsonl_file, cache_manager, from_date, to_date)
         all_messages.extend(messages)
 
     # Sort all messages chronologically
