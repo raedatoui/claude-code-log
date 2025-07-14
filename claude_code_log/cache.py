@@ -30,6 +30,7 @@ class SessionCacheData(BaseModel):
     last_timestamp: str
     message_count: int
     first_user_message: str
+    cwd: Optional[str] = None  # Working directory from session messages
     total_input_tokens: int = 0
     total_output_tokens: int = 0
     total_cache_creation_tokens: int = 0
@@ -56,6 +57,9 @@ class ProjectCache(BaseModel):
 
     # Session metadata
     sessions: Dict[str, SessionCacheData]
+
+    # Working directories associated with this project
+    working_directories: List[str] = []
 
     # Timeline information
     earliest_timestamp: str = ""
@@ -354,6 +358,14 @@ class CacheManager:
         self._project_cache.earliest_timestamp = earliest_timestamp
         self._project_cache.latest_timestamp = latest_timestamp
 
+        self._save_project_cache()
+
+    def update_working_directories(self, working_directories: List[str]) -> None:
+        """Update the list of working directories associated with this project."""
+        if self._project_cache is None:
+            return
+
+        self._project_cache.working_directories = working_directories
         self._save_project_cache()
 
     def get_modified_files(self, jsonl_files: List[Path]) -> List[Path]:

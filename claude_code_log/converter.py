@@ -3,7 +3,10 @@
 
 from pathlib import Path
 import traceback
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .cache import CacheManager
 
 from .utils import should_use_as_session_starter, extract_init_command_description
 from .cache import CacheManager, SessionCacheData, get_library_version
@@ -22,6 +25,8 @@ from .renderer import (
     generate_html,
     generate_session_html,
     generate_projects_index_html,
+    is_html_outdated,
+    get_project_display_name,
 )
 
 
@@ -59,7 +64,16 @@ def convert_jsonl_to_html(
         messages = load_directory_transcripts(
             input_path, cache_manager, from_date, to_date
         )
-        title = f"Claude Transcripts - {input_path.name}"
+
+        # Try to get a better project title from working directories in cache
+        working_directories = None
+        if cache_manager is not None:
+            project_cache = cache_manager.get_cached_project_data()
+            if project_cache and project_cache.working_directories:
+                working_directories = project_cache.working_directories
+
+        project_title = get_project_display_name(input_path.name, working_directories)
+        title = f"Claude Transcripts - {project_title}"
 
     # Apply date filtering
     messages = filter_messages_by_date(messages, from_date, to_date)
@@ -74,14 +88,26 @@ def convert_jsonl_to_html(
         date_range_str = " ".join(date_range_parts)
         title += f" ({date_range_str})"
 
-    # Generate combined HTML file
-    html_content = generate_html(messages, title)
+    # Generate combined HTML file (check if regeneration needed)
     assert output_path is not None
-    output_path.write_text(html_content, encoding="utf-8")
+    should_regenerate = (
+        is_html_outdated(output_path)
+        or from_date is not None
+        or to_date is not None
+        or not output_path.exists()
+    )
+
+    if should_regenerate:
+        html_content = generate_html(messages, title)
+        output_path.write_text(html_content, encoding="utf-8")
+    else:
+        print(f"HTML file {output_path.name} is current, skipping regeneration")
 
     # Generate individual session files if requested and in directory mode
     if generate_individual_sessions and input_path.is_dir():
-        _generate_individual_session_files(messages, input_path, from_date, to_date)
+        _generate_individual_session_files(
+            messages, input_path, from_date, to_date, cache_manager
+        )
 
     # Update cache with session and project data if available
     if cache_manager is not None and input_path.is_dir():
@@ -163,6 +189,7 @@ def _update_cache_with_session_data(
                     last_timestamp=getattr(message, "timestamp", ""),
                     message_count=0,
                     first_user_message="",
+                    cwd=getattr(message, "cwd", None),
                 )
 
             session_cache = sessions_cache_data[session_id]
@@ -223,6 +250,15 @@ def _update_cache_with_session_data(
 
     # Update cache with session data
     cache_manager.update_session_cache(sessions_cache_data)
+
+    # Collect unique working directories from sessions
+    working_directories = set()
+    for session_cache in sessions_cache_data.values():
+        if session_cache.cwd:
+            working_directories.add(session_cache.cwd)
+
+    # Update cache with working directories
+    cache_manager.update_working_directories(list(working_directories))
 
     # Update cache with project aggregates
     cache_manager.update_project_aggregates(
@@ -366,6 +402,7 @@ def _generate_individual_session_files(
     output_dir: Path,
     from_date: Optional[str] = None,
     to_date: Optional[str] = None,
+    cache_manager: Optional["CacheManager"] = None,
 ) -> None:
     """Generate individual HTML files for each session."""
     # Find all unique session IDs
@@ -376,10 +413,41 @@ def _generate_individual_session_files(
             if session_id:
                 session_ids.add(session_id)
 
+    # Get session data from cache for better titles
+    session_data: Dict[str, Any] = {}
+    working_directories = None
+    if cache_manager is not None:
+        project_cache = cache_manager.get_cached_project_data()
+        if project_cache:
+            session_data = {s.session_id: s for s in project_cache.sessions.values()}
+            # Get working directories for project title
+            if project_cache.working_directories:
+                working_directories = project_cache.working_directories
+
+    project_title = get_project_display_name(output_dir.name, working_directories)
+
     # Generate HTML file for each session
     for session_id in session_ids:
-        # Create session-specific title
-        session_title = f"Session {session_id[:8]}"
+        # Create session-specific title using cache data if available
+        if session_id in session_data:
+            session_cache = session_data[session_id]
+            if session_cache.summary:
+                session_title = f"{project_title}: {session_cache.summary}"
+            else:
+                # Fall back to first user message preview
+                preview = session_cache.first_user_message
+                if preview and len(preview) > 50:
+                    preview = preview[:50] + "..."
+                session_title = (
+                    f"{project_title}: {preview}"
+                    if preview
+                    else f"{project_title}: Session {session_id[:8]}"
+                )
+        else:
+            # Fall back to basic session title
+            session_title = f"{project_title}: Session {session_id[:8]}"
+
+        # Add date range if specified
         if from_date or to_date:
             date_range_parts: List[str] = []
             if from_date:
@@ -390,7 +458,9 @@ def _generate_individual_session_files(
             session_title += f" ({date_range_str})"
 
         # Generate session HTML
-        session_html = generate_session_html(messages, session_id, session_title)
+        session_html = generate_session_html(
+            messages, session_id, session_title, cache_manager
+        )
 
         # Write session file
         session_file_path = output_dir / f"session-{session_id}.html"
@@ -443,8 +513,12 @@ def process_projects_hierarchy(
                     jsonl_files = list(project_dir.glob("*.jsonl"))
                     modified_files = cache_manager.get_modified_files(jsonl_files)
 
-                    if not modified_files:
-                        # All files are cached, use cached project data
+                    # Check if HTML files are outdated
+                    combined_html_path = project_dir / "combined_transcripts.html"
+                    html_outdated = is_html_outdated(combined_html_path)
+
+                    if not modified_files and not html_outdated:
+                        # All files are cached and HTML is current, use cached project data
                         print(f"Using cached data for project {project_dir.name}")
                         project_summaries.append(
                             {
@@ -465,6 +539,7 @@ def process_projects_hierarchy(
                                 "total_cache_read_tokens": cached_project_data.total_cache_read_tokens,
                                 "latest_timestamp": cached_project_data.latest_timestamp,
                                 "earliest_timestamp": cached_project_data.earliest_timestamp,
+                                "working_directories": cached_project_data.working_directories,
                                 "sessions": [
                                     {
                                         "id": session_data.session_id,
@@ -514,6 +589,7 @@ def process_projects_hierarchy(
                             "total_cache_read_tokens": cached_project_data.total_cache_read_tokens,
                             "latest_timestamp": cached_project_data.latest_timestamp,
                             "earliest_timestamp": cached_project_data.earliest_timestamp,
+                            "working_directories": cached_project_data.working_directories,
                             "sessions": [
                                 {
                                     "id": session_data.session_id,
@@ -552,6 +628,12 @@ def process_projects_hierarchy(
 
             # Collect session data for this project
             sessions_data = _collect_project_sessions(messages)
+
+            # Collect working directories from messages
+            working_directories = set()
+            for message in messages:
+                if hasattr(message, "cwd") and message.cwd:
+                    working_directories.add(message.cwd)
 
             for message in messages:
                 # Track latest and earliest timestamps across all messages
@@ -607,6 +689,7 @@ def process_projects_hierarchy(
                     "total_cache_read_tokens": total_cache_read_tokens,
                     "latest_timestamp": latest_timestamp,
                     "earliest_timestamp": earliest_timestamp,
+                    "working_directories": list(working_directories),
                     "sessions": sessions_data,
                 }
             )
@@ -618,9 +701,12 @@ def process_projects_hierarchy(
             )
             continue
 
-    # Generate index HTML
+    # Generate index HTML (always regenerate if outdated)
     index_path = projects_path / "index.html"
-    index_html = generate_projects_index_html(project_summaries, from_date, to_date)
-    index_path.write_text(index_html, encoding="utf-8")
+    if is_html_outdated(index_path) or from_date or to_date:
+        index_html = generate_projects_index_html(project_summaries, from_date, to_date)
+        index_path.write_text(index_html, encoding="utf-8")
+    else:
+        print("Index HTML is current, skipping regeneration")
 
     return index_path

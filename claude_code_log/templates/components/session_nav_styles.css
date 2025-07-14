@@ -75,3 +75,21 @@
 .project-sessions .session-link-meta {
     font-size: 0.75em;
 }
+
+/* Combined transcript link */
+.combined-transcript-link {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #ffffff66;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #495057;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.combined-transcript-link:hover {
+    background-color: #ffffff99;
+    text-decoration: none;
+}

@@ -258,7 +258,6 @@ uv run claude-code-log
 - integrate `claude-trace` request logs if present?
 - Shortcut / command to resume a specific conversation by session ID $ claude --resume 550e8400-e29b-41d4-a716-446655440000?
 - Localised number formatting and timezone adjustment runtime? For this we'd need to make Jinja template variables more granular
-- get `cwd` from logs to be able to render the proper path for titles
 - convert images to WebP as screenshots are often huge PNGs – this might be time consuming to keep redoing (so would also need some caching) and need heavy dependencies with compilation (unless there are fast pure Python conversation libraries? Or WASM?)
 - add special formatting for built-in tools: Bash, Glob, Grep, LS, exit_plan_mode, Read, Edit, MultiEdit, Write, NotebookRead, NotebookEdit, WebFetch, TodoRead, TodoWrite, WebSearch
   - render Edit / MultiEdit as diff(s)?

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """CLI interface for claude-code-log."""
 
+import os
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 import click
 
@@ -28,6 +29,64 @@ def convert_project_path_to_claude_dir(input_path: Path) -> Path:
     claude_projects_dir = Path.home() / ".claude" / "projects" / claude_project_name
 
     return claude_projects_dir
+
+
+def find_projects_by_cwd(
+    projects_dir: Path, current_cwd: Optional[str] = None
+) -> List[Path]:
+    """Find Claude projects that match the current working directory."""
+    if current_cwd is None:
+        current_cwd = os.getcwd()
+
+    # Normalize the current working directory
+    current_cwd_path = Path(current_cwd).resolve()
+
+    matching_projects: List[Path] = []
+
+    # Check all project directories
+    if not projects_dir.exists():
+        return matching_projects
+
+    for project_dir in projects_dir.iterdir():
+        if not project_dir.is_dir() or not list(project_dir.glob("*.jsonl")):
+            continue
+
+        try:
+            # Load cache to check for working directories
+            cache_manager = CacheManager(project_dir, get_library_version())
+            project_cache = cache_manager.get_cached_project_data()
+
+            if project_cache and project_cache.working_directories:
+                # Check if current cwd matches any working directory in this project
+                for cwd in project_cache.working_directories:
+                    cwd_path = Path(cwd).resolve()
+                    # Check for exact match or if current cwd is under this path
+                    if (
+                        current_cwd_path == cwd_path
+                        or current_cwd_path.is_relative_to(cwd_path)
+                        or cwd_path.is_relative_to(current_cwd_path)
+                    ):
+                        matching_projects.append(project_dir)
+                        break
+            else:
+                # Fall back to path name matching if no cache data
+                project_name = project_dir.name
+                if project_name.startswith("-"):
+                    # Convert Claude project name back to path
+                    path_parts = project_name[1:].split("-")
+                    if path_parts:
+                        reconstructed_path = Path("/") / Path(*path_parts)
+                        if (
+                            current_cwd_path == reconstructed_path
+                            or current_cwd_path.is_relative_to(reconstructed_path)
+                            or reconstructed_path.is_relative_to(current_cwd_path)
+                        ):
+                            matching_projects.append(project_dir)
+        except Exception:
+            # Skip projects with cache issues
+            continue
+
+    return matching_projects
 
 
 def _clear_caches(input_path: Path, all_projects: bool) -> None:
@@ -65,6 +124,72 @@ def _clear_caches(input_path: Path, all_projects: bool) -> None:
 
     except Exception as e:
         click.echo(f"Warning: Failed to clear cache: {e}")
+
+
+def _clear_html_files(input_path: Path, all_projects: bool) -> None:
+    """Clear HTML files for the specified path."""
+    try:
+        if all_projects:
+            # Clear HTML files for all project directories
+            click.echo("Clearing HTML files for all projects...")
+            project_dirs = [
+                d
+                for d in input_path.iterdir()
+                if d.is_dir() and list(d.glob("*.jsonl"))
+            ]
+
+            total_removed = 0
+            for project_dir in project_dirs:
+                try:
+                    # Remove HTML files in project directory
+                    html_files = list(project_dir.glob("*.html"))
+                    for html_file in html_files:
+                        html_file.unlink()
+                        total_removed += 1
+
+                    if html_files:
+                        click.echo(
+                            f"  Removed {len(html_files)} HTML files from {project_dir.name}"
+                        )
+                except Exception as e:
+                    click.echo(
+                        f"  Warning: Failed to clear HTML files for {project_dir.name}: {e}"
+                    )
+
+            # Also remove top-level index.html
+            index_file = input_path / "index.html"
+            if index_file.exists():
+                index_file.unlink()
+                total_removed += 1
+                click.echo("  Removed top-level index.html")
+
+            if total_removed > 0:
+                click.echo(f"Total: Removed {total_removed} HTML files")
+            else:
+                click.echo("No HTML files found to remove")
+
+        elif input_path.is_dir():
+            # Clear HTML files for single directory
+            click.echo(f"Clearing HTML files for {input_path}...")
+            html_files = list(input_path.glob("*.html"))
+            for html_file in html_files:
+                html_file.unlink()
+
+            if html_files:
+                click.echo(f"Removed {len(html_files)} HTML files")
+            else:
+                click.echo("No HTML files found to remove")
+        else:
+            # Single file - remove corresponding HTML file
+            html_file = input_path.with_suffix(".html")
+            if html_file.exists():
+                html_file.unlink()
+                click.echo(f"Removed {html_file}")
+            else:
+                click.echo("No corresponding HTML file found to remove")
+
+    except Exception as e:
+        click.echo(f"Warning: Failed to clear HTML files: {e}")
 
 
 @click.command()
@@ -110,6 +235,11 @@ def _clear_caches(input_path: Path, all_projects: bool) -> None:
     is_flag=True,
     help="Clear all cache directories before processing",
 )
+@click.option(
+    "--clear-html",
+    is_flag=True,
+    help="Clear all HTML files and force regeneration",
+)
 def main(
     input_path: Optional[Path],
     output: Optional[Path],
@@ -120,6 +250,7 @@ def main(
     no_individual_sessions: bool,
     no_cache: bool,
     clear_cache: bool,
+    clear_html: bool,
 ) -> None:
     """Convert Claude transcript JSONL files to HTML.
 
@@ -137,6 +268,14 @@ def main(
             if clear_cache and not (from_date or to_date or input_path.is_file()):
                 # If only clearing cache, exit after clearing
                 click.echo("Cache cleared successfully.")
+                return
+
+        # Handle HTML files clearing
+        if clear_html:
+            _clear_html_files(input_path, all_projects)
+            if clear_html and not (from_date or to_date or input_path.is_file()):
+                # If only clearing HTML files, exit after clearing
+                click.echo("HTML files cleared successfully.")
                 return
 
         # Handle --all-projects flag or default behavior
