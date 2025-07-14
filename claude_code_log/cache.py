@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, cast
 from datetime import datetime
 from pydantic import BaseModel
+from packaging import version
 
 from .models import TranscriptEntry
 
@@ -91,10 +92,10 @@ class CacheManager:
                     cache_data = json.load(f)
                 self._project_cache = ProjectCache.model_validate(cache_data)
 
-                # Check if cache version matches current library version
-                if self._project_cache.version != self.library_version:
+                # Check if cache version is compatible with current library version
+                if not self._is_cache_version_compatible(self._project_cache.version):
                     print(
-                        f"Cache version mismatch: {self._project_cache.version} != {self.library_version}, invalidating cache"
+                        f"Cache version incompatible: {self._project_cache.version} -> {self.library_version}, invalidating cache"
                     )
                     self.clear_cache()
                     self._project_cache = None
@@ -395,6 +396,48 @@ class CacheManager:
             sessions={},
         )
 
+    def _is_cache_version_compatible(self, cache_version: str) -> bool:
+        """Check if a cache version is compatible with the current library version.
+
+        This uses a compatibility matrix to determine if cache invalidation is needed.
+        Only breaking changes require cache invalidation, not every version bump.
+        """
+        if cache_version == self.library_version:
+            return True
+
+        # Define compatibility rules
+        # Format: "cache_version": "minimum_library_version_required"
+        # If cache version is older than the minimum required, it needs invalidation
+        breaking_changes: dict[str, str] = {
+            # Example breaking changes (adjust as needed):
+            # "0.3.3": "0.3.4",  # 0.3.4 introduced breaking changes to cache format
+            # "0.2.x": "0.3.0",  # 0.3.0 introduced major cache format changes
+        }
+
+        cache_ver = version.parse(cache_version)
+        current_ver = version.parse(self.library_version)
+
+        # Check if cache version requires invalidation due to breaking changes
+        for breaking_version_pattern, min_required in breaking_changes.items():
+            min_required_ver = version.parse(min_required)
+
+            # If current version is at or above the minimum required for this breaking change
+            if current_ver >= min_required_ver:
+                # Check if cache version is affected by this breaking change
+                if breaking_version_pattern.endswith(".x"):
+                    # Pattern like "0.2.x" matches any 0.2.* version
+                    major_minor = breaking_version_pattern[:-2]
+                    if str(cache_ver).startswith(major_minor):
+                        return False
+                else:
+                    # Exact version or version comparison
+                    breaking_ver = version.parse(breaking_version_pattern)
+                    if cache_ver <= breaking_ver:
+                        return False
+
+        # If no breaking changes affect this cache version, it's compatible
+        return True
+
     def get_cache_stats(self) -> Dict[str, Any]:
         """Get cache statistics for reporting."""
         if self._project_cache is None:
@@ -411,7 +454,35 @@ class CacheManager:
 
 
 def get_library_version() -> str:
-    """Get the current library version from pyproject.toml."""
+    """Get the current library version from package metadata or pyproject.toml."""
+    # First try to get version from installed package metadata
+    try:
+        from importlib.metadata import version
+
+        return version("claude-code-log")
+    except Exception:
+        # Package not installed or other error, continue to file-based detection
+        pass
+
+    # Second approach: Use importlib.resources for more robust package location detection
+    try:
+        from importlib import resources
+        import toml
+
+        # Get the package directory and navigate to parent for pyproject.toml
+        package_files = resources.files("claude_code_log")
+        # Convert to Path to access parent reliably
+        package_root = Path(str(package_files)).parent
+        pyproject_path = package_root / "pyproject.toml"
+
+        if pyproject_path.exists():
+            with open(pyproject_path, "r") as f:
+                pyproject_data = toml.load(f)
+            return pyproject_data.get("project", {}).get("version", "unknown")
+    except Exception:
+        pass
+
+    # Final fallback: Try to read from pyproject.toml using file-relative path
     try:
         import toml
 
@@ -422,27 +493,6 @@ def get_library_version() -> str:
             with open(pyproject_path, "r") as f:
                 pyproject_data = toml.load(f)
             return pyproject_data.get("project", {}).get("version", "unknown")
-    except ImportError:
-        # toml is not available, try parsing manually
-        pass
-    except Exception:
-        pass
-
-    # Fallback: try to read version manually
-    try:
-        project_root = Path(__file__).parent.parent
-        pyproject_path = project_root / "pyproject.toml"
-
-        if pyproject_path.exists():
-            with open(pyproject_path, "r") as f:
-                content = f.read()
-
-            # Simple regex to extract version
-            import re
-
-            version_match = re.search(r'version\s*=\s*"([^"]+)"', content)
-            if version_match:
-                return version_match.group(1)
     except Exception:
         pass
 

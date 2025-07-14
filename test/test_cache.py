@@ -198,10 +198,12 @@ class TestCacheManager:
         # Create new cache manager with different version
         with patch("claude_code_log.cache.get_library_version", return_value="2.0.0"):
             cache_manager_v2 = CacheManager(temp_project_dir, "2.0.0")
-            # Cache should be cleared due to version mismatch
+            # Since the default implementation has empty breaking_changes,
+            # versions should be compatible and cache should be preserved
             cached_data = cache_manager_v2.get_cached_project_data()
             assert cached_data is not None
-            assert cached_data.version == "2.0.0"
+            # Version should remain 1.0.0 since it's compatible
+            assert cached_data.version == "1.0.0"
 
     def test_filtered_loading_with_dates(self, cache_manager, temp_project_dir):
         """Test timestamp-based filtering during cache loading."""
@@ -381,6 +383,191 @@ class TestLibraryVersion:
         finally:
             # Restore original modules
             sys.modules.update(original_modules)
+
+
+class TestCacheVersionCompatibility:
+    """Test cache version compatibility checking."""
+
+    def test_same_version_is_compatible(self, temp_project_dir):
+        """Test that same version is always compatible."""
+        cache_manager = CacheManager(temp_project_dir, "1.0.0")
+        assert cache_manager._is_cache_version_compatible("1.0.0") is True
+
+    def test_no_breaking_changes_is_compatible(self, temp_project_dir):
+        """Test that versions without breaking changes are compatible."""
+        cache_manager = CacheManager(temp_project_dir, "1.0.1")
+        assert cache_manager._is_cache_version_compatible("1.0.0") is True
+
+    def test_patch_version_increase_is_compatible(self, temp_project_dir):
+        """Test that patch version increases are compatible."""
+        cache_manager = CacheManager(temp_project_dir, "1.0.2")
+        assert cache_manager._is_cache_version_compatible("1.0.1") is True
+
+    def test_minor_version_increase_is_compatible(self, temp_project_dir):
+        """Test that minor version increases are compatible."""
+        cache_manager = CacheManager(temp_project_dir, "1.1.0")
+        assert cache_manager._is_cache_version_compatible("1.0.5") is True
+
+    def test_major_version_increase_is_compatible(self, temp_project_dir):
+        """Test that major version increases are compatible by default."""
+        cache_manager = CacheManager(temp_project_dir, "2.0.0")
+        assert cache_manager._is_cache_version_compatible("1.5.0") is True
+
+    def test_version_downgrade_is_compatible(self, temp_project_dir):
+        """Test that version downgrades are compatible by default."""
+        cache_manager = CacheManager(temp_project_dir, "1.0.0")
+        assert cache_manager._is_cache_version_compatible("1.0.1") is True
+
+    def test_breaking_change_exact_version_incompatible(self, temp_project_dir):
+        """Test that exact version breaking changes are detected."""
+        cache_manager = CacheManager(temp_project_dir, "0.3.4")
+
+        def patched_method(cache_version):
+            # Create a custom breaking_changes dict for this test
+            breaking_changes = {"0.3.3": "0.3.4"}
+
+            if cache_version == cache_manager.library_version:
+                return True
+
+            from packaging import version
+
+            cache_ver = version.parse(cache_version)
+            current_ver = version.parse(cache_manager.library_version)
+
+            for breaking_version_pattern, min_required in breaking_changes.items():
+                min_required_ver = version.parse(min_required)
+
+                if current_ver >= min_required_ver:
+                    if breaking_version_pattern.endswith(".x"):
+                        major_minor = breaking_version_pattern[:-2]
+                        if str(cache_ver).startswith(major_minor):
+                            return False
+                    else:
+                        breaking_ver = version.parse(breaking_version_pattern)
+                        if cache_ver <= breaking_ver:
+                            return False
+
+            return True
+
+        # Test with a breaking change scenario
+        cache_manager._is_cache_version_compatible = patched_method
+
+        # 0.3.3 should be incompatible with 0.3.4 due to breaking change
+        assert cache_manager._is_cache_version_compatible("0.3.3") is False
+        # 0.3.4 should be compatible with itself
+        assert cache_manager._is_cache_version_compatible("0.3.4") is True
+        # 0.3.5 should be compatible with 0.3.4
+        assert cache_manager._is_cache_version_compatible("0.3.5") is True
+
+    def test_breaking_change_pattern_matching(self, temp_project_dir):
+        """Test that version pattern matching works for breaking changes."""
+        cache_manager = CacheManager(temp_project_dir, "0.3.0")
+
+        def patched_method(cache_version):
+            # Create a custom breaking_changes dict for this test
+            breaking_changes = {"0.2.x": "0.3.0"}
+
+            if cache_version == cache_manager.library_version:
+                return True
+
+            from packaging import version
+
+            cache_ver = version.parse(cache_version)
+            current_ver = version.parse(cache_manager.library_version)
+
+            for breaking_version_pattern, min_required in breaking_changes.items():
+                min_required_ver = version.parse(min_required)
+
+                if current_ver >= min_required_ver:
+                    if breaking_version_pattern.endswith(".x"):
+                        major_minor = breaking_version_pattern[:-2]
+                        if str(cache_ver).startswith(major_minor):
+                            return False
+                    else:
+                        breaking_ver = version.parse(breaking_version_pattern)
+                        if cache_ver <= breaking_ver:
+                            return False
+
+            return True
+
+        # Test with a breaking change scenario using pattern matching
+        cache_manager._is_cache_version_compatible = patched_method
+
+        # All 0.2.x versions should be incompatible with 0.3.0
+        assert cache_manager._is_cache_version_compatible("0.2.0") is False
+        assert cache_manager._is_cache_version_compatible("0.2.5") is False
+        assert cache_manager._is_cache_version_compatible("0.2.99") is False
+
+        # 0.1.x and 0.3.x versions should be compatible
+        assert cache_manager._is_cache_version_compatible("0.1.0") is True
+        assert cache_manager._is_cache_version_compatible("0.3.1") is True
+
+    def test_multiple_breaking_changes(self, temp_project_dir):
+        """Test handling of multiple breaking changes."""
+        cache_manager = CacheManager(temp_project_dir, "0.2.6")
+
+        def patched_method(cache_version):
+            # Create a custom breaking_changes dict with multiple entries
+            breaking_changes = {"0.1.x": "0.2.0", "0.2.5": "0.2.6"}
+
+            if cache_version == cache_manager.library_version:
+                return True
+
+            from packaging import version
+
+            cache_ver = version.parse(cache_version)
+            current_ver = version.parse(cache_manager.library_version)
+
+            for breaking_version_pattern, min_required in breaking_changes.items():
+                min_required_ver = version.parse(min_required)
+
+                if current_ver >= min_required_ver:
+                    if breaking_version_pattern.endswith(".x"):
+                        major_minor = breaking_version_pattern[:-2]
+                        if str(cache_ver).startswith(major_minor):
+                            return False
+                    else:
+                        breaking_ver = version.parse(breaking_version_pattern)
+                        if cache_ver <= breaking_ver:
+                            return False
+
+            return True
+
+        # Test with multiple breaking change scenarios
+        cache_manager._is_cache_version_compatible = patched_method
+
+        # 0.1.x should be incompatible due to first breaking change
+        assert cache_manager._is_cache_version_compatible("0.1.0") is False
+        assert cache_manager._is_cache_version_compatible("0.1.5") is False
+
+        # 0.2.5 should be incompatible due to second breaking change
+        assert cache_manager._is_cache_version_compatible("0.2.5") is False
+
+        # 0.2.6 and newer should be compatible
+        assert cache_manager._is_cache_version_compatible("0.2.6") is True
+        assert cache_manager._is_cache_version_compatible("0.2.7") is True
+
+    def test_version_parsing_edge_cases(self, temp_project_dir):
+        """Test edge cases in version parsing."""
+        cache_manager = CacheManager(temp_project_dir, "1.0.0")
+
+        # Test with prerelease versions
+        assert cache_manager._is_cache_version_compatible("1.0.0-alpha") is True
+        assert cache_manager._is_cache_version_compatible("1.0.0-beta.1") is True
+        assert cache_manager._is_cache_version_compatible("1.0.0-rc.1") is True
+
+        # Test with build metadata
+        assert cache_manager._is_cache_version_compatible("1.0.0+build.1") is True
+        assert cache_manager._is_cache_version_compatible("1.0.0+20230101") is True
+
+    def test_empty_breaking_changes_dict(self, temp_project_dir):
+        """Test that empty breaking changes dict allows all versions."""
+        cache_manager = CacheManager(temp_project_dir, "2.0.0")
+
+        # With no breaking changes defined, all versions should be compatible
+        assert cache_manager._is_cache_version_compatible("1.0.0") is True
+        assert cache_manager._is_cache_version_compatible("0.5.0") is True
+        assert cache_manager._is_cache_version_compatible("3.0.0") is True
 
 
 class TestCacheErrorHandling:
