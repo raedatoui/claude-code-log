@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.4.0] - 2025-07-16
+
+### Changed
+
+- **Implement TUI to open individual HTML pages for sessions and to resume them with CC**
+- **Implement better path handling by reading cwd from messages + link to combined transcript from individual session pages + HTML versioning and command to clear them**
+- **Add cache version compatibility checker to prevent it from invalidating after compatible version bumps**
+
+
 ## [0.3.4] - 2025-07-13
 
 ### Changed
