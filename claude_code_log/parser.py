@@ -119,6 +119,7 @@ def load_transcript(
     cache_manager: Optional["CacheManager"] = None,
     from_date: Optional[str] = None,
     to_date: Optional[str] = None,
+    silent: bool = False,
 ) -> List[TranscriptEntry]:
     """Load and parse JSONL transcript file, using cache if available."""
     # Try to load from cache first
@@ -132,14 +133,16 @@ def load_transcript(
             cached_entries = cache_manager.load_cached_entries(jsonl_path)
 
         if cached_entries is not None:
-            print(f"Loading {jsonl_path} from cache...")
+            if not silent:
+                print(f"Loading {jsonl_path} from cache...")
             return cached_entries
 
     # Parse from source file
     messages: List[TranscriptEntry] = []
 
     with open(jsonl_path, "r", encoding="utf-8") as f:
-        print(f"Processing {jsonl_path}...")
+        if not silent:
+            print(f"Processing {jsonl_path}...")
         for line_no, line in enumerate(f):
             line = line.strip()
             if line:
@@ -198,6 +201,7 @@ def load_directory_transcripts(
     cache_manager: Optional["CacheManager"] = None,
     from_date: Optional[str] = None,
     to_date: Optional[str] = None,
+    silent: bool = False,
 ) -> List[TranscriptEntry]:
     """Load all JSONL transcript files from a directory and combine them."""
     all_messages: List[TranscriptEntry] = []
@@ -206,7 +210,9 @@ def load_directory_transcripts(
     jsonl_files = list(directory_path.glob("*.jsonl"))
 
     for jsonl_file in jsonl_files:
-        messages = load_transcript(jsonl_file, cache_manager, from_date, to_date)
+        messages = load_transcript(
+            jsonl_file, cache_manager, from_date, to_date, silent
+        )
         all_messages.extend(messages)
 
     # Sort all messages chronologically

@@ -33,7 +33,7 @@ def _launch_tui_with_cache_check(project_path: Path) -> None:
 
         # Pre-build the cache before launching TUI
         try:
-            convert_jsonl_to_html(project_path)
+            convert_jsonl_to_html(project_path, silent=True)
             click.echo("Cache ready! Launching TUI...")
         except Exception as e:
             click.echo(f"Error building cache: {e}", err=True)

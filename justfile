@@ -33,8 +33,15 @@ test-all:
 # Run tests with coverage (all categories)
 test-cov:
     #!/usr/bin/env bash
+    set -e  # Exit on first failure
     echo "📊 Running all tests with coverage..."
-    uv run pytest --cov=claude_code_log --cov-report=xml --cov-report=html --cov-report=term -v
+    echo "📦 Running unit tests with coverage..."
+    uv run pytest -m "not (tui or browser)" --cov=claude_code_log --cov-report=xml --cov-report=html --cov-report=term -v
+    echo "🖥️  Running TUI tests with coverage append..."
+    uv run pytest -m tui --cov=claude_code_log --cov-append --cov-report=xml --cov-report=html --cov-report=term -v
+    echo "🌐 Running browser tests with coverage append..."
+    uv run pytest -m browser --cov=claude_code_log --cov-append --cov-report=xml --cov-report=html --cov-report=term -v
+    echo "✅ All tests with coverage completed!"
 
 format:
     uv run ruff format

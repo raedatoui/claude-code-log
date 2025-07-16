@@ -281,7 +281,7 @@ class SessionBrowser(App[None]):
             # Need to build cache - use converter to load and process all transcripts
             try:
                 # Use converter to build cache (it handles all the session processing)
-                convert_jsonl_to_html(self.project_path)
+                convert_jsonl_to_html(self.project_path, silent=True)
 
                 # Now get the updated cache data
                 project_cache = self.cache_manager.get_cached_project_data()

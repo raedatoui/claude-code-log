@@ -37,6 +37,7 @@ def convert_jsonl_to_html(
     to_date: Optional[str] = None,
     generate_individual_sessions: bool = True,
     use_cache: bool = True,
+    silent: bool = False,
 ) -> Path:
     """Convert JSONL transcript(s) to HTML file(s)."""
     if not input_path.exists():
@@ -55,14 +56,14 @@ def convert_jsonl_to_html(
         # Single file mode - cache only available for directory mode
         if output_path is None:
             output_path = input_path.with_suffix(".html")
-        messages = load_transcript(input_path)
+        messages = load_transcript(input_path, silent=silent)
         title = f"Claude Transcript - {input_path.stem}"
     else:
         # Directory mode
         if output_path is None:
             output_path = input_path / "combined_transcripts.html"
         messages = load_directory_transcripts(
-            input_path, cache_manager, from_date, to_date
+            input_path, cache_manager, from_date, to_date, silent
         )
 
         # Try to get a better project title from working directories in cache
