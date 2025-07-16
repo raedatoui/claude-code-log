@@ -668,8 +668,6 @@ def _get_combined_transcript_link(cache_manager: "CacheManager") -> Optional[str
         return None
 
 
-
-
 def generate_session_html(
     messages: List[TranscriptEntry],
     session_id: str,
@@ -690,15 +688,25 @@ def generate_session_html(
         combined_link = _get_combined_transcript_link(cache_manager)
 
     if not session_messages:
-        return generate_html([], title or f"Session {session_id[:8]}", combined_transcript_link=combined_link)
+        return generate_html(
+            [],
+            title or f"Session {session_id[:8]}",
+            combined_transcript_link=combined_link,
+        )
 
     # Use the existing generate_html function but with filtered messages and combined link
     return generate_html(
-        session_messages, title or f"Session {session_id[:8]}", combined_transcript_link=combined_link
+        session_messages,
+        title or f"Session {session_id[:8]}",
+        combined_transcript_link=combined_link,
     )
 
 
-def generate_html(messages: List[TranscriptEntry], title: Optional[str] = None, combined_transcript_link: Optional[str] = None) -> str:
+def generate_html(
+    messages: List[TranscriptEntry],
+    title: Optional[str] = None,
+    combined_transcript_link: Optional[str] = None,
+) -> str:
     """Generate HTML from transcript messages using Jinja2 templates."""
     if not title:
         title = "Claude Transcript"
@@ -1208,7 +1216,7 @@ def generate_projects_index_html(
     title = "Claude Code Projects"
     if project_summaries:
         # Collect all working directories from all projects
-        all_working_dirs = set()
+        all_working_dirs: set[str] = set()
         for project in project_summaries:
             working_dirs = project.get("working_directories", [])
             if working_dirs:
@@ -1228,7 +1236,7 @@ def generate_projects_index_html(
                 # Multiple working directories - try to find common parent
                 try:
                     # Find common parent
-                    common_parts = []
+                    common_parts: list[str] = []
                     if working_paths:
                         # Get parts of first path
                         first_parts = working_paths[0].parts

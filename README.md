@@ -127,11 +127,47 @@ The project uses:
 
 ### Testing
 
-Run tests with:
+The project uses a categorized test system to avoid async event loop conflicts between different testing frameworks:
+
+#### Test Categories
+
+- **Unit Tests** (no mark): Fast, standalone tests with no external dependencies
+- **TUI Tests** (`@pytest.mark.tui`): Tests for the Textual-based Terminal User Interface
+- **Browser Tests** (`@pytest.mark.browser`): Playwright-based tests that run in real browsers
+
+#### Running Tests
 
 ```bash
-uv run pytest
+# Run only unit tests (fast, recommended for development)
+uv run pytest -m "not (tui or browser)"
+
+# Run TUI tests (isolated event loop)
+uv run pytest -m tui
+
+# Run browser tests (requires Chromium)
+uv run pytest -m browser
+
+# Run all tests in sequence (separated to avoid conflicts)
+uv run pytest -m "not tui and not browser"; uv run pytest -m tui; uv run pytest -m browser
 ```
+
+#### Prerequisites
+
+Browser tests require Chromium to be installed:
+
+```bash
+uv run playwright install chromium
+```
+
+#### Why Test Categories?
+
+The test suite is categorized because:
+
+- **TUI tests** use Textual's async event loop (`run_test()`)
+- **Browser tests** use Playwright's internal asyncio
+- **pytest-asyncio** manages async test execution
+
+Running all tests together can cause "RuntimeError: This event loop is already running" conflicts. The categorization ensures reliable test execution by isolating different async frameworks.
 
 ### Test Coverage
 
@@ -162,15 +198,18 @@ HTML coverage reports are generated in `htmlcov/index.html`.
 
 - **Format code**: `ruff format`
 - **Lint and fix**: `ruff check --fix`
-- **Type checking**: `uv run pyright`
+- **Type checking**: `uv run pyright` and `uv run ty check`
 
 ### All Commands
 
-- **Test**: `uv run pytest`
-- **Test with Coverage**: `uv run pytest --cov=claude_code_log --cov-report=html`
+- **Test (Unit only)**: `uv run pytest`
+- **Test (TUI)**: `uv run pytest -m tui`
+- **Test (Browser)**: `uv run pytest -m browser`
+- **Test (All categories)**: `uv run pytest -m "not tui and not browser"; uv run pytest -m tui; uv run pytest -m browser`
+- **Test with Coverage**: `uv run pytest --cov=claude_code_log --cov-report=html --cov-report=term`
 - **Format**: `ruff format`
 - **Lint**: `ruff check --fix`
-- **Type Check**: `uv run pyright`
+- **Type Check**: `uv run pyright` and `uv run ty check`
 - **Generate Style Guide**: `uv run python scripts/generate_style_guide.py`
 
 Test with Claude transcript JSONL files typically found in `~/.claude/projects/` directories.
@@ -253,10 +292,10 @@ uv run claude-code-log
 
 ## TODO
 
+- make it possible to get to project selector in TUI even if pwd is a project
 - add a bit of padding to the last message time so the timeline doesn't look empty when opening
 - tutorial overlay
 - integrate `claude-trace` request logs if present?
-- Shortcut / command to resume a specific conversation by session ID $ claude --resume 550e8400-e29b-41d4-a716-446655440000?
 - Localised number formatting and timezone adjustment runtime? For this we'd need to make Jinja template variables more granular
 - convert images to WebP as screenshots are often huge PNGs – this might be time consuming to keep redoing (so would also need some caching) and need heavy dependencies with compilation (unless there are fast pure Python conversation libraries? Or WASM?)
 - add special formatting for built-in tools: Bash, Glob, Grep, LS, exit_plan_mode, Read, Edit, MultiEdit, Write, NotebookRead, NotebookEdit, WebFetch, TodoRead, TodoWrite, WebSearch
@@ -267,5 +306,10 @@ uv run claude-code-log
 - add `ccusage` like daily summary and maybe some textual summary too based on Claude generate session summaries?
 – import logs from @claude Github Actions
 - stream logs from @claude Github Actions, see [octotail](https://github.com/getbettr/octotail)
+- wrap up CLI as Github Action to run after Cladue Github Action and process [output](https://github.com/anthropics/claude-code-base-action?tab=readme-ov-file#outputs)
 - extend into a VS Code extension that reads the JSONL real-time and displays stats like current context usage and implements a UI to see messages, todos, permissions, config, MCP status, etc
 - feed the filtered user messages to headless claude CLI to distill the user intent from the session
+- filter message type on Python (CLI) side too, not just UI
+- Markdown renderer
+- figure out minimum Python version and introduce a testing matrix
+- add minimalist theme and make it light + dark; animate gradient background in fancy theme

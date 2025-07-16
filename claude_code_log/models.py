@@ -214,6 +214,7 @@ class SummaryTranscriptEntry(BaseModel):
     type: Literal["summary"]
     summary: str
     leafUuid: str
+    cwd: Optional[str] = None
 
 
 class SystemTranscriptEntry(BaseTranscriptEntry):

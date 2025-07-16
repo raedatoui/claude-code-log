@@ -7,12 +7,15 @@ This directory contains comprehensive testing infrastructure and visual document
 Representative JSONL files covering all message types and edge cases:
 
 **Note**: After the module split, import paths have changed:
+
 - `from claude_code_log.parser import load_transcript, extract_text_content`
 - `from claude_code_log.renderer import generate_html, format_timestamp`
 - `from claude_code_log.converter import convert_jsonl_to_html`
 
 ### `representative_messages.jsonl`
+
 A comprehensive conversation demonstrating:
+
 - User and assistant messages
 - Tool use and tool results (success cases)
 - Markdown formatting and code blocks
@@ -20,7 +23,9 @@ A comprehensive conversation demonstrating:
 - Multiple message interactions
 
 ### `edge_cases.jsonl`
+
 Edge cases and special scenarios:
+
 - Complex markdown formatting
 - Very long text content
 - Tool errors and error handling
@@ -30,7 +35,9 @@ Edge cases and special scenarios:
 - HTML escaping scenarios
 
 ### `session_b.jsonl`
+
 Additional session for testing multi-session handling:
+
 - Different source file content
 - Session divider behavior
 - Cross-session message ordering
@@ -40,6 +47,7 @@ Additional session for testing multi-session handling:
 Comprehensive unit tests that verify:
 
 ### Core Functionality
+
 - ✅ Basic HTML structure generation
 - ✅ All message types render correctly
 - ✅ Session divider logic (only first session shown)
@@ -47,6 +55,7 @@ Comprehensive unit tests that verify:
 - ✅ Empty file handling
 
 ### Message Type Coverage
+
 - ✅ User messages with markdown
 - ✅ Assistant responses
 - ✅ Tool use and tool results
@@ -56,6 +65,7 @@ Comprehensive unit tests that verify:
 - ✅ Summary messages
 
 ### Formatting & Safety
+
 - ✅ Timestamp formatting
 - ✅ CSS class application
 - ✅ HTML escaping for security
@@ -63,6 +73,7 @@ Comprehensive unit tests that verify:
 - ✅ JavaScript markdown setup
 
 ### Template Systems
+
 - ✅ Transcript template (individual conversations)
 - ✅ Index template (project listings)
 - ✅ Project summary statistics
@@ -73,12 +84,15 @@ Comprehensive unit tests that verify:
 Generates comprehensive visual documentation:
 
 ### Generated Files
+
 - **Main Index** (`index.html`) - Overview and navigation
 - **Transcript Guide** (`transcript_style_guide.html`) - All message types
 - **Index Guide** (`index_style_guide.html`) - Project listing examples
 
 ### Coverage
+
 The style guide demonstrates:
+
 - 📝 **Message Types**: User, assistant, system, summary
 - 🛠️ **Tool Interactions**: Usage, results, errors
 - 📏 **Text Handling**: Long content, wrapping, formatting
@@ -87,6 +101,7 @@ The style guide demonstrates:
 - 🎨 **Visual Design**: Typography, colors, spacing, responsive layout
 
 ### Usage
+
 ```bash
 # Generate style guides
 uv run python scripts/generate_style_guide.py
@@ -97,20 +112,53 @@ open scripts/style_guide_output/index.html
 
 ## Running Tests
 
-### Unit Tests
-```bash
-# Run all tests
-uv run pytest -v
+### Test Categories
 
-# Run all template tests
+The project uses a categorized test system to avoid async event loop conflicts between different testing frameworks:
+
+#### Test Categories
+
+- **Unit Tests** (no mark): Fast, standalone tests with no external dependencies
+- **TUI Tests** (`@pytest.mark.tui`): Tests for the Textual-based Terminal User Interface  
+- **Browser Tests** (`@pytest.mark.browser`): Playwright-based tests that run in real browsers
+
+#### Running Tests
+
+```bash
+# Run only unit tests (fast, recommended for development)
+just test
+# or: uv run pytest -m "not (tui or browser)" -v
+
+# Run TUI tests (isolated event loop)
+just test-tui
+# or: uv run pytest -m tui -v
+
+# Run browser tests (requires Chromium)
+just test-browser
+# or: uv run pytest -m browser -v
+
+# Run all tests in sequence (separated to avoid conflicts)
+just test-all
+
+# Run specific test file
 uv run pytest test/test_template_rendering.py -v
 
-# Run specific test
+# Run specific test method
 uv run pytest test/test_template_rendering.py::TestTemplateRendering::test_representative_messages_render -v
 
 # Run tests with coverage
-uv run pytest --cov=claude_code_log --cov-report=term-missing -v
+just test-cov
 ```
+
+#### Why Test Categories?
+
+The test suite is categorized because:
+
+- **TUI tests** use Textual's async event loop (`run_test()`)
+- **Browser tests** use Playwright's internal asyncio
+- **pytest-asyncio** manages async test execution
+
+Running all tests together can cause "RuntimeError: This event loop is already running" conflicts. The categorization ensures reliable test execution by isolating different async frameworks.
 
 ### Test Coverage
 
@@ -128,12 +176,14 @@ open htmlcov/index.html
 ```
 
 Current coverage: **78%+** across all modules:
+
 - `parser.py`: 81% - Data extraction and parsing
 - `renderer.py`: 86% - HTML generation and formatting  
 - `converter.py`: 52% - High-level orchestration
 - `models.py`: 89% - Pydantic data models
 
 ### Manual Testing
+
 ```bash
 # Test with representative data
 uv run python -c "

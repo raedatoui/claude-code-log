@@ -4,7 +4,6 @@ import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 
-import pytest
 
 from claude_code_log.cache import CacheManager
 from claude_code_log.renderer import generate_session_html
@@ -48,7 +47,7 @@ class TestCombinedTranscriptLink:
             # Mock project data with sessions
             mock_project_data = SimpleNamespace()
             mock_project_data.sessions = {session_id: object()}
-            cache_manager.get_cached_project_data = lambda: mock_project_data
+            cache_manager.get_cached_project_data = lambda: mock_project_data  # type: ignore
 
             html = generate_session_html(
                 messages, session_id, "Test Session", cache_manager
@@ -73,7 +72,7 @@ class TestCombinedTranscriptLink:
         with tempfile.TemporaryDirectory() as tmpdir:
             cache_manager = CacheManager(Path(tmpdir), "1.0.0")
             # Mock cache manager that will raise exception
-            cache_manager.get_cached_project_data = lambda: exec(
+            cache_manager.get_cached_project_data = lambda: exec(  # type: ignore
                 'raise Exception("Test exception")'
             )
 
@@ -93,7 +92,7 @@ class TestCombinedTranscriptLink:
             cache_manager = CacheManager(Path(tmpdir), "1.0.0")
             mock_project_data = SimpleNamespace()
             mock_project_data.sessions = {session_id: object()}
-            cache_manager.get_cached_project_data = lambda: mock_project_data
+            cache_manager.get_cached_project_data = lambda: mock_project_data  # type: ignore
 
             html = generate_session_html(
                 messages, session_id, "Test Session", cache_manager
@@ -113,7 +112,7 @@ class TestCombinedTranscriptLink:
             cache_manager = CacheManager(Path(tmpdir), "1.0.0")
             mock_project_data = SimpleNamespace()
             mock_project_data.sessions = {session_id: object()}
-            cache_manager.get_cached_project_data = lambda: mock_project_data
+            cache_manager.get_cached_project_data = lambda: mock_project_data  # type: ignore
 
             html = generate_session_html(
                 messages, session_id, custom_title, cache_manager

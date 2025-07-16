@@ -12,6 +12,47 @@ from .converter import convert_jsonl_to_html, process_projects_hierarchy
 from .cache import CacheManager, get_library_version
 
 
+def _launch_tui_with_cache_check(project_path: Path) -> None:
+    """Launch TUI with proper cache checking and user feedback."""
+    click.echo("Checking cache and loading session data...")
+
+    # Check if we need to rebuild cache
+    cache_manager = CacheManager(project_path, get_library_version())
+    jsonl_files = list(project_path.glob("*.jsonl"))
+    modified_files = cache_manager.get_modified_files(jsonl_files)
+    project_cache = cache_manager.get_cached_project_data()
+
+    if not (project_cache and project_cache.sessions and not modified_files):
+        # Need to rebuild cache
+        if modified_files:
+            click.echo(
+                f"Found {len(modified_files)} modified files, rebuilding cache..."
+            )
+        else:
+            click.echo("Building session cache...")
+
+        # Pre-build the cache before launching TUI
+        try:
+            convert_jsonl_to_html(project_path)
+            click.echo("Cache ready! Launching TUI...")
+        except Exception as e:
+            click.echo(f"Error building cache: {e}", err=True)
+            return
+    else:
+        click.echo(
+            f"Cache up to date. Found {len(project_cache.sessions)} sessions. Launching TUI..."
+        )
+
+    # Small delay to let user see the message before TUI clears screen
+    import time
+
+    time.sleep(0.5)
+
+    from .tui import run_session_browser
+
+    run_session_browser(project_path)
+
+
 def convert_project_path_to_claude_dir(input_path: Path) -> Path:
     """Convert a project path to the corresponding directory in ~/.claude/projects/."""
     # Get the real path to resolve any symlinks
@@ -240,6 +281,11 @@ def _clear_html_files(input_path: Path, all_projects: bool) -> None:
     is_flag=True,
     help="Clear all HTML files and force regeneration",
 )
+@click.option(
+    "--tui",
+    is_flag=True,
+    help="Launch interactive TUI for session browsing and management",
+)
 def main(
     input_path: Optional[Path],
     output: Optional[Path],
@@ -251,12 +297,69 @@ def main(
     no_cache: bool,
     clear_cache: bool,
     clear_html: bool,
+    tui: bool,
 ) -> None:
     """Convert Claude transcript JSONL files to HTML.
 
     INPUT_PATH: Path to a Claude transcript JSONL file, directory containing JSONL files, or project path to convert. If not provided, defaults to ~/.claude/projects/ and --all-projects is used.
     """
     try:
+        # Handle TUI mode
+        if tui:
+            # Handle default case for TUI - use ~/.claude/projects if no input path
+            if input_path is None:
+                input_path = Path.home() / ".claude" / "projects"
+
+            # If targeting all projects, show project selection TUI
+            if (
+                all_projects
+                or not input_path.exists()
+                or not list(input_path.glob("*.jsonl"))
+            ):
+                # Show project selection interface
+                if not input_path.exists():
+                    click.echo(f"Error: Projects directory not found: {input_path}")
+                    return
+
+                project_dirs = [
+                    d
+                    for d in input_path.iterdir()
+                    if d.is_dir() and list(d.glob("*.jsonl"))
+                ]
+
+                if not project_dirs:
+                    click.echo(f"No projects with JSONL files found in {input_path}")
+                    return
+
+                # Try to find projects that match current working directory
+                matching_projects = find_projects_by_cwd(input_path)
+
+                if len(project_dirs) == 1:
+                    # Only one project, open it directly
+                    _launch_tui_with_cache_check(project_dirs[0])
+                    return
+                elif matching_projects and len(matching_projects) == 1:
+                    # Found exactly one project matching current working directory
+                    click.echo(
+                        f"Found project matching current directory: {matching_projects[0].name}"
+                    )
+                    _launch_tui_with_cache_check(matching_projects[0])
+                    return
+                else:
+                    # Multiple projects or multiple matching projects - show selector
+                    from .tui import run_project_selector
+
+                    selected_project = run_project_selector(
+                        project_dirs, matching_projects
+                    )
+                    if selected_project:
+                        _launch_tui_with_cache_check(selected_project)
+                    return
+            else:
+                # Single project directory
+                _launch_tui_with_cache_check(input_path)
+                return
+
         # Handle default case - process all projects hierarchy if no input path and --all-projects flag
         if input_path is None:
             input_path = Path.home() / ".claude" / "projects"

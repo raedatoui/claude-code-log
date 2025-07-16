@@ -4,6 +4,7 @@ import tempfile
 import re
 from pathlib import Path
 from typing import List
+import pytest
 from playwright.sync_api import Page, expect
 
 from claude_code_log.parser import load_transcript
@@ -48,6 +49,7 @@ class TestTimelineBrowser:
         # Wait for timeline items to be rendered
         page.wait_for_selector(".vis-item", timeout=5000)
 
+    @pytest.mark.browser
     def test_timeline_toggle_button_exists(self, page: Page):
         """Test that timeline toggle button is present."""
         # Use sidechain test data
@@ -63,6 +65,7 @@ class TestTimelineBrowser:
         expect(toggle_btn).to_have_text("📆")
         expect(toggle_btn).to_have_attribute("title", "Show timeline")
 
+    @pytest.mark.browser
     def test_timeline_shows_after_toggle(self, page: Page):
         """Test that timeline becomes visible after clicking toggle."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -87,6 +90,7 @@ class TestTimelineBrowser:
         expect(toggle_btn).to_have_text("🗓️")
         expect(toggle_btn).to_have_attribute("title", "Hide timeline")
 
+    @pytest.mark.browser
     def test_timeline_sidechain_messages(self, page: Page):
         """Test that sidechain messages appear correctly in timeline."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -128,6 +132,7 @@ class TestTimelineBrowser:
             f"Should have sidechain content items, found {total_sidechain_content}"
         )
 
+    @pytest.mark.browser
     def test_timeline_sidechain_message_groups_and_classes(self, page: Page):
         """Test that sub-assistant messages appear in the correct timeline group with proper CSS classes."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -174,6 +179,7 @@ class TestTimelineBrowser:
             "Timeline should show sidechain messages with proper 📝/🔗 prefixes"
         )
 
+    @pytest.mark.browser
     def test_timeline_message_type_filtering_sidechain(self, page: Page):
         """Test that sidechain messages can be filtered independently from regular messages."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -201,6 +207,7 @@ class TestTimelineBrowser:
         filter_toolbar = page.locator(".filter-toolbar")
         expect(filter_toolbar).to_be_visible()
 
+    @pytest.mark.browser
     def test_sidechain_filter_toggle_exists(self, page: Page):
         """Test that Sub-assistant filter toggle exists and works."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -224,6 +231,7 @@ class TestTimelineBrowser:
             re.compile(r".*active.*")
         )  # Use regex to match partial class
 
+    @pytest.mark.browser
     def test_sidechain_message_filtering_integration(self, page: Page):
         """Test that sidechain messages can be filtered in both main content and timeline."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -277,6 +285,7 @@ class TestTimelineBrowser:
             "Sidechain messages should be visible when filter is on"
         )
 
+    @pytest.mark.browser
     def test_sidechain_messages_html_css_classes(self, page: Page):
         """Test that sidechain messages in the main content have correct CSS classes."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -312,6 +321,7 @@ class TestTimelineBrowser:
             "Sub-assistant prompt about failing test should have 'user sidechain' classes"
         )
 
+    @pytest.mark.browser
     def test_sidechain_filter_complete_integration(self, page: Page):
         """Test complete integration of sidechain filtering between main content and timeline."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -428,6 +438,7 @@ class TestTimelineBrowser:
             "All messages should be visible when all filters are active"
         )
 
+    @pytest.mark.browser
     def test_timeline_system_messages(self, page: Page):
         """Test that system messages appear correctly in timeline."""
         system_file = Path("test/test_data/system_model_change.jsonl")
@@ -450,6 +461,7 @@ class TestTimelineBrowser:
 
         assert system_count > 0, "Should contain the system warning about Opus limit"
 
+    @pytest.mark.browser
     def test_timeline_message_click_navigation(self, page: Page):
         """Test that clicking timeline items scrolls to corresponding messages."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -481,6 +493,7 @@ class TestTimelineBrowser:
             f"Both timeline ({timeline_count}) and messages ({message_count}) should exist"
         )
 
+    @pytest.mark.browser
     def test_timeline_filtering_integration(self, page: Page):
         """Test that timeline filters work with message filters."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -540,6 +553,7 @@ class TestTimelineBrowser:
                 "Timeline should handle assistant filtering without errors"
             )
 
+    @pytest.mark.browser
     def test_timeline_console_errors(self, page: Page):
         """Test that timeline doesn't produce JavaScript errors."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -580,6 +594,7 @@ class TestTimelineBrowser:
             f"Timeline should not produce critical JavaScript errors: {critical_errors}"
         )
 
+    @pytest.mark.browser
     def test_timeline_filter_synchronization(self, page: Page):
         """Test that timeline filtering stays synchronized with main message filtering."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -633,6 +648,7 @@ class TestTimelineBrowser:
                     f"Main messages of type '{filter_type}' should be visible when filter is on"
                 )
 
+    @pytest.mark.browser
     def test_timeline_filter_all_none_buttons(self, page: Page):
         """Test that timeline responds correctly to 'Select All' and 'Select None' buttons."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -686,6 +702,7 @@ class TestTimelineBrowser:
         all_timeline_count = page.locator(".vis-item").count()
         assert all_timeline_count > 0, "Timeline should show items with 'Select All'"
 
+    @pytest.mark.browser
     def test_timeline_filter_individual_message_types(self, page: Page):
         """Test filtering individual message types in timeline."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -746,6 +763,7 @@ class TestTimelineBrowser:
                 # Verify filter is active again
                 expect(filter_toggle).to_have_class(re.compile(r".*active.*"))
 
+    @pytest.mark.browser
     def test_timeline_filter_edge_cases(self, page: Page):
         """Test edge cases in timeline filtering."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -799,6 +817,7 @@ class TestTimelineBrowser:
         restored_count = timeline_items.count()
         assert restored_count >= 0, "Timeline should restore with correct filter state"
 
+    @pytest.mark.browser
     def test_timeline_filter_performance(self, page: Page):
         """Test that timeline filtering performs well with various message types."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -849,6 +868,7 @@ class TestTimelineBrowser:
             f"Timeline filtering should not produce performance warnings: {warnings}"
         )
 
+    @pytest.mark.browser
     def test_timeline_filter_message_type_coverage(self, page: Page):
         """Test that all message types generated by the renderer are handled in timeline filtering."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")
@@ -931,6 +951,7 @@ class TestTimelineBrowser:
                 filter_toggle.click()
                 page.wait_for_timeout(100)
 
+    @pytest.mark.browser
     def test_timeline_synchronizes_with_message_filtering(self, page: Page):
         """Test that timeline synchronizes visibility with main message filtering using CSS classes."""
         sidechain_file = Path("test/test_data/sidechain.jsonl")

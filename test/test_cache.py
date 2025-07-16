@@ -450,7 +450,7 @@ class TestCacheVersionCompatibility:
             return True
 
         # Test with a breaking change scenario
-        cache_manager._is_cache_version_compatible = patched_method
+        cache_manager._is_cache_version_compatible = patched_method  # type: ignore
 
         # 0.3.3 should be incompatible with 0.3.4 due to breaking change
         assert cache_manager._is_cache_version_compatible("0.3.3") is False
@@ -491,7 +491,7 @@ class TestCacheVersionCompatibility:
             return True
 
         # Test with a breaking change scenario using pattern matching
-        cache_manager._is_cache_version_compatible = patched_method
+        cache_manager._is_cache_version_compatible = patched_method  # type: ignore
 
         # All 0.2.x versions should be incompatible with 0.3.0
         assert cache_manager._is_cache_version_compatible("0.2.0") is False
@@ -534,7 +534,7 @@ class TestCacheVersionCompatibility:
             return True
 
         # Test with multiple breaking change scenarios
-        cache_manager._is_cache_version_compatible = patched_method
+        cache_manager._is_cache_version_compatible = patched_method  # type: ignore
 
         # 0.1.x should be incompatible due to first breaking change
         assert cache_manager._is_cache_version_compatible("0.1.0") is False

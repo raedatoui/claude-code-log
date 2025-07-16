@@ -252,7 +252,7 @@ def _update_cache_with_session_data(
     cache_manager.update_session_cache(sessions_cache_data)
 
     # Collect unique working directories from sessions
-    working_directories = set()
+    working_directories: set[str] = set()
     for session_cache in sessions_cache_data.values():
         if session_cache.cwd:
             working_directories.add(session_cache.cwd)
@@ -630,7 +630,7 @@ def process_projects_hierarchy(
             sessions_data = _collect_project_sessions(messages)
 
             # Collect working directories from messages
-            working_directories = set()
+            working_directories: set[str] = set()
             for message in messages:
                 if hasattr(message, "cwd") and message.cwd:
                     working_directories.add(message.cwd)

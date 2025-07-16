@@ -8,6 +8,7 @@ This tool processes Claude Code transcript files (stored as JSONL) and generates
 
 ## Key Features
 
+- **Interactive TUI (Terminal User Interface)**: Browse and manage Claude Code sessions with real-time navigation, summaries, and quick actions for HTML export and session resuming
 - **Project Hierarchy Processing**: Process entire `~/.claude/projects/` directory with linked index page
 - **Individual Session Files**: Generate separate HTML files for each session with navigation links
 - **Single File or Directory Processing**: Convert individual JSONL files or specific directories
@@ -26,6 +27,43 @@ This tool processes Claude Code transcript files (stored as JSONL) and generates
 - **CLI Interface**: Simple command-line tool using Click
 
 ## Usage
+
+### Interactive TUI (Terminal User Interface)
+
+The TUI provides an interactive interface for browsing and managing Claude Code sessions with real-time navigation, session summaries, and quick actions.
+
+```bash
+# Launch TUI for all projects (default behavior)
+claude-code-log --tui
+
+# Launch TUI for specific project directory
+claude-code-log /path/to/project --tui
+
+# Launch TUI for specific Claude project
+claude-code-log my-project --tui  # Automatically converts to ~/.claude/projects/-path-to-my-project
+```
+
+**TUI Features:**
+
+- **Session Listing**: Interactive table showing session IDs, summaries, timestamps, message counts, and token usage
+- **Smart Summaries**: Prioritizes Claude-generated summaries over first user messages for better session identification
+- **Working Directory Matching**: Automatically finds and opens projects matching your current working directory
+- **Quick Actions**:
+  - `h` or "Export to HTML" button: Generate and open session HTML in browser
+  - `c` or "Resume in Claude Code" button: Continue session with `claude -r <sessionId>`
+  - `r` or "Refresh" button: Reload session data from files
+- **Project Statistics**: Real-time display of total sessions, messages, tokens, and date range
+- **Cache Integration**: Leverages existing cache system for fast loading with automatic cache validation
+- **Keyboard Navigation**: Arrow keys to navigate, Enter to select, `q` to quit
+
+**Working Directory Matching:**
+
+The TUI automatically identifies Claude projects that match your current working directory by:
+
+1. **Cache-based Matching**: Uses stored working directories from session messages (`cwd` field)
+2. **Path-based Matching**: Falls back to Claude's project naming convention (replacing `/` with `-`)
+3. **Smart Prioritization**: When multiple projects are found, prioritizes those matching your current directory
+4. **Subdirectory Support**: Matches parent directories, so you can run the TUI from anywhere within a project
 
 ### Default Behavior (Process All Projects)
 
@@ -80,6 +118,8 @@ claude-code-log /path/to/directory --from-date "3 days ago" --to-date "yesterday
 - `claude_code_log/converter.py` - High-level conversion orchestration
 - `claude_code_log/cli.py` - Command-line interface with project discovery
 - `claude_code_log/models.py` - Pydantic models for transcript data structures
+- `claude_code_log/tui.py` - Interactive Terminal User Interface using Textual
+- `claude_code_log/cache.py` - Cache management for performance optimization
 - `claude_code_log/templates/` - Jinja2 HTML templates
   - `transcript.html` - Main transcript viewer template
   - `index.html` - Project directory index template
@@ -91,6 +131,7 @@ The project uses:
 
 - Python 3.12+ with uv package management
 - Click for CLI interface and argument parsing
+- Textual for interactive Terminal User Interface
 - Pydantic for robust data modelling and validation
 - Jinja2 for HTML template rendering
 - dateparser for natural language date parsing
@@ -102,24 +143,63 @@ The project uses:
 
 ### Testing
 
-Run tests with:
+The project uses a categorized test system to avoid async event loop conflicts between different testing frameworks:
+
+#### Test Categories
+
+- **Unit Tests** (no mark): Fast, standalone tests with no external dependencies
+- **TUI Tests** (`@pytest.mark.tui`): Tests for the Textual-based Terminal User Interface
+- **Browser Tests** (`@pytest.mark.browser`): Playwright-based tests that run in real browsers
+
+#### Running Tests
 
 ```bash
-uv run pytest
+# Run only unit tests (fast, recommended for development)
+just test
+# or: uv run pytest -m "not (tui or browser)" -v
+
+# Run TUI tests (isolated event loop)
+just test-tui
+# or: uv run pytest -m tui
+
+# Run browser tests (requires Chromium)
+just test-browser
+# or: uv run pytest -m browser
+
+# Run all tests in sequence (separated to avoid conflicts)
+just test-all
+
+# Run tests with coverage (all categories)
+just test-cov
 ```
 
-The test suite includes both unit tests and browser-based integration tests using Playwright. Timeline functionality is tested in real browsers to ensure JavaScript components work correctly. Playwright tests require Chromium to be installed:
+#### Prerequisites
+
+Browser tests require Chromium to be installed:
 
 ```bash
 uv run playwright install chromium
 ```
+
+#### Why Test Categories?
+
+The test suite is categorized because:
+
+- **TUI tests** use Textual's async event loop (`run_test()`)
+- **Browser tests** use Playwright's internal asyncio
+- **pytest-asyncio** manages async test execution
+
+Running all tests together can cause "RuntimeError: This event loop is already running" conflicts. The categorization ensures reliable test execution by isolating different async frameworks.
 
 ### Test Coverage
 
 Generate test coverage reports:
 
 ```bash
-# Run tests with coverage
+# Run all tests with coverage (recommended)
+just test-cov
+
+# Or run coverage manually
 uv run pytest --cov=claude_code_log --cov-report=html --cov-report=term
 
 # Generate HTML coverage report only
@@ -139,11 +219,23 @@ HTML coverage reports are generated in `htmlcov/index.html`.
 
 ### Testing & Style Guide
 
-- **Unit Tests**: See [test/README.md](test/README.md) for comprehensive testing documentation
+- **Unit and Integration Tests**: See [test/README.md](test/README.md) for comprehensive testing documentation
 - **Visual Style Guide**: `uv run python scripts/generate_style_guide.py`
 - **Manual Testing**: Use representative test data in `test/test_data/`
 
 Test with Claude transcript JSONL files typically found in `~/.claude/projects/` directories.
+
+### Dependency management
+
+The project uses `uv` so:
+
+```sh
+# Add a new dep
+uv add textual
+
+# Remove a dep
+uv remove textual
+```
 
 ## Architecture Notes
 

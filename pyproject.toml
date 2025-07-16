@@ -23,6 +23,7 @@ dependencies = [
     "mistune>=3.1.3",
     "anthropic>=0.56.0",
     "toml>=0.10.2",
+    "textual>=4.0.0",
 ]
 
 [project.urls]
@@ -43,6 +44,10 @@ exclude = ["/docs", "/test", "/scripts"]
 testpaths = ["test"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "tui: TUI tests using Textual framework (requires isolated event loop)",
+    "browser: Browser integration tests using Playwright (requires Chromium)",
+]
 
 [tool.pyright]
 # Pyright configuration with strict settings

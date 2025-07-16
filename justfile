@@ -5,11 +5,36 @@ default:
 cli *ARGS:
     uv run claude-code-log {{ARGS}}
 
+# Run only unit tests (fast, no external dependencies)
 test:
-    uv run pytest
+    uv run pytest -m "not (tui or browser)" -v
 
+# Run TUI tests (requires isolated event loop)
+test-tui:
+    uv run pytest -m tui -v
+
+# Run browser tests (requires Chromium)
+test-browser:
+    uv run pytest -m browser -v
+
+# Run all tests in sequence (separated to avoid event loop conflicts)
+test-all:
+    #!/usr/bin/env bash
+    set -e  # Exit on first failure
+    echo "🧪 Running all tests in sequence..."
+    echo "📦 Running unit tests..."
+    uv run pytest -m "not (tui or browser)" -v
+    echo "🖥️  Running TUI tests..."
+    uv run pytest -m tui -v
+    echo "🌐 Running browser tests..."
+    uv run pytest -m browser -v
+    echo "✅ All tests completed!"
+
+# Run tests with coverage (all categories)
 test-cov:
-    uv run pytest --cov=claude_code_log --cov-report=xml --cov-report=html --cov-report=term
+    #!/usr/bin/env bash
+    echo "📊 Running all tests with coverage..."
+    uv run pytest --cov=claude_code_log --cov-report=xml --cov-report=html --cov-report=term -v
 
 format:
     uv run ruff format
@@ -23,7 +48,7 @@ typecheck:
 ty:
     uv run ty check
 
-ci: format test lint typecheck ty
+ci: format test-all lint typecheck ty
 
 build:
     rm dist/*
