@@ -30,7 +30,7 @@ from .utils import (
     is_local_command_output,
     should_skip_message,
     should_use_as_session_starter,
-    extract_init_command_description,
+    create_session_preview,
 )
 from .cache import get_library_version
 
@@ -857,7 +857,7 @@ def generate_html(
                 and should_use_as_session_starter(text_content)
             ):
                 content = extract_text_content(message.message.content)
-                first_user_message = extract_init_command_description(content)
+                first_user_message = create_session_preview(content)
 
             sessions[session_id] = {
                 "id": session_id,
@@ -899,10 +899,9 @@ def generate_html(
             if hasattr(message, "message"):
                 first_user_content = extract_text_content(message.message.content)
                 if should_use_as_session_starter(first_user_content):
-                    preview_content = extract_init_command_description(
+                    sessions[session_id]["first_user_message"] = create_session_preview(
                         first_user_content
                     )
-                    sessions[session_id]["first_user_message"] = preview_content[:1000]
 
         sessions[session_id]["message_count"] += 1
 

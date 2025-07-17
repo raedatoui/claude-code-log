@@ -8,7 +8,10 @@ from typing import List, Optional, Dict, Any, TYPE_CHECKING
 if TYPE_CHECKING:
     from .cache import CacheManager
 
-from .utils import should_use_as_session_starter, extract_init_command_description
+from .utils import (
+    should_use_as_session_starter,
+    create_session_preview,
+)
 from .cache import CacheManager, SessionCacheData, get_library_version
 from .parser import (
     load_transcript,
@@ -207,10 +210,9 @@ def _update_cache_with_session_data(
             ):
                 first_user_content = extract_text_content(message.message.content)
                 if should_use_as_session_starter(first_user_content):
-                    preview_content = extract_init_command_description(
+                    session_cache.first_user_message = create_session_preview(
                         first_user_content
                     )
-                    session_cache.first_user_message = preview_content[:1000]
 
         # Calculate token usage for assistant messages
         if message.type == "assistant" and hasattr(message, "message"):
@@ -358,10 +360,9 @@ def _collect_project_sessions(messages: List[TranscriptEntry]) -> List[Dict[str,
             ):
                 first_user_content = extract_text_content(message.message.content)
                 if should_use_as_session_starter(first_user_content):
-                    preview_content = extract_init_command_description(
+                    sessions[session_id]["first_user_message"] = create_session_preview(
                         first_user_content
                     )
-                    sessions[session_id]["first_user_message"] = preview_content[:1000]
 
     # Convert to list format with formatted timestamps
     session_list: List[Dict[str, Any]] = []

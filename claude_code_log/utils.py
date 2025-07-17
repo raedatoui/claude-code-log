@@ -68,6 +68,26 @@ def should_use_as_session_starter(text_content: str) -> bool:
     return True
 
 
+# Constants
+FIRST_USER_MESSAGE_PREVIEW_LENGTH = 1000
+
+
+def create_session_preview(text_content: str) -> str:
+    """Create a truncated preview of first user message for session display.
+
+    Args:
+        text_content: The raw text content from the first user message
+
+    Returns:
+        A preview string, truncated to FIRST_USER_MESSAGE_PREVIEW_LENGTH with
+        ellipsis if needed, and with init commands converted to friendly descriptions.
+    """
+    preview_content = extract_init_command_description(text_content)
+    if len(preview_content) > FIRST_USER_MESSAGE_PREVIEW_LENGTH:
+        return preview_content[:FIRST_USER_MESSAGE_PREVIEW_LENGTH] + "..."
+    return preview_content
+
+
 def extract_text_content_length(content: Union[str, List[ContentItem]]) -> int:
     """Get the length of text content for quick checks without full extraction."""
     if isinstance(content, str):
