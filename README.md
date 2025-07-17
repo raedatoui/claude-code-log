@@ -293,6 +293,7 @@ uv run claude-code-log
 ## TODO
 
 - make it possible to get to project selector in TUI even if pwd is a project
+- review why do we have `[:1000]` of first_user_message in 4 different places
 - add a bit of padding to the last message time so the timeline doesn't look empty when opening
 - tutorial overlay
 - integrate `claude-trace` request logs if present?

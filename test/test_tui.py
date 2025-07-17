@@ -420,19 +420,24 @@ class TestSessionBrowser:
 
         with (
             patch("claude_code_log.tui.os.execvp") as mock_execvp,
-            patch("claude_code_log.tui.os.system") as mock_system,
+            patch.object(app, "suspend") as mock_suspend,
         ):
+            # Make suspend work as a context manager that executes the body
+            mock_suspend.return_value.__enter__ = Mock(return_value=None)
+            mock_suspend.return_value.__exit__ = Mock(return_value=False)
+
             async with app.run_test() as pilot:
                 await pilot.pause(0.1)
 
                 # Test resume action
                 app.action_resume_selected()
 
+                # Check that suspend was called
+                mock_suspend.assert_called_once()
                 # Check that execvp was called with correct arguments
                 mock_execvp.assert_called_once_with(
                     "claude", ["claude", "-r", "session-123"]
                 )
-                mock_system.assert_called_once_with("reset")
 
     @pytest.mark.asyncio
     async def test_resume_action_command_not_found(self, temp_project_dir):
@@ -442,9 +447,12 @@ class TestSessionBrowser:
 
         with (
             patch("claude_code_log.tui.os.execvp") as mock_execvp,
-            patch("claude_code_log.tui.os.system"),
+            patch.object(app, "suspend") as mock_suspend,
         ):
             mock_execvp.side_effect = FileNotFoundError()
+            # Make suspend work as a context manager that executes the body
+            mock_suspend.return_value.__enter__ = Mock(return_value=None)
+            mock_suspend.return_value.__exit__ = Mock(return_value=False)
 
             async with app.run_test() as pilot:
                 await pilot.pause(0.1)
@@ -453,6 +461,7 @@ class TestSessionBrowser:
                 app.action_resume_selected()
 
                 # Should handle the error gracefully
+                mock_suspend.assert_called_once()
                 mock_execvp.assert_called_once()
 
     @pytest.mark.asyncio

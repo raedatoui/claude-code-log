@@ -210,7 +210,7 @@ def _update_cache_with_session_data(
                     preview_content = extract_init_command_description(
                         first_user_content
                     )
-                    session_cache.first_user_message = preview_content[:500]
+                    session_cache.first_user_message = preview_content[:1000]
 
         # Calculate token usage for assistant messages
         if message.type == "assistant" and hasattr(message, "message"):
@@ -361,7 +361,7 @@ def _collect_project_sessions(messages: List[TranscriptEntry]) -> List[Dict[str,
                     preview_content = extract_init_command_description(
                         first_user_content
                     )
-                    sessions[session_id]["first_user_message"] = preview_content[:500]
+                    sessions[session_id]["first_user_message"] = preview_content[:1000]
 
     # Convert to list format with formatted timestamps
     session_list: List[Dict[str, Any]] = []

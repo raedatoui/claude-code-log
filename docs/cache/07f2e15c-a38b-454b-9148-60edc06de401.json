@@ -3,22 +3,26 @@
     {
       "type": "summary",
       "summary": "Automate Release Process with Justfile Command",
-      "leafUuid": "af936c4e-108b-42a6-be4b-8677a96902f3"
+      "leafUuid": "af936c4e-108b-42a6-be4b-8677a96902f3",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Collapsible Details: Line-Based Rendering & Toggle Functionality",
-      "leafUuid": "d2c2aa08-8bb0-4a85-af19-b175d5edd5a5"
+      "leafUuid": "d2c2aa08-8bb0-4a85-af19-b175d5edd5a5",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Transcript Entry Structure in Test Data Files",
-      "leafUuid": "d811607b-c468-467f-b5f9-07fb61983046"
+      "leafUuid": "d811607b-c468-467f-b5f9-07fb61983046",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Collapsible Details: Line-Based Rendering & Toggle Functionality",
-      "leafUuid": "f80baf11-8db7-45a3-9638-095806d32234"
+      "leafUuid": "f80baf11-8db7-45a3-9638-095806d32234",
+      "cwd": null
     }
   ],
   "2025-06-18T23:17:59.336Z": [

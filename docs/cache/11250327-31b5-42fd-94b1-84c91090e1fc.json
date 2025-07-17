@@ -3,7 +3,8 @@
     {
       "type": "summary",
       "summary": "GitHub Action CI: Tests, Linting, Type Checks",
-      "leafUuid": "fe37cae6-5eb1-4f62-b2e5-b7f7425aedbb"
+      "leafUuid": "fe37cae6-5eb1-4f62-b2e5-b7f7425aedbb",
+      "cwd": null
     }
   ],
   "2025-06-15T00:17:05.590Z": [

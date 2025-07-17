@@ -3,7 +3,8 @@
     {
       "type": "summary",
       "summary": "Local Command Execution: Doctor Command Attempted",
-      "leafUuid": "60e95c9f-3fa8-47f0-92a0-32f677461087"
+      "leafUuid": "60e95c9f-3fa8-47f0-92a0-32f677461087",
+      "cwd": null
     }
   ],
   "2025-07-02T11:34:22.402Z": [

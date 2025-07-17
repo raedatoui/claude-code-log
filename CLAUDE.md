@@ -54,7 +54,8 @@ claude-code-log my-project --tui  # Automatically converts to ~/.claude/projects
   - `r` or "Refresh" button: Reload session data from files
 - **Project Statistics**: Real-time display of total sessions, messages, tokens, and date range
 - **Cache Integration**: Leverages existing cache system for fast loading with automatic cache validation
-- **Keyboard Navigation**: Arrow keys to navigate, Enter to select, `q` to quit
+- **Keyboard Navigation**: Arrow keys to navigate, Enter to expand row details, `q` to quit
+- **Row Expansion**: Press Enter to expand selected row showing full summary, first user message, working directory, and detailed token usage
 
 **Working Directory Matching:**
 

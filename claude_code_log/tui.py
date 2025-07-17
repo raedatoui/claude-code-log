@@ -15,6 +15,7 @@ from textual.widgets import (
     Footer,
     Header,
     Label,
+    Static,
 )
 from textual.reactive import reactive
 
@@ -125,6 +126,20 @@ class ProjectSelector(App[Path]):
                 cache_manager = CacheManager(project_path, get_library_version())
                 project_cache = cache_manager.get_cached_project_data()
 
+                # If cache is empty, try to build it
+                if not project_cache or not project_cache.sessions:
+                    # Check if we have any JSONL files to process
+                    jsonl_files = list(project_path.glob("*.jsonl"))
+                    if jsonl_files:
+                        try:
+                            # Build cache by processing the project
+                            convert_jsonl_to_html(project_path, silent=True)
+                            # Reload cache after building
+                            project_cache = cache_manager.get_cached_project_data()
+                        except Exception:
+                            # If cache building fails, continue with empty cache
+                            project_cache = None
+
                 # Get project info
                 session_count = (
                     len(project_cache.sessions)
@@ -186,13 +201,17 @@ class ProjectSelector(App[Path]):
             if self.projects:
                 self.exit(self.projects[0])
 
+    async def action_quit(self) -> None:
+        """Quit the application with proper cleanup."""
+        self.exit(None)
+
 
 class SessionBrowser(App[None]):
     """Interactive TUI for browsing and managing Claude Code Log sessions."""
 
     CSS = """
     #main-container {
-        padding: 1;
+        padding: 0;
         height: 100%;
     }
     
@@ -201,7 +220,6 @@ class SessionBrowser(App[None]):
         min-height: 3;
         max-height: 5;
         border: solid $primary;
-        margin-bottom: 1;
     }
     
     .stat-label {
@@ -216,17 +234,26 @@ class SessionBrowser(App[None]):
     #sessions-table {
         height: 1fr;
     }
+    
+    #expanded-content {
+        display: none;
+        height: 1fr;
+        border: solid $secondary;
+        overflow-y: auto;
+    }
     """
 
     TITLE = "Claude Code Log - Session Browser"
     BINDINGS = [
         ("q", "quit", "Quit"),
-        ("h", "export_selected", "Export to HTML"),
+        ("h", "export_selected", "Open HTML page"),
         ("c", "resume_selected", "Resume in Claude Code"),
+        ("e", "toggle_expanded", "Toggle Expanded View"),
         ("?", "toggle_help", "Help"),
     ]
 
     selected_session_id: reactive[Optional[str]] = reactive(cast(Optional[str], None))
+    is_expanded: reactive[bool] = reactive(False)
     project_path: Path
     cache_manager: CacheManager
     sessions: Dict[str, SessionCacheData]
@@ -251,6 +278,9 @@ class SessionBrowser(App[None]):
 
                 # Session table
                 yield DataTable[str](id="sessions-table", cursor_type="row")
+
+                # Expanded content container (initially hidden)
+                yield Static("", id="expanded-content")
 
         yield Footer()
 
@@ -311,7 +341,7 @@ class SessionBrowser(App[None]):
         terminal_width = self.size.width
 
         # Fixed widths for specific columns
-        session_id_width = 12
+        session_id_width = 10
         messages_width = 10
         tokens_width = 14
 
@@ -485,6 +515,10 @@ class SessionBrowser(App[None]):
         """Handle row highlighting (cursor movement) in the sessions table."""
         self._update_selected_session_from_cursor()
 
+        # Update expanded content if it's visible
+        if self.is_expanded:
+            self._update_expanded_content()
+
     def _update_selected_session_from_cursor(self) -> None:
         """Update the selected session based on the current cursor position."""
         table = cast(DataTable[str], self.query_one("#sessions-table", DataTable))
@@ -527,14 +561,11 @@ class SessionBrowser(App[None]):
             return
 
         try:
-            # Exit the TUI cleanly first
-            self.exit()
-
-            # Reset terminal to normal state and clear screen
-            os.system("reset")
-
-            # Replace the current process with claude -r <sessionId>
-            os.execvp("claude", ["claude", "-r", self.selected_session_id])
+            # Use Textual's suspend context manager for proper terminal cleanup
+            with self.suspend():
+                # Terminal is properly restored here by Textual
+                # Replace the current process with claude -r <sessionId>
+                os.execvp("claude", ["claude", "-r", self.selected_session_id])
         except FileNotFoundError:
             self.notify(
                 "Claude Code CLI not found. Make sure 'claude' is in your PATH.",
@@ -543,19 +574,104 @@ class SessionBrowser(App[None]):
         except Exception as e:
             self.notify(f"Error resuming session: {e}", severity="error")
 
+    def _escape_rich_markup(self, text: str) -> str:
+        """Escape Rich markup characters in text to prevent parsing errors."""
+        if not text:
+            return text
+        # Escape square brackets which are used for Rich markup
+        return text.replace("[", "\\[").replace("]", "\\]")
+
+    def _update_expanded_content(self) -> None:
+        """Update the expanded content for the currently selected session."""
+        if (
+            not self.selected_session_id
+            or self.selected_session_id not in self.sessions
+        ):
+            return
+
+        expanded_content = self.query_one("#expanded-content", Static)
+        session_data = self.sessions[self.selected_session_id]
+
+        # Build expanded content
+        content_parts: list[str] = []
+
+        # Session ID (safe - UUID format)
+        content_parts.append(f"[bold]Session ID:[/bold] {self.selected_session_id}")
+
+        # Summary (if available) - escape markup
+        if session_data.summary:
+            escaped_summary = self._escape_rich_markup(session_data.summary)
+            content_parts.append(f"\n[bold]Summary:[/bold] {escaped_summary}")
+
+        # First user message - escape markup
+        if session_data.first_user_message:
+            escaped_message = self._escape_rich_markup(session_data.first_user_message)
+            content_parts.append(
+                f"\n[bold]First User Message:[/bold] {escaped_message}"
+            )
+
+        # Working directory (if available) - escape markup
+        if session_data.cwd:
+            escaped_cwd = self._escape_rich_markup(session_data.cwd)
+            content_parts.append(f"\n[bold]Working Directory:[/bold] {escaped_cwd}")
+
+        # Token usage (safe - numeric data)
+        total_tokens = (
+            session_data.total_input_tokens + session_data.total_output_tokens
+        )
+        if total_tokens > 0:
+            token_details = f"Input: {session_data.total_input_tokens:,} | Output: {session_data.total_output_tokens:,}"
+            if session_data.total_cache_creation_tokens > 0:
+                token_details += (
+                    f" | Cache Creation: {session_data.total_cache_creation_tokens:,}"
+                )
+            if session_data.total_cache_read_tokens > 0:
+                token_details += (
+                    f" | Cache Read: {session_data.total_cache_read_tokens:,}"
+                )
+            content_parts.append(f"\n[bold]Token Usage:[/bold] {token_details}")
+
+        expanded_content.update("\n".join(content_parts))
+
+    def action_toggle_expanded(self) -> None:
+        """Toggle the expanded view for the selected session."""
+        if (
+            not self.selected_session_id
+            or self.selected_session_id not in self.sessions
+        ):
+            return
+
+        expanded_content = self.query_one("#expanded-content", Static)
+
+        if self.is_expanded:
+            # Hide expanded content
+            self.is_expanded = False
+            expanded_content.styles.display = "none"
+            expanded_content.update("")
+        else:
+            # Show expanded content
+            self.is_expanded = True
+            expanded_content.styles.display = "block"
+            self._update_expanded_content()
+
     def action_toggle_help(self) -> None:
         """Show help information."""
         help_text = (
             "Claude Code Log - Session Browser\n\n"
             "Navigation:\n"
             "- Use arrow keys to select sessions\n"
-            "- Press Enter to select a session\n\n"
+            "- Expanded content updates automatically when visible\n\n"
             "Actions:\n"
-            "- h: Open selected session HTML\n"
+            "- e: Toggle expanded view for session\n"
+            "- h: Open selected session's HTML page log\n"
             "- c: Resume selected session in Claude Code\n"
             "- q: Quit application\n\n"
         )
         self.notify(help_text, timeout=10)
+
+    async def action_quit(self) -> None:
+        """Quit the application with proper cleanup."""
+        self.exit()
 
 
 def run_project_selector(
@@ -567,7 +683,12 @@ def run_project_selector(
         return None
 
     app = ProjectSelector(projects, matching_projects)
-    return app.run()
+    try:
+        return app.run()
+    except KeyboardInterrupt:
+        # Textual handles terminal cleanup automatically
+        print("\nInterrupted")
+        return None
 
 
 def run_session_browser(project_path: Path) -> None:
@@ -587,4 +708,9 @@ def run_session_browser(project_path: Path) -> None:
         return
 
     app = SessionBrowser(project_path)
-    app.run()
+    try:
+        app.run()
+    except KeyboardInterrupt:
+        # Textual handles terminal cleanup automatically
+        print("\nInterrupted")
+        return

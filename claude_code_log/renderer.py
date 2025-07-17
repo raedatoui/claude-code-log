@@ -52,22 +52,30 @@ def get_project_display_name(
         # First try to find one that matches the project directory name
         project_path_parts = project_dir_name.split("-")
         if len(project_path_parts) > 1:
-            # Extract the last part which should be the project name
-            expected_project_name = project_path_parts[-1]
-            # Find working directory that ends with this project name
+            # Try to reconstruct the original path from the project directory name
+            # Remove leading empty string and rejoin with "/"
+            reconstructed_path = "/" + "/".join(project_path_parts[1:])
+
+            # Find working directory that matches the reconstructed path
             matching_dirs = [
-                wd
-                for wd in working_directories
-                if Path(wd).name == expected_project_name
+                wd for wd in working_directories if wd == reconstructed_path
             ]
             if matching_dirs:
-                # Sort by length (longest first) to prefer more specific paths
-                matching_dirs.sort(key=len, reverse=True)
                 return Path(matching_dirs[0]).name
-            else:
-                # Fall back to longest working directory (more specific)
-                longest_cwd = max(working_directories, key=len)
-                return Path(longest_cwd).name
+
+            # If no exact match, try to find working directory that ends with similar pattern
+            # Convert project name parts to potential directory names
+            for i in range(len(project_path_parts), 0, -1):
+                potential_name = "-".join(project_path_parts[-i:])
+                matching_dirs = [
+                    wd for wd in working_directories if Path(wd).name == potential_name
+                ]
+                if matching_dirs:
+                    return Path(matching_dirs[0]).name
+
+            # Fall back to longest working directory (more specific)
+            longest_cwd = max(working_directories, key=len)
+            return Path(longest_cwd).name
         else:
             # No project path structure, use longest working directory
             longest_cwd = max(working_directories, key=len)
@@ -894,7 +902,7 @@ def generate_html(
                     preview_content = extract_init_command_description(
                         first_user_content
                     )
-                    sessions[session_id]["first_user_message"] = preview_content[:500]
+                    sessions[session_id]["first_user_message"] = preview_content[:1000]
 
         sessions[session_id]["message_count"] += 1
 

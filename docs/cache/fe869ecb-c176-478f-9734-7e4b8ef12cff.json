@@ -3,77 +3,92 @@
     {
       "type": "summary",
       "summary": "System Message Parsing and HTML Rendering Upgrade",
-      "leafUuid": "7e17c050-6107-4772-83da-a26846a30d3c"
+      "leafUuid": "7e17c050-6107-4772-83da-a26846a30d3c",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Template Testing & Style Guide for Code Log Project",
-      "leafUuid": "f3c323ce-c8a2-4f79-8a9f-ee1840b7b098"
+      "leafUuid": "f3c323ce-c8a2-4f79-8a9f-ee1840b7b098",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "JSON Structure Analysis for Complex Conversation Logs",
-      "leafUuid": "44433c38-90f3-4dc0-9572-305f0d35402f"
+      "leafUuid": "44433c38-90f3-4dc0-9572-305f0d35402f",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Pydantic Models Fix Linting, Render Command Output",
-      "leafUuid": "9a3f5fd9-7e9e-4c44-bc06-30d2492ddb19"
+      "leafUuid": "9a3f5fd9-7e9e-4c44-bc06-30d2492ddb19",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Template Testing & Style Guide Infrastructure",
-      "leafUuid": "a15c45d1-c12f-481f-beac-2df093c5a6ce"
+      "leafUuid": "a15c45d1-c12f-481f-beac-2df093c5a6ce",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Tool Use Rendering for Claude Code Log Converter",
-      "leafUuid": "e95d00b7-0774-48d9-b040-2d81b2be9be2"
+      "leafUuid": "e95d00b7-0774-48d9-b040-2d81b2be9be2",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Template Testing & Style Guide Infrastructure",
-      "leafUuid": "f5bb7681-b9ae-4167-940a-758ce3515043"
+      "leafUuid": "f5bb7681-b9ae-4167-940a-758ce3515043",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "HTML Escaping Fix for Claude Code Log Converter",
-      "leafUuid": "1015c9ea-a743-4a74-aaed-5b8bfaa35448"
+      "leafUuid": "1015c9ea-a743-4a74-aaed-5b8bfaa35448",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Template Testing & Style Guide for Code Log Project",
-      "leafUuid": "8ca58a25-3851-48b8-8b1d-20b97e51d155"
+      "leafUuid": "8ca58a25-3851-48b8-8b1d-20b97e51d155",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "HTML Escaping Fix for Nested Markdown Divs",
-      "leafUuid": "14f93ac6-a530-4764-9e68-96bb1d81b57b"
+      "leafUuid": "14f93ac6-a530-4764-9e68-96bb1d81b57b",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Template Testing & Style Guide Infrastructure",
-      "leafUuid": "1169a04d-ab9f-44bc-929b-c9102376faa3"
+      "leafUuid": "1169a04d-ab9f-44bc-929b-c9102376faa3",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Claude Code Log: Hierarchical Project Processing CLI Tool",
-      "leafUuid": "0d13b813-9f90-43f3-8768-0a5420277ff7"
+      "leafUuid": "0d13b813-9f90-43f3-8768-0a5420277ff7",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Template Testing & Style Guide Infrastructure",
-      "leafUuid": "3e4e1a6e-4233-4d36-97a8-cc1af5ec40bd"
+      "leafUuid": "3e4e1a6e-4233-4d36-97a8-cc1af5ec40bd",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Template Testing & Style Guide for Code Log Project",
-      "leafUuid": "ac415a2d-ffc8-4001-98f6-5f655001a641"
+      "leafUuid": "ac415a2d-ffc8-4001-98f6-5f655001a641",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Test Suite Reorganization: Improved Test File Structure",
-      "leafUuid": "8a74ee27-ba16-4225-b66b-7940689bf1c3"
+      "leafUuid": "8a74ee27-ba16-4225-b66b-7940689bf1c3",
+      "cwd": null
     }
   ],
   "2025-06-14T23:45:12.148Z": [

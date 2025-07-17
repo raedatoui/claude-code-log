@@ -97,6 +97,20 @@ def find_projects_by_cwd(
             cache_manager = CacheManager(project_dir, get_library_version())
             project_cache = cache_manager.get_cached_project_data()
 
+            # Check if we need to build cache (empty cache or no working directories)
+            if not project_cache or not project_cache.working_directories:
+                # Check if we have any JSONL files to process
+                jsonl_files = list(project_dir.glob("*.jsonl"))
+                if jsonl_files:
+                    # Build cache by processing the project
+                    try:
+                        convert_jsonl_to_html(project_dir, silent=True)
+                        # Reload cache after building
+                        project_cache = cache_manager.get_cached_project_data()
+                    except Exception:
+                        # If cache building fails, fall back to path name matching
+                        project_cache = None
+
             if project_cache and project_cache.working_directories:
                 # Check if current cwd matches any working directory in this project
                 for cwd in project_cache.working_directories:

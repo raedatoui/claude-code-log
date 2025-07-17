@@ -3,47 +3,56 @@
     {
       "type": "summary",
       "summary": "Docs Update: Markdown Conversation Review Tool Improvements",
-      "leafUuid": "1b1b0496-21d9-43ac-9df9-06272184b20f"
+      "leafUuid": "1b1b0496-21d9-43ac-9df9-06272184b20f",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Timeline Browser Tests: Fixing Sidechain Message Rendering",
-      "leafUuid": "2abcd2f7-505c-49d3-a4d2-d487c2642966"
+      "leafUuid": "2abcd2f7-505c-49d3-a4d2-d487c2642966",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Sub-Assistant Message Structure and Rendering Analysis",
-      "leafUuid": "dcddf167-15e6-44b9-a6e4-f156006480c5"
+      "leafUuid": "dcddf167-15e6-44b9-a6e4-f156006480c5",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Sidechain Message HTML Structure and Timeline Detection",
-      "leafUuid": "375d0f95-e345-40a6-8815-9f00dd6cdd4e"
+      "leafUuid": "375d0f95-e345-40a6-8815-9f00dd6cdd4e",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Sub-Assistant Message Filtering System Investigation",
-      "leafUuid": "6255f655-d315-4ff0-a01c-f878ce9e942c"
+      "leafUuid": "6255f655-d315-4ff0-a01c-f878ce9e942c",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Sub-assistant Timeline Filtering and Rendering Fix",
-      "leafUuid": "4e48863b-afac-4282-8ad4-0a95319e9b78"
+      "leafUuid": "4e48863b-afac-4282-8ad4-0a95319e9b78",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Sub-assistant Filtering: Tests, Fixes, Cleanup",
-      "leafUuid": "9ea214f0-6f39-47a6-838d-bc25c9b7e2bf"
+      "leafUuid": "9ea214f0-6f39-47a6-838d-bc25c9b7e2bf",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Terminal Command Execution and Screen Clearing",
-      "leafUuid": "c2a0ce66-4831-4d9e-971b-b4bbaeeb8c52"
+      "leafUuid": "c2a0ce66-4831-4d9e-971b-b4bbaeeb8c52",
+      "cwd": null
     },
     {
       "type": "summary",
       "summary": "Pyright Fixes: Renderer Type Errors Resolved",
-      "leafUuid": "9b28ea40-c8e8-4cbd-b704-ed319f63e70e"
+      "leafUuid": "9b28ea40-c8e8-4cbd-b704-ed319f63e70e",
+      "cwd": null
     }
   ],
   "2025-07-02T21:34:34.180Z": [
