@@ -292,7 +292,9 @@ uv run claude-code-log
 
 ## TODO
 
+- project names aren't rendered correctly in HTML when generating everything form a cold cache
 - make it possible to get to project selector in TUI even if pwd is a project
+- resuming session when launched from a different directory doesn't work
 - tutorial overlay
 - integrate `claude-trace` request logs if present?
 - Localised number formatting and timezone adjustment runtime? For this we'd need to make Jinja template variables more granular

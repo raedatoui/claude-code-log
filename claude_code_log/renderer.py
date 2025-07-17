@@ -48,38 +48,14 @@ def get_project_display_name(
         The best project display name (e.g., "claude-code-log")
     """
     if working_directories:
-        # Choose the working directory that matches the project name best
-        # First try to find one that matches the project directory name
-        project_path_parts = project_dir_name.split("-")
-        if len(project_path_parts) > 1:
-            # Try to reconstruct the original path from the project directory name
-            # Remove leading empty string and rejoin with "/"
-            reconstructed_path = "/" + "/".join(project_path_parts[1:])
+        # Find the working directory that represents the project root
+        # (shortest path that doesn't have another working directory as its parent)
+        working_paths = [Path(wd) for wd in working_directories]
 
-            # Find working directory that matches the reconstructed path
-            matching_dirs = [
-                wd for wd in working_directories if wd == reconstructed_path
-            ]
-            if matching_dirs:
-                return Path(matching_dirs[0]).name
-
-            # If no exact match, try to find working directory that ends with similar pattern
-            # Convert project name parts to potential directory names
-            for i in range(len(project_path_parts), 0, -1):
-                potential_name = "-".join(project_path_parts[-i:])
-                matching_dirs = [
-                    wd for wd in working_directories if Path(wd).name == potential_name
-                ]
-                if matching_dirs:
-                    return Path(matching_dirs[0]).name
-
-            # Fall back to longest working directory (more specific)
-            longest_cwd = max(working_directories, key=len)
-            return Path(longest_cwd).name
-        else:
-            # No project path structure, use longest working directory
-            longest_cwd = max(working_directories, key=len)
-            return Path(longest_cwd).name
+        # Sort by path depth (number of parts) and then by length
+        # This prefers shorter, less nested paths
+        best_path = min(working_paths, key=lambda p: (len(p.parts), len(str(p))))
+        return best_path.name
     else:
         # Fall back to converting project directory name
         display_name = project_dir_name

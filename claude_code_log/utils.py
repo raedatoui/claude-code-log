@@ -2,7 +2,7 @@
 """Utility functions for message filtering and processing."""
 
 from typing import Union, List
-from .models import ContentItem, TextContent
+from .models import ContentItem, TextContent, TranscriptEntry
 
 
 def is_system_message(text_content: str) -> bool:
@@ -101,3 +101,22 @@ def extract_text_content_length(content: Union[str, List[ContentItem]]) -> int:
             total_length += len(item.text.strip())
 
     return total_length
+
+
+def extract_working_directories_from_messages(
+    messages: List[TranscriptEntry],
+) -> List[str]:
+    """Extract unique working directories from a list of transcript messages.
+
+    Args:
+        messages: List of transcript entries to extract working directories from
+
+    Returns:
+        List of unique working directory paths found in the messages
+    """
+    working_directories: set[str] = set()
+    for message in messages:
+        if hasattr(message, "cwd") and message.cwd:
+            working_directories.add(message.cwd)
+
+    return list(working_directories)

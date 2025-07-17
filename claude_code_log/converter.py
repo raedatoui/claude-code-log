@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 from .utils import (
     should_use_as_session_starter,
     create_session_preview,
+    extract_working_directories_from_messages,
 )
 from .cache import CacheManager, SessionCacheData, get_library_version
 from .parser import (
@@ -62,19 +63,20 @@ def convert_jsonl_to_html(
         messages = load_transcript(input_path, silent=silent)
         title = f"Claude Transcript - {input_path.stem}"
     else:
-        # Directory mode
+        # Directory mode - Cache-First Approach
         if output_path is None:
             output_path = input_path / "combined_transcripts.html"
+
+        # Phase 1: Ensure cache is fresh and populated
+        _ensure_fresh_cache(input_path, cache_manager, from_date, to_date, silent)
+
+        # Phase 2: Load messages (will use fresh cache when available)
         messages = load_directory_transcripts(
             input_path, cache_manager, from_date, to_date, silent
         )
 
-        # Try to get a better project title from working directories in cache
-        working_directories = None
-        if cache_manager is not None:
-            project_cache = cache_manager.get_cached_project_data()
-            if project_cache and project_cache.working_directories:
-                working_directories = project_cache.working_directories
+        # Extract working directories directly from parsed messages
+        working_directories = extract_working_directories_from_messages(messages)
 
         project_title = get_project_display_name(input_path.name, working_directories)
         title = f"Claude Transcripts - {project_title}"
@@ -113,11 +115,49 @@ def convert_jsonl_to_html(
             messages, input_path, from_date, to_date, cache_manager
         )
 
-    # Update cache with session and project data if available
-    if cache_manager is not None and input_path.is_dir():
-        _update_cache_with_session_data(cache_manager, messages)
-
     return output_path
+
+
+def _ensure_fresh_cache(
+    project_dir: Path,
+    cache_manager: Optional[CacheManager],
+    from_date: Optional[str] = None,
+    to_date: Optional[str] = None,
+    silent: bool = False,
+) -> bool:
+    """Ensure cache is fresh and populated. Returns True if cache was updated."""
+    if cache_manager is None:
+        return False
+
+    # Check if cache needs updating
+    jsonl_files = list(project_dir.glob("*.jsonl"))
+    if not jsonl_files:
+        return False
+
+    # Get cached project data
+    cached_project_data = cache_manager.get_cached_project_data()
+
+    # Check various invalidation conditions
+    needs_update = (
+        cached_project_data is None
+        or from_date is not None
+        or to_date is not None
+        or cache_manager.get_modified_files(jsonl_files)  # Files changed
+        or (cached_project_data.total_message_count == 0 and jsonl_files)  # Stale cache
+    )
+
+    if not needs_update:
+        return False  # Cache is already fresh
+
+    # Load and process messages to populate cache
+    print(f"Updating cache for {project_dir.name}...")
+    messages = load_directory_transcripts(
+        project_dir, cache_manager, from_date, to_date, silent
+    )
+
+    # Update cache with fresh data
+    _update_cache_with_session_data(cache_manager, messages)
+    return True
 
 
 def _update_cache_with_session_data(
@@ -505,62 +545,10 @@ def process_projects_hierarchy(
                 except Exception as e:
                     print(f"Warning: Failed to initialize cache for {project_dir}: {e}")
 
-            # Check if we can use cached project data
-            cached_project_data = None
-            if cache_manager is not None:
-                cached_project_data = cache_manager.get_cached_project_data()
+            # Phase 1: Ensure cache is fresh and populated
+            _ensure_fresh_cache(project_dir, cache_manager, from_date, to_date)
 
-                # Check if all files are still cached and no date filtering is applied
-                if cached_project_data is not None and not from_date and not to_date:
-                    jsonl_files = list(project_dir.glob("*.jsonl"))
-                    modified_files = cache_manager.get_modified_files(jsonl_files)
-
-                    # Check if HTML files are outdated
-                    combined_html_path = project_dir / "combined_transcripts.html"
-                    html_outdated = is_html_outdated(combined_html_path)
-
-                    if not modified_files and not html_outdated:
-                        # All files are cached and HTML is current, use cached project data
-                        print(f"Using cached data for project {project_dir.name}")
-                        project_summaries.append(
-                            {
-                                "name": project_dir.name,
-                                "path": project_dir,
-                                "html_file": f"{project_dir.name}/combined_transcripts.html",
-                                "jsonl_count": len(cached_project_data.cached_files),
-                                "message_count": cached_project_data.total_message_count,
-                                "last_modified": max(
-                                    info.source_mtime
-                                    for info in cached_project_data.cached_files.values()
-                                )
-                                if cached_project_data.cached_files
-                                else 0.0,
-                                "total_input_tokens": cached_project_data.total_input_tokens,
-                                "total_output_tokens": cached_project_data.total_output_tokens,
-                                "total_cache_creation_tokens": cached_project_data.total_cache_creation_tokens,
-                                "total_cache_read_tokens": cached_project_data.total_cache_read_tokens,
-                                "latest_timestamp": cached_project_data.latest_timestamp,
-                                "earliest_timestamp": cached_project_data.earliest_timestamp,
-                                "working_directories": cached_project_data.working_directories,
-                                "sessions": [
-                                    {
-                                        "id": session_data.session_id,
-                                        "summary": session_data.summary,
-                                        "timestamp_range": _format_session_timestamp_range(
-                                            session_data.first_timestamp,
-                                            session_data.last_timestamp,
-                                        ),
-                                        "message_count": session_data.message_count,
-                                        "first_user_message": session_data.first_user_message
-                                        or "[No user message found in session.]",
-                                    }
-                                    for session_data in cached_project_data.sessions.values()
-                                ],
-                            }
-                        )
-                        continue
-
-            # Generate HTML for this project (including individual session files)
+            # Phase 2: Generate HTML for this project (including individual session files)
             output_path = convert_jsonl_to_html(
                 project_dir, None, from_date, to_date, True, use_cache
             )
@@ -572,8 +560,8 @@ def process_projects_hierarchy(
                 max(f.stat().st_mtime for f in jsonl_files) if jsonl_files else 0.0
             )
 
-            # Try to use cached project data if no date filtering
-            if cache_manager is not None and not from_date and not to_date:
+            # Phase 3: Use fresh cached data for index aggregation
+            if cache_manager is not None:
                 cached_project_data = cache_manager.get_cached_project_data()
                 if cached_project_data is not None:
                     # Use cached aggregation data
@@ -610,7 +598,10 @@ def process_projects_hierarchy(
                     )
                     continue
 
-            # Fallback: process messages normally (needed when date filtering or cache unavailable)
+            # Fallback for when cache is not available (should be rare)
+            print(
+                f"Warning: No cached data available for {project_dir.name}, using fallback processing"
+            )
             messages = load_directory_transcripts(
                 project_dir, cache_manager, from_date, to_date
             )

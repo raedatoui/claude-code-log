@@ -52,7 +52,7 @@ markers = [
 
 [tool.pyright]
 # Pyright configuration with strict settings
-include = ["claude_code_log"]
+include = ["claude_code_log"]           # TODO: , "test"
 exclude = ["**/__pycache__", "dist"]
 stubPath = "stubs"
 venvPath = "."
