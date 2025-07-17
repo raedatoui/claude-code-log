@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.4.1] - 2025-07-17
+
+### Changed
+
+- **Fix TUI test**
+- **Add expanded session info panel to TUI + clean up after TUI exit + fix project name regression + take 1000 instead of 500 chars of first user message**
+- **Merge pull request #7 from bbatsell/patch-1**
+- **Add `packaging` to main dependencies**
+- **Silence cache fill output lines when launching TUI + run test suites individually to fix CI**
+
+
 ## [0.4.0] - 2025-07-16
 
 ### Changed
