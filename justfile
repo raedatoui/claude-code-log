@@ -183,4 +183,8 @@ copy-example:
 backup:
     rsync -r ~/.claude/projects ~/.claude/backup
 
-regen-all: backup render-test-data style-guide cli copy-example
+clear-cache:
+    just cli --clear-cache
+    just cli --clear-html
+
+regen-all: backup clear-cache render-test-data style-guide cli copy-example
