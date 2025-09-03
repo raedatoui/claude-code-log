@@ -28,6 +28,8 @@ from .parser import extract_text_content
 from .utils import (
     is_command_message,
     is_local_command_output,
+    is_bash_input,
+    is_bash_output,
     should_skip_message,
     should_use_as_session_starter,
     create_session_preview,
@@ -181,6 +183,7 @@ def render_markdown(text: str) -> str:
             "def_list",
         ],
         escape=False,  # Don't escape HTML since we want to render markdown properly
+        hard_wrap=True,  # Line break for newlines (checklists in Assistant messages)
     )
     return str(renderer(text))
 
@@ -640,6 +643,369 @@ class TemplateSummary:
             self.token_summary = " | ".join(token_parts)
 
 
+def _convert_ansi_to_html(text: str) -> str:
+    """Convert ANSI escape codes to HTML spans with CSS classes.
+
+    Supports:
+    - Colors (30-37, 90-97 for foreground; 40-47, 100-107 for background)
+    - RGB colors (38;2;r;g;b for foreground; 48;2;r;g;b for background)
+    - Bold (1), Dim (2), Italic (3), Underline (4)
+    - Reset (0, 39, 49, 22, 23, 24)
+    """
+    import re
+
+    result: List[str] = []
+    segments: List[Dict[str, Any]] = []
+
+    # First pass: split text into segments with their styles
+    last_end = 0
+    current_fg = None
+    current_bg = None
+    current_bold = False
+    current_dim = False
+    current_italic = False
+    current_underline = False
+    current_rgb_fg = None
+    current_rgb_bg = None
+
+    for match in re.finditer(r"\x1b\[([0-9;]+)m", text):
+        # Add text before this escape code
+        if match.start() > last_end:
+            segments.append(
+                {
+                    "text": text[last_end : match.start()],
+                    "fg": current_fg,
+                    "bg": current_bg,
+                    "bold": current_bold,
+                    "dim": current_dim,
+                    "italic": current_italic,
+                    "underline": current_underline,
+                    "rgb_fg": current_rgb_fg,
+                    "rgb_bg": current_rgb_bg,
+                }
+            )
+
+        # Process escape codes
+        codes = match.group(1).split(";")
+        i = 0
+        while i < len(codes):
+            code = codes[i]
+
+            # Reset codes
+            if code == "0":
+                current_fg = None
+                current_bg = None
+                current_bold = False
+                current_dim = False
+                current_italic = False
+                current_underline = False
+                current_rgb_fg = None
+                current_rgb_bg = None
+            elif code == "39":
+                current_fg = None
+                current_rgb_fg = None
+            elif code == "49":
+                current_bg = None
+                current_rgb_bg = None
+            elif code == "22":
+                current_bold = False
+                current_dim = False
+            elif code == "23":
+                current_italic = False
+            elif code == "24":
+                current_underline = False
+
+            # Style codes
+            elif code == "1":
+                current_bold = True
+            elif code == "2":
+                current_dim = True
+            elif code == "3":
+                current_italic = True
+            elif code == "4":
+                current_underline = True
+
+            # Standard foreground colors
+            elif code in ["30", "31", "32", "33", "34", "35", "36", "37"]:
+                color_map = {
+                    "30": "black",
+                    "31": "red",
+                    "32": "green",
+                    "33": "yellow",
+                    "34": "blue",
+                    "35": "magenta",
+                    "36": "cyan",
+                    "37": "white",
+                }
+                current_fg = f"ansi-{color_map[code]}"
+                current_rgb_fg = None
+
+            # Standard background colors
+            elif code in ["40", "41", "42", "43", "44", "45", "46", "47"]:
+                color_map = {
+                    "40": "black",
+                    "41": "red",
+                    "42": "green",
+                    "43": "yellow",
+                    "44": "blue",
+                    "45": "magenta",
+                    "46": "cyan",
+                    "47": "white",
+                }
+                current_bg = f"ansi-bg-{color_map[code]}"
+                current_rgb_bg = None
+
+            # Bright foreground colors
+            elif code in ["90", "91", "92", "93", "94", "95", "96", "97"]:
+                color_map = {
+                    "90": "bright-black",
+                    "91": "bright-red",
+                    "92": "bright-green",
+                    "93": "bright-yellow",
+                    "94": "bright-blue",
+                    "95": "bright-magenta",
+                    "96": "bright-cyan",
+                    "97": "bright-white",
+                }
+                current_fg = f"ansi-{color_map[code]}"
+                current_rgb_fg = None
+
+            # Bright background colors
+            elif code in ["100", "101", "102", "103", "104", "105", "106", "107"]:
+                color_map = {
+                    "100": "bright-black",
+                    "101": "bright-red",
+                    "102": "bright-green",
+                    "103": "bright-yellow",
+                    "104": "bright-blue",
+                    "105": "bright-magenta",
+                    "106": "bright-cyan",
+                    "107": "bright-white",
+                }
+                current_bg = f"ansi-bg-{color_map[code]}"
+                current_rgb_bg = None
+
+            # RGB foreground color
+            elif code == "38" and i + 1 < len(codes) and codes[i + 1] == "2":
+                if i + 4 < len(codes):
+                    r, g, b = codes[i + 2], codes[i + 3], codes[i + 4]
+                    current_rgb_fg = f"color: rgb({r}, {g}, {b})"
+                    current_fg = None
+                    i += 4
+
+            # RGB background color
+            elif code == "48" and i + 1 < len(codes) and codes[i + 1] == "2":
+                if i + 4 < len(codes):
+                    r, g, b = codes[i + 2], codes[i + 3], codes[i + 4]
+                    current_rgb_bg = f"background-color: rgb({r}, {g}, {b})"
+                    current_bg = None
+                    i += 4
+
+            i += 1
+
+        last_end = match.end()
+
+    # Add remaining text
+    if last_end < len(text):
+        segments.append(
+            {
+                "text": text[last_end:],
+                "fg": current_fg,
+                "bg": current_bg,
+                "bold": current_bold,
+                "dim": current_dim,
+                "italic": current_italic,
+                "underline": current_underline,
+                "rgb_fg": current_rgb_fg,
+                "rgb_bg": current_rgb_bg,
+            }
+        )
+
+    # Second pass: build HTML
+    for segment in segments:
+        if not segment["text"]:
+            continue
+
+        classes: List[str] = []
+        styles: List[str] = []
+
+        if segment["fg"]:
+            classes.append(segment["fg"])
+        if segment["bg"]:
+            classes.append(segment["bg"])
+        if segment["bold"]:
+            classes.append("ansi-bold")
+        if segment["dim"]:
+            classes.append("ansi-dim")
+        if segment["italic"]:
+            classes.append("ansi-italic")
+        if segment["underline"]:
+            classes.append("ansi-underline")
+        if segment["rgb_fg"]:
+            styles.append(segment["rgb_fg"])
+        if segment["rgb_bg"]:
+            styles.append(segment["rgb_bg"])
+
+        escaped_text = escape_html(segment["text"])
+
+        if classes or styles:
+            attrs: List[str] = []
+            if classes:
+                attrs.append(f'class="{" ".join(classes)}"')
+            if styles:
+                attrs.append(f'style="{"; ".join(styles)}"')
+            result.append(f"<span {' '.join(attrs)}>{escaped_text}</span>")
+        else:
+            result.append(escaped_text)
+
+    return "".join(result)
+
+
+# def _process_summary_message(message: SummaryTranscriptEntry) -> tuple[str, str, str]:
+#     """Process a summary message and return (css_class, content_html, message_type)."""
+#     css_class = "summary"
+#     content_html = f"<strong>Summary:</strong> {escape_html(str(message.summary))}"
+#     message_type = "summary"
+#     return css_class, content_html, message_type
+
+
+def _process_command_message(text_content: str) -> tuple[str, str, str]:
+    """Process a command message and return (css_class, content_html, message_type)."""
+    css_class = "system"
+    command_name, command_args, command_contents = extract_command_info(text_content)
+    escaped_command_name = escape_html(command_name)
+    escaped_command_args = escape_html(command_args)
+
+    # Format the command contents with proper line breaks
+    formatted_contents = command_contents.replace("\\n", "\n")
+    escaped_command_contents = escape_html(formatted_contents)
+
+    # Build the content HTML
+    content_parts: List[str] = [f"<strong>Command:</strong> {escaped_command_name}"]
+    if command_args:
+        content_parts.append(f"<strong>Args:</strong> {escaped_command_args}")
+    if command_contents:
+        details_html = create_collapsible_details("Content", escaped_command_contents)
+        content_parts.append(details_html)
+
+    content_html = "<br>".join(content_parts)
+    message_type = "system"
+    return css_class, content_html, message_type
+
+
+def _process_local_command_output(text_content: str) -> tuple[str, str, str]:
+    """Process local command output and return (css_class, content_html, message_type)."""
+    import re
+
+    css_class = "system command-output"
+
+    stdout_match = re.search(
+        r"<local-command-stdout>(.*?)</local-command-stdout>",
+        text_content,
+        re.DOTALL,
+    )
+    if stdout_match:
+        stdout_content = stdout_match.group(1).strip()
+        # Convert ANSI codes to HTML for colored display
+        html_content = _convert_ansi_to_html(stdout_content)
+        # Use <pre> to preserve formatting and line breaks
+        content_html = (
+            f"<strong>Command Output:</strong><br>"
+            f"<pre class='command-output-content'>{html_content}</pre>"
+        )
+    else:
+        content_html = escape_html(text_content)
+
+    message_type = "system"
+    return css_class, content_html, message_type
+
+
+def _process_bash_input(text_content: str) -> tuple[str, str, str]:
+    """Process bash input command and return (css_class, content_html, message_type)."""
+    import re
+
+    css_class = "bash-input"
+
+    bash_match = re.search(
+        r"<bash-input>(.*?)</bash-input>",
+        text_content,
+        re.DOTALL,
+    )
+    if bash_match:
+        bash_command = bash_match.group(1).strip()
+        escaped_command = escape_html(bash_command)
+        content_html = (
+            f"<span class='bash-prompt'>❯</span> "
+            f"<code class='bash-command'>{escaped_command}</code>"
+        )
+    else:
+        content_html = escape_html(text_content)
+
+    message_type = "bash"
+    return css_class, content_html, message_type
+
+
+def _process_bash_output(text_content: str) -> tuple[str, str, str]:
+    """Process bash output and return (css_class, content_html, message_type)."""
+    import re
+
+    css_class = "bash-output"
+
+    stdout_match = re.search(
+        r"<bash-stdout>(.*?)</bash-stdout>",
+        text_content,
+        re.DOTALL,
+    )
+    stderr_match = re.search(
+        r"<bash-stderr>(.*?)</bash-stderr>",
+        text_content,
+        re.DOTALL,
+    )
+
+    output_parts: List[str] = []
+    if stdout_match:
+        stdout_content = stdout_match.group(1).strip()
+        if stdout_content:
+            escaped_stdout = escape_html(stdout_content)
+            output_parts.append(f"<pre class='bash-stdout'>{escaped_stdout}</pre>")
+
+    if stderr_match:
+        stderr_content = stderr_match.group(1).strip()
+        if stderr_content:
+            escaped_stderr = escape_html(stderr_content)
+            output_parts.append(f"<pre class='bash-stderr'>{escaped_stderr}</pre>")
+
+    if output_parts:
+        content_html = "".join(output_parts)
+    else:
+        # Empty output
+        content_html = (
+            "<pre class='bash-stdout'><span class='bash-empty'>(no output)</span></pre>"
+        )
+
+    message_type = "bash"
+    return css_class, content_html, message_type
+
+
+def _process_regular_message(
+    text_only_content: Union[str, List[ContentItem]],
+    message_type: str,
+    is_sidechain: bool,
+) -> tuple[str, str, str]:
+    """Process regular message and return (css_class, content_html, message_type)."""
+    css_class = f"{message_type}"
+    content_html = render_message_content(text_only_content, message_type)
+
+    if is_sidechain:
+        css_class = f"{message_type} sidechain"
+        # Update message type for display
+        message_type = (
+            "📝 Sub-assistant prompt" if message_type == "user" else "🔗 Sub-assistant"
+        )
+
+    return css_class, content_html, message_type
+
+
 def _get_combined_transcript_link(cache_manager: "CacheManager") -> Optional[str]:
     """Get link to combined transcript if available."""
     try:
@@ -814,6 +1180,8 @@ def generate_html(
         # Check message types for special handling
         is_command = is_command_message(text_content)
         is_local_output = is_local_command_output(text_content)
+        is_bash_cmd = is_bash_input(text_content)
+        is_bash_result = is_bash_output(text_content)
 
         # Check if we're in a new session
         session_id = getattr(message, "sessionId", "unknown")
@@ -948,69 +1316,22 @@ def generate_html(
                 token_usage_str = " | ".join(token_parts)
 
         # Determine CSS class and content based on message type and duplicate status
-        if message_type == "summary":
-            css_class = "summary"
-            summary_text = (
-                message.summary
-                if isinstance(message, SummaryTranscriptEntry)
-                else "Summary"
-            )
-            content_html = f"<strong>Summary:</strong> {escape_html(str(summary_text))}"
-        elif is_command:
-            css_class = "system"
-            command_name, command_args, command_contents = extract_command_info(
+        if is_command:
+            css_class, content_html, message_type = _process_command_message(
                 text_content
             )
-            escaped_command_name = escape_html(command_name)
-            escaped_command_args = escape_html(command_args)
-
-            # Format the command contents with proper line breaks
-            formatted_contents = command_contents.replace("\\n", "\n")
-            escaped_command_contents = escape_html(formatted_contents)
-
-            # Build the content HTML
-            content_parts: List[str] = [
-                f"<strong>Command:</strong> {escaped_command_name}"
-            ]
-            if command_args:
-                content_parts.append(f"<strong>Args:</strong> {escaped_command_args}")
-            if command_contents:
-                details_html = create_collapsible_details(
-                    "Content", escaped_command_contents
-                )
-                content_parts.append(details_html)
-
-            content_html = "<br>".join(content_parts)
-            message_type = "system"
         elif is_local_output:
-            css_class = "system"
-            # Extract content between <local-command-stdout> tags
-            import re
-
-            stdout_match = re.search(
-                r"<local-command-stdout>(.*?)</local-command-stdout>",
-                text_content,
-                re.DOTALL,
+            css_class, content_html, message_type = _process_local_command_output(
+                text_content
             )
-            if stdout_match:
-                stdout_content = stdout_match.group(1).strip()
-                escaped_stdout = escape_html(stdout_content)
-                content_html = f"<strong>Command Output:</strong><br><div class='content'>{escaped_stdout}</div>"
-            else:
-                content_html = escape_html(text_content)
-            message_type = "system"
+        elif is_bash_cmd:
+            css_class, content_html, message_type = _process_bash_input(text_content)
+        elif is_bash_result:
+            css_class, content_html, message_type = _process_bash_output(text_content)
         else:
-            css_class = f"{message_type}"
-            content_html = render_message_content(text_only_content, message_type)
-            if getattr(message, "isSidechain", False):
-                css_class = f"{message_type} sidechain"
-
-                # Update message type for display
-                message_type = (
-                    "📝 Sub-assistant prompt"
-                    if message_type == "user"
-                    else "🔗 Sub-assistant"
-                )
+            css_class, content_html, message_type = _process_regular_message(
+                text_only_content, message_type, getattr(message, "isSidechain", False)
+            )
 
         # Create main message (if it has text content)
         if text_only_content and (
