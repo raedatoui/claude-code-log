@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.5.0] - 2025-09-03
+
+### Changed
+
+- **Config + regenerate outputs**
+- **Apply ANSI colour parsing to Claude's Bash tool call outputs + strip escape sequences for cursor movement and screen manipulation**
+- **Render system and bash commands (#19)**
+- **Prevent UnicodeEncodeError: surrogates not allowed – fixes #16**
+- **Fix timezone-dependent test failures in template data tests (#18)**
+- **Add official Claude Code GitHub Workflow [skip-review] (#15)**
+
+
 ## [0.4.4] - 2025-07-30
 
 ### Changed
