@@ -285,6 +285,110 @@ def test_bash_multiline_output_rendering():
         test_file_path.unlink()
 
 
+def test_bash_ansi_color_rendering():
+    """Test that ANSI color codes in bash output are properly converted to HTML."""
+    bash_output_with_colors = {
+        "type": "user",
+        "timestamp": "2025-06-11T10:00:00Z",
+        "parentUuid": "bash_001",
+        "isSidechain": False,
+        "userType": "human",
+        "cwd": "/home/user",
+        "sessionId": "test_bash",
+        "version": "1.0.0",
+        "uuid": "bash_002",
+        "message": {
+            "role": "user",
+            "content": "<bash-stdout>\x1b[32m✔ Built extension in 1.234 s\x1b[0m\n\x1b[1mΣ Total size: 620.55 kB\x1b[0m\n\x1b[2m✔ Finished in 1.259 s\x1b[0m</bash-stdout><bash-stderr>\x1b[31mError: Test failed\x1b[0m</bash-stderr>",
+        },
+    }
+
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".jsonl", delete=False) as f:
+        f.write(json.dumps(bash_output_with_colors) + "\n")
+        f.flush()
+        test_file_path = Path(f.name)
+
+    try:
+        messages = load_transcript(test_file_path)
+        html = generate_html(messages, "Bash ANSI Color Test")
+
+        # Check that ANSI color codes were converted to HTML spans
+        assert '<span class="ansi-green">✔ Built extension in 1.234 s</span>' in html
+        assert '<span class="ansi-bold">Σ Total size: 620.55 kB</span>' in html
+        assert '<span class="ansi-dim">✔ Finished in 1.259 s</span>' in html
+        assert '<span class="ansi-red">Error: Test failed</span>' in html
+
+        # Check that both stdout and stderr are properly rendered
+        assert "bash-stdout" in html, "Bash stdout CSS class should be present"
+        assert "bash-stderr" in html, "Bash stderr CSS class should be present"
+
+        # Ensure raw ANSI codes are not present
+        assert "\x1b[" not in html, "Raw ANSI escape codes should not be visible"
+
+        # Check that the text content is preserved
+        assert "✔ Built extension in 1.234 s" in html
+        assert "Σ Total size: 620.55 kB" in html
+        assert "✔ Finished in 1.259 s" in html
+        assert "Error: Test failed" in html
+
+    finally:
+        test_file_path.unlink()
+
+
+def test_bash_tool_result_ansi_processing():
+    """Test that Bash tool results have ANSI codes processed."""
+    from claude_code_log.renderer import (
+        format_tool_result_content,
+        _looks_like_bash_output,
+    )
+    from claude_code_log.models import ToolResultContent
+
+    # Test the detection function
+    bash_content = "❯ npm run build\n\x1b[32m✔ Build completed\x1b[0m"
+    assert _looks_like_bash_output(bash_content)
+
+    regular_content = "This is just regular text output"
+    assert not _looks_like_bash_output(regular_content)
+
+    # Test tool result processing with ANSI codes
+    tool_result = ToolResultContent(
+        type="tool_result", tool_use_id="bash_123", content=bash_content, is_error=False
+    )
+
+    html = format_tool_result_content(tool_result)
+
+    # Should contain colored output
+    assert '<span class="ansi-green">✔ Build completed</span>' in html
+    assert "❯ npm run build" in html
+    # Should not contain raw ANSI codes
+    assert "\x1b[32m" not in html
+    assert "\x1b[0m" not in html
+
+
+def test_bash_tool_result_cursor_stripping():
+    """Test that cursor movement codes are stripped from Bash tool results."""
+    from claude_code_log.renderer import format_tool_result_content
+    from claude_code_log.models import ToolResultContent
+
+    # Content with cursor movement codes
+    content_with_cursor = "Building...\x1b[1A\x1b[2K\x1b[32m✔ Done!\x1b[0m"
+
+    tool_result = ToolResultContent(
+        type="tool_result",
+        tool_use_id="bash_456",
+        content=content_with_cursor,
+        is_error=False,
+    )
+
+    html = format_tool_result_content(tool_result)
+
+    # Should have colors but no cursor codes
+    assert '<span class="ansi-green">✔ Done!</span>' in html
+    assert "Building..." in html
+    assert "\x1b[1A" not in html
+    assert "\x1b[2K" not in html
+
+
 def test_bash_css_styles_included():
     """Test that bash-specific CSS styles are included in the HTML."""
     bash_message = {
@@ -334,5 +438,8 @@ if __name__ == "__main__":
     test_bash_mixed_output_rendering()
     test_bash_complex_command_rendering()
     test_bash_multiline_output_rendering()
+    test_bash_ansi_color_rendering()
+    test_bash_tool_result_ansi_processing()
+    test_bash_tool_result_cursor_stripping()
     test_bash_css_styles_included()
     print("✅ All bash rendering tests passed!")

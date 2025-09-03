@@ -320,7 +320,7 @@ def format_tool_result_content(tool_result: ToolResultContent) -> str:
     """Format tool result content as HTML."""
     # Handle both string and structured content
     if isinstance(tool_result.content, str):
-        escaped_content = escape_html(tool_result.content)
+        raw_content = tool_result.content
     else:
         # Content is a list of structured items, extract text
         content_parts: List[str] = []
@@ -329,7 +329,14 @@ def format_tool_result_content(tool_result: ToolResultContent) -> str:
                 text_value = item.get("text")
                 if isinstance(text_value, str):
                     content_parts.append(text_value)
-        escaped_content = escape_html("\n".join(content_parts))
+        raw_content = "\n".join(content_parts)
+
+    # Check if this looks like Bash tool output and process ANSI codes
+    # Bash tool results often contain ANSI escape sequences and terminal output
+    if _looks_like_bash_output(raw_content):
+        escaped_content = _convert_ansi_to_html(raw_content)
+    else:
+        escaped_content = escape_html(raw_content)
 
     # For simple content, show directly without collapsible wrapper
     if len(escaped_content) <= 200:
@@ -347,6 +354,41 @@ def format_tool_result_content(tool_result: ToolResultContent) -> str:
         </div>
     </details>
     """
+
+
+def _looks_like_bash_output(content: str) -> bool:
+    """Check if content looks like it's from a Bash tool based on common patterns."""
+    if not content:
+        return False
+
+    # Check for ANSI escape sequences
+    if "\x1b[" in content:
+        return True
+
+    # Check for common bash/terminal patterns
+    bash_indicators = [
+        "$ ",  # Shell prompt
+        "❯ ",  # Modern shell prompt
+        "> ",  # Shell continuation
+        "\n+ ",  # Bash -x output
+        "bash: ",  # Bash error messages
+        "/bin/bash",  # Bash path
+        "command not found",  # Common bash error
+        "Permission denied",  # Common bash error
+        "No such file or directory",  # Common bash error
+    ]
+
+    # Check for file path patterns that suggest command output
+    import re
+
+    if re.search(r"/[a-zA-Z0-9_-]+(/[a-zA-Z0-9_.-]+)*", content):  # Unix-style paths
+        return True
+
+    # Check for common command output patterns
+    if any(indicator in content for indicator in bash_indicators):
+        return True
+
+    return False
 
 
 def format_thinking_content(thinking: ThinkingContent) -> str:
@@ -651,8 +693,33 @@ def _convert_ansi_to_html(text: str) -> str:
     - RGB colors (38;2;r;g;b for foreground; 48;2;r;g;b for background)
     - Bold (1), Dim (2), Italic (3), Underline (4)
     - Reset (0, 39, 49, 22, 23, 24)
+    - Strips cursor movement and screen manipulation codes
     """
     import re
+
+    # First, strip cursor movement and screen manipulation codes
+    # Common patterns: [1A (cursor up), [2K (erase line), [?25l (hide cursor), etc.
+    cursor_patterns = [
+        r"\x1b\[[0-9]*[ABCD]",  # Cursor movement (up, down, forward, back)
+        r"\x1b\[[0-9]*[EF]",  # Cursor next/previous line
+        r"\x1b\[[0-9]*[GH]",  # Cursor horizontal/home position
+        r"\x1b\[[0-9;]*[Hf]",  # Cursor position
+        r"\x1b\[[0-9]*[JK]",  # Erase display/line
+        r"\x1b\[[0-9]*[ST]",  # Scroll up/down
+        r"\x1b\[\?[0-9]*[hl]",  # Private mode set/reset (show/hide cursor, etc.)
+        r"\x1b\[[0-9]*[PXYZ@]",  # Insert/delete operations
+        r"\x1b\[=[0-9]*[A-Za-z]",  # Alternate character set
+        r"\x1b\][0-9];[^\x07]*\x07",  # Operating System Command (OSC)
+        r"\x1b\][0-9];[^\x1b]*\x1b\\",  # OSC with string terminator
+    ]
+
+    # Strip all cursor movement and screen manipulation codes
+    for pattern in cursor_patterns:
+        text = re.sub(pattern, "", text)
+
+    # Also strip any remaining unhandled escape sequences that aren't color codes
+    # This catches any we might have missed, but preserves \x1b[...m color codes
+    text = re.sub(r"\x1b\[(?![0-9;]*m)[0-9;]*[A-Za-z]", "", text)
 
     result: List[str] = []
     segments: List[Dict[str, Any]] = []
@@ -966,13 +1033,13 @@ def _process_bash_output(text_content: str) -> tuple[str, str, str]:
     if stdout_match:
         stdout_content = stdout_match.group(1).strip()
         if stdout_content:
-            escaped_stdout = escape_html(stdout_content)
+            escaped_stdout = _convert_ansi_to_html(stdout_content)
             output_parts.append(f"<pre class='bash-stdout'>{escaped_stdout}</pre>")
 
     if stderr_match:
         stderr_content = stderr_match.group(1).strip()
         if stderr_content:
-            escaped_stderr = escape_html(stderr_content)
+            escaped_stderr = _convert_ansi_to_html(stderr_content)
             output_parts.append(f"<pre class='bash-stderr'>{escaped_stderr}</pre>")
 
     if output_parts:

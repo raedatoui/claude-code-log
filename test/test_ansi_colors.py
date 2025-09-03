@@ -102,3 +102,30 @@ class TestAnsiColorConversion:
         assert "⛁" in result
         assert "⛀" in result
         assert "⛶" in result
+
+    def test_cursor_movement_stripping(self):
+        """Test that cursor movement and screen manipulation codes are stripped."""
+        # Test cursor movement codes
+        text = "Line 1\x1b[1AOverwritten\x1b[2KCleared line"
+        result = _convert_ansi_to_html(text)
+        assert "Line 1OverwrittenCleared line" == result
+        assert "\x1b[1A" not in result
+        assert "\x1b[2K" not in result
+
+    def test_complex_cursor_and_color_codes(self):
+        """Test mixed cursor movement and color codes."""
+        text = "\x1b[31mRed\x1b[1A\x1b[2K\x1b[32mGreen\x1b[0m"
+        result = _convert_ansi_to_html(text)
+        # Should preserve colors but strip cursor movement
+        assert '<span class="ansi-red">Red</span>' in result
+        assert '<span class="ansi-green">Green</span>' in result
+        assert "\x1b[1A" not in result
+        assert "\x1b[2K" not in result
+
+    def test_hide_show_cursor_codes(self):
+        """Test that cursor visibility codes are stripped."""
+        text = "\x1b[?25lHidden cursor text\x1b[?25hVisible cursor text"
+        result = _convert_ansi_to_html(text)
+        assert result == "Hidden cursor textVisible cursor text"
+        assert "\x1b[?25l" not in result
+        assert "\x1b[?25h" not in result
