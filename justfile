@@ -358,7 +358,7 @@ copy-example:
     rsync -r ~/.claude/projects/-Users-dain-workspace-claude-code-log/cache ./docs/
 
 backup:
-    rsync -r ~/.claude/projects ~/.claude/backup
+    rsync -r ~/.claude/projects ~/.claude-backup/projects
 
 clear-cache:
     just cli --clear-cache
