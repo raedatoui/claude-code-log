@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.5.1] - 2025-10-04
+
+### Changed
+
+- **Wire up JSONL ensure_fresh_cache with converter to ensure HTML updated on change (#27)**
+
+
 ## [0.5.0] - 2025-09-03
 
 ### Changed
