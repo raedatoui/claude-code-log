@@ -110,6 +110,17 @@ def convert_jsonl_to_html(
     )
 
     if should_regenerate:
+        # Export full transcripts to JSON
+        import json
+        json_path = output_path.parent / "full-transcripts.json"
+        json_data = {
+            "title": title,
+            "total_messages": len(messages),
+            "messages": [msg.model_dump() for msg in messages]
+        }
+        json_path.write_text(json.dumps(json_data, indent=2), encoding="utf-8")
+        print(f"Exported {len(messages)} messages to {json_path}")
+
         html_content = generate_html(messages, title)
         output_path.write_text(html_content, encoding="utf-8")
     else:
@@ -718,6 +729,20 @@ def process_projects_hierarchy(
     # Generate index HTML (always regenerate if outdated)
     index_path = projects_path / "index.html"
     if is_html_outdated(index_path) or from_date or to_date or any_cache_updated:
+        # Export all projects summary to JSON
+        import json
+        all_projects_json_path = projects_path / "all-projects-summary.json"
+        json_data = {
+            "total_projects": len(project_summaries),
+            "date_range": {
+                "from": from_date,
+                "to": to_date
+            },
+            "projects": project_summaries
+        }
+        all_projects_json_path.write_text(json.dumps(json_data, indent=2, default=str), encoding="utf-8")
+        print(f"Exported {len(project_summaries)} projects summary to {all_projects_json_path}")
+
         index_html = generate_projects_index_html(project_summaries, from_date, to_date)
         index_path.write_text(index_html, encoding="utf-8")
     else:
