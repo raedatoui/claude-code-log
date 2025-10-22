@@ -1,20 +1,20 @@
 {
-  "version": "0.5.0",
-  "cache_created": "2025-10-04T14:59:39.663184",
-  "last_updated": "2025-10-04T15:28:54.822717",
+  "version": "0.5.1",
+  "cache_created": "2025-10-22T11:47:51.512724",
+  "last_updated": "2025-10-22T11:47:53.993935",
   "project_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log",
   "cached_files": {
     "4e27c414-a885-46a0-b5c8-d58e1417377d.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/4e27c414-a885-46a0-b5c8-d58e1417377d.jsonl",
       "source_mtime": 1752763740.3889072,
-      "cached_mtime": 1759586379.66389,
+      "cached_mtime": 1761130071.5138109,
       "message_count": 1,
       "session_ids": []
     },
     "937c6e6b-27e7-4edd-86f1-ad28f9731841.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/937c6e6b-27e7-4edd-86f1-ad28f9731841.jsonl",
       "source_mtime": 1752785553.5541983,
-      "cached_mtime": 1759586379.669199,
+      "cached_mtime": 1761130071.5211833,
       "message_count": 99,
       "session_ids": [
         "937c6e6b-27e7-4edd-86f1-ad28f9731841"
@@ -23,7 +23,7 @@
     "07f2e15c-a38b-454b-9148-60edc06de401.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/07f2e15c-a38b-454b-9148-60edc06de401.jsonl",
       "source_mtime": 1750288868.0617466,
-      "cached_mtime": 1759586379.6738567,
+      "cached_mtime": 1761130071.5269144,
       "message_count": 57,
       "session_ids": [
         "07f2e15c-a38b-454b-9148-60edc06de401"
@@ -32,7 +32,7 @@
     "69c94b28-25cc-489e-9cae-29fcbab55af0.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/69c94b28-25cc-489e-9cae-29fcbab55af0.jsonl",
       "source_mtime": 1753013885.3624692,
-      "cached_mtime": 1759586379.6877773,
+      "cached_mtime": 1761130071.54264,
       "message_count": 206,
       "session_ids": [
         "69c94b28-25cc-489e-9cae-29fcbab55af0"
@@ -41,14 +41,14 @@
     "7d630391-3c3a-4b29-8d29-8818963a4c2e.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/7d630391-3c3a-4b29-8d29-8818963a4c2e.jsonl",
       "source_mtime": 1752746712.0488477,
-      "cached_mtime": 1759586379.6884127,
+      "cached_mtime": 1761130071.5433688,
       "message_count": 2,
       "session_ids": []
     },
     "858d9e0c-1f3f-4b19-ac5c-b0573d8f5ec3.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/858d9e0c-1f3f-4b19-ac5c-b0573d8f5ec3.jsonl",
       "source_mtime": 1750984419.0423524,
-      "cached_mtime": 1759586379.7300606,
+      "cached_mtime": 1761130071.5874991,
       "message_count": 447,
       "session_ids": [
         "080fa927-769a-438a-a133-a297802dca50",
@@ -59,7 +59,7 @@
     "a8ead6cf-7761-4e80-9c08-126868b34d53.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/a8ead6cf-7761-4e80-9c08-126868b34d53.jsonl",
       "source_mtime": 1753043750.325415,
-      "cached_mtime": 1759586379.7417412,
+      "cached_mtime": 1761130071.6046126,
       "message_count": 186,
       "session_ids": [
         "a8ead6cf-7761-4e80-9c08-126868b34d53"
@@ -68,7 +68,7 @@
     "89488521-e2e7-4d97-bc02-38197efdddc8.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/89488521-e2e7-4d97-bc02-38197efdddc8.jsonl",
       "source_mtime": 1752659902.3926754,
-      "cached_mtime": 1759586379.7447448,
+      "cached_mtime": 1761130071.6086988,
       "message_count": 38,
       "session_ids": [
         "89488521-e2e7-4d97-bc02-38197efdddc8"
@@ -77,7 +77,7 @@
     "86f53fcb-7d2f-46a6-a662-20597451bd94.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/86f53fcb-7d2f-46a6-a662-20597451bd94.jsonl",
       "source_mtime": 1751156463.8896484,
-      "cached_mtime": 1759586379.7573915,
+      "cached_mtime": 1761130071.6426947,
       "message_count": 175,
       "session_ids": [
         "86f53fcb-7d2f-46a6-a662-20597451bd94"
@@ -86,7 +86,7 @@
     "326189cf-5676-4237-8cde-1ce80aae4a9f.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/326189cf-5676-4237-8cde-1ce80aae4a9f.jsonl",
       "source_mtime": 1752441564.8050497,
-      "cached_mtime": 1759586379.7603061,
+      "cached_mtime": 1761130071.6472108,
       "message_count": 54,
       "session_ids": [
         "326189cf-5676-4237-8cde-1ce80aae4a9f"
@@ -95,7 +95,7 @@
     "a790dc9e-eb86-4146-a3e9-52d3aecbcc3f.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/a790dc9e-eb86-4146-a3e9-52d3aecbcc3f.jsonl",
       "source_mtime": 1751586089.5266278,
-      "cached_mtime": 1759586379.7765126,
+      "cached_mtime": 1761130071.6643667,
       "message_count": 249,
       "session_ids": [
         "a790dc9e-eb86-4146-a3e9-52d3aecbcc3f"
@@ -104,14 +104,14 @@
     "5c988118-15df-472f-af6b-a1b26449cdf0.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/5c988118-15df-472f-af6b-a1b26449cdf0.jsonl",
       "source_mtime": 1752663958.8255665,
-      "cached_mtime": 1759586379.7771332,
+      "cached_mtime": 1761130071.6652381,
       "message_count": 1,
       "session_ids": []
     },
     "0d3a8e6f-290f-4105-a327-a2496e5e2a83.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/0d3a8e6f-290f-4105-a327-a2496e5e2a83.jsonl",
       "source_mtime": 1751745912.1099885,
-      "cached_mtime": 1759586379.7851374,
+      "cached_mtime": 1761130071.6745908,
       "message_count": 68,
       "session_ids": [
         "0d3a8e6f-290f-4105-a327-a2496e5e2a83"
@@ -120,7 +120,7 @@
     "aa5c5ada-4f1e-4b7f-9d1f-c496b3badde5.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/aa5c5ada-4f1e-4b7f-9d1f-c496b3badde5.jsonl",
       "source_mtime": 1752488702.116499,
-      "cached_mtime": 1759586379.7887805,
+      "cached_mtime": 1761130071.6821673,
       "message_count": 48,
       "session_ids": [
         "aa5c5ada-4f1e-4b7f-9d1f-c496b3badde5"
@@ -129,16 +129,25 @@
     "cbc0f75b-b36d-4efd-a7da-ac800ea30eb6.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/cbc0f75b-b36d-4efd-a7da-ac800ea30eb6.jsonl",
       "source_mtime": 1752935862.3651867,
-      "cached_mtime": 1759586379.790996,
+      "cached_mtime": 1761130071.6856678,
       "message_count": 34,
       "session_ids": [
         "cbc0f75b-b36d-4efd-a7da-ac800ea30eb6"
       ]
     },
+    "0a6f56b8-d18c-4fba-ab82-369e9b11b339.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/0a6f56b8-d18c-4fba-ab82-369e9b11b339.jsonl",
+      "source_mtime": 1759587994.3791733,
+      "cached_mtime": 1761130071.6873455,
+      "message_count": 14,
+      "session_ids": [
+        "0a6f56b8-d18c-4fba-ab82-369e9b11b339"
+      ]
+    },
     "37f83ec9-f2ea-42a9-925e-0d5c105cb6e8.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/37f83ec9-f2ea-42a9-925e-0d5c105cb6e8.jsonl",
       "source_mtime": 1752535617.2263863,
-      "cached_mtime": 1759586379.8101027,
+      "cached_mtime": 1761130071.7072325,
       "message_count": 346,
       "session_ids": [
         "37f83ec9-f2ea-42a9-925e-0d5c105cb6e8"
@@ -147,7 +156,7 @@
     "2616daa7-39c8-4bc3-a82e-d05eafd535ee.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/2616daa7-39c8-4bc3-a82e-d05eafd535ee.jsonl",
       "source_mtime": 1752491998.107116,
-      "cached_mtime": 1759586379.8280125,
+      "cached_mtime": 1761130071.7273304,
       "message_count": 260,
       "session_ids": [
         "2616daa7-39c8-4bc3-a82e-d05eafd535ee"
@@ -156,7 +165,7 @@
     "12a546d1-83a7-49a6-abba-5400db340b43.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/12a546d1-83a7-49a6-abba-5400db340b43.jsonl",
       "source_mtime": 1753036634.8982303,
-      "cached_mtime": 1759586379.834319,
+      "cached_mtime": 1761130071.7352784,
       "message_count": 113,
       "session_ids": [
         "12a546d1-83a7-49a6-abba-5400db340b43"
@@ -165,7 +174,7 @@
     "71c9afe9-d9cc-4583-86b3-e62ba682b83a.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/71c9afe9-d9cc-4583-86b3-e62ba682b83a.jsonl",
       "source_mtime": 1752969613.0401523,
-      "cached_mtime": 1759586379.8358479,
+      "cached_mtime": 1761130071.7374418,
       "message_count": 15,
       "session_ids": [
         "71c9afe9-d9cc-4583-86b3-e62ba682b83a"
@@ -174,7 +183,7 @@
     "b45ad5d8-81fb-4bcb-baba-19d9f503d731.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/b45ad5d8-81fb-4bcb-baba-19d9f503d731.jsonl",
       "source_mtime": 1752967943.6835694,
-      "cached_mtime": 1759586379.8379643,
+      "cached_mtime": 1761130071.7409673,
       "message_count": 28,
       "session_ids": [
         "b45ad5d8-81fb-4bcb-baba-19d9f503d731"
@@ -183,7 +192,7 @@
     "5027f309-99b0-41ff-865e-0f62d2f799e1.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/5027f309-99b0-41ff-865e-0f62d2f799e1.jsonl",
       "source_mtime": 1750635545.682709,
-      "cached_mtime": 1759586379.8568058,
+      "cached_mtime": 1761130071.7648606,
       "message_count": 176,
       "session_ids": [
         "5027f309-99b0-41ff-865e-0f62d2f799e1"
@@ -192,7 +201,7 @@
     "099e8272-3fdd-4c78-9bad-d06e3d86c4cd.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/099e8272-3fdd-4c78-9bad-d06e3d86c4cd.jsonl",
       "source_mtime": 1753396313.3190084,
-      "cached_mtime": 1759586379.898563,
+      "cached_mtime": 1761130071.7937412,
       "message_count": 370,
       "session_ids": [
         "099e8272-3fdd-4c78-9bad-d06e3d86c4cd"
@@ -201,7 +210,7 @@
     "fe869ecb-c176-478f-9734-7e4b8ef12cff.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/fe869ecb-c176-478f-9734-7e4b8ef12cff.jsonl",
       "source_mtime": 1749945652.0183456,
-      "cached_mtime": 1759586379.9060447,
+      "cached_mtime": 1761130071.8026638,
       "message_count": 111,
       "session_ids": [
         "fe869ecb-c176-478f-9734-7e4b8ef12cff"
@@ -210,7 +219,7 @@
     "3f74f7a0-a067-4820-a50a-61440d2565a1.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/3f74f7a0-a067-4820-a50a-61440d2565a1.jsonl",
       "source_mtime": 1752851333.829025,
-      "cached_mtime": 1759586379.90968,
+      "cached_mtime": 1761130071.8076303,
       "message_count": 57,
       "session_ids": [
         "3f74f7a0-a067-4820-a50a-61440d2565a1"
@@ -219,17 +228,17 @@
     "cd8ca5c4-6a1d-4ea2-a90d-d406827468ed.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/cd8ca5c4-6a1d-4ea2-a90d-d406827468ed.jsonl",
       "source_mtime": 1750554176.5963707,
-      "cached_mtime": 1759586379.9480727,
+      "cached_mtime": 1761130071.8548727,
       "message_count": 278,
       "session_ids": [
-        "cd8ca5c4-6a1d-4ea2-a90d-d406827468ed",
-        "9c14e24e-e2b3-4916-bf3b-5b545018fd1d"
+        "9c14e24e-e2b3-4916-bf3b-5b545018fd1d",
+        "cd8ca5c4-6a1d-4ea2-a90d-d406827468ed"
       ]
     },
     "40f8af00-d071-46a6-8682-dd2aaf944ee3.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/40f8af00-d071-46a6-8682-dd2aaf944ee3.jsonl",
       "source_mtime": 1751455729.311505,
-      "cached_mtime": 1759586379.9502034,
+      "cached_mtime": 1761130071.8621716,
       "message_count": 24,
       "session_ids": [
         "40f8af00-d071-46a6-8682-dd2aaf944ee3"
@@ -238,7 +247,7 @@
     "489f991c-df48-4f8f-bc97-0e1f733511fe.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/489f991c-df48-4f8f-bc97-0e1f733511fe.jsonl",
       "source_mtime": 1752538821.1596527,
-      "cached_mtime": 1759586379.9595683,
+      "cached_mtime": 1761130071.8769562,
       "message_count": 137,
       "session_ids": [
         "489f991c-df48-4f8f-bc97-0e1f733511fe"
@@ -247,7 +256,7 @@
     "b7e26994-dd48-4a1c-ba02-2c9d71d2ebc9.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/b7e26994-dd48-4a1c-ba02-2c9d71d2ebc9.jsonl",
       "source_mtime": 1752935627.340024,
-      "cached_mtime": 1759586379.9678993,
+      "cached_mtime": 1761130071.8866448,
       "message_count": 133,
       "session_ids": [
         "b7e26994-dd48-4a1c-ba02-2c9d71d2ebc9"
@@ -256,7 +265,7 @@
     "f5f78e6f-89ba-447c-a58e-c19689698a7a.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/f5f78e6f-89ba-447c-a58e-c19689698a7a.jsonl",
       "source_mtime": 1751934463.3385134,
-      "cached_mtime": 1759586379.9746635,
+      "cached_mtime": 1761130071.8944328,
       "message_count": 124,
       "session_ids": [
         "f5f78e6f-89ba-447c-a58e-c19689698a7a"
@@ -265,17 +274,17 @@
     "a3a5adc4-3fe2-4303-9110-fe6492006a0e.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/a3a5adc4-3fe2-4303-9110-fe6492006a0e.jsonl",
       "source_mtime": 1749900724.6798153,
-      "cached_mtime": 1759586379.982181,
+      "cached_mtime": 1761130071.9028685,
       "message_count": 115,
       "session_ids": [
-        "a3a5adc4-3fe2-4303-9110-fe6492006a0e",
-        "295968bb-8a55-4f5c-b81f-77169dad0b5c"
+        "295968bb-8a55-4f5c-b81f-77169dad0b5c",
+        "a3a5adc4-3fe2-4303-9110-fe6492006a0e"
       ]
     },
     "572685ca-bfe8-49b0-905c-34da0adb6dbc.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/572685ca-bfe8-49b0-905c-34da0adb6dbc.jsonl",
       "source_mtime": 1758283373.6704354,
-      "cached_mtime": 1759586380.1407626,
+      "cached_mtime": 1761130072.1116297,
       "message_count": 214,
       "session_ids": [
         "572685ca-bfe8-49b0-905c-34da0adb6dbc"
@@ -284,7 +293,7 @@
     "cbf19c46-2ae2-4807-a766-a46019a9b75f.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/cbf19c46-2ae2-4807-a766-a46019a9b75f.jsonl",
       "source_mtime": 1752664617.0480886,
-      "cached_mtime": 1759586380.159254,
+      "cached_mtime": 1761130072.1342554,
       "message_count": 61,
       "session_ids": [
         "cbf19c46-2ae2-4807-a766-a46019a9b75f"
@@ -293,7 +302,7 @@
     "b03a8f1f-bf25-4eb6-bbd1-a798f198f2d4.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/b03a8f1f-bf25-4eb6-bbd1-a798f198f2d4.jsonl",
       "source_mtime": 1752689651.6211948,
-      "cached_mtime": 1759586380.1618705,
+      "cached_mtime": 1761130072.1429708,
       "message_count": 23,
       "session_ids": [
         "b03a8f1f-bf25-4eb6-bbd1-a798f198f2d4"
@@ -302,7 +311,7 @@
     "4784c51c-06c8-4765-88a3-4b381d8877a7.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/4784c51c-06c8-4765-88a3-4b381d8877a7.jsonl",
       "source_mtime": 1752934867.5913634,
-      "cached_mtime": 1759586380.1634943,
+      "cached_mtime": 1761130072.145712,
       "message_count": 20,
       "session_ids": [
         "4784c51c-06c8-4765-88a3-4b381d8877a7"
@@ -311,7 +320,7 @@
     "5e960400-dccb-48e5-b7dc-e6821988cb31.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/5e960400-dccb-48e5-b7dc-e6821988cb31.jsonl",
       "source_mtime": 1752796229.185234,
-      "cached_mtime": 1759586380.1739872,
+      "cached_mtime": 1761130072.1566057,
       "message_count": 147,
       "session_ids": [
         "5e960400-dccb-48e5-b7dc-e6821988cb31"
@@ -320,7 +329,7 @@
     "dd88eb5a-4957-43ec-a724-e8771fd12fb7.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/dd88eb5a-4957-43ec-a724-e8771fd12fb7.jsonl",
       "source_mtime": 1753046426.605207,
-      "cached_mtime": 1759586380.1783283,
+      "cached_mtime": 1761130072.162015,
       "message_count": 63,
       "session_ids": [
         "dd88eb5a-4957-43ec-a724-e8771fd12fb7"
@@ -329,21 +338,21 @@
     "cbe98bb1-fa71-472d-9dfd-dba9e1ded20d.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/cbe98bb1-fa71-472d-9dfd-dba9e1ded20d.jsonl",
       "source_mtime": 1752664672.902023,
-      "cached_mtime": 1759586380.1788285,
+      "cached_mtime": 1761130072.1626887,
       "message_count": 1,
       "session_ids": []
     },
     "6525fa90-54dd-4f5b-9330-d228c4d2a744.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/6525fa90-54dd-4f5b-9330-d228c4d2a744.jsonl",
       "source_mtime": 1752664528.4532342,
-      "cached_mtime": 1759586380.17925,
+      "cached_mtime": 1761130072.1632648,
       "message_count": 1,
       "session_ids": []
     },
     "b6ba7dfb-c1e6-4eb8-8863-bf37d24626eb.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/b6ba7dfb-c1e6-4eb8-8863-bf37d24626eb.jsonl",
       "source_mtime": 1751128265.0499268,
-      "cached_mtime": 1759586380.191814,
+      "cached_mtime": 1761130072.1770191,
       "message_count": 102,
       "session_ids": [
         "b6ba7dfb-c1e6-4eb8-8863-bf37d24626eb"
@@ -352,14 +361,14 @@
     "f9bec399-8bec-4a17-a170-21dbf510ef3c.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/f9bec399-8bec-4a17-a170-21dbf510ef3c.jsonl",
       "source_mtime": 1752702085.6486268,
-      "cached_mtime": 1759586380.192398,
+      "cached_mtime": 1761130072.1778407,
       "message_count": 0,
       "session_ids": []
     },
     "d1268aa4-6e4a-4835-bf89-8ad849b99128.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/d1268aa4-6e4a-4835-bf89-8ad849b99128.jsonl",
       "source_mtime": 1750456210.6237395,
-      "cached_mtime": 1759586380.225205,
+      "cached_mtime": 1761130072.2150798,
       "message_count": 201,
       "session_ids": [
         "d1268aa4-6e4a-4835-bf89-8ad849b99128"
@@ -368,14 +377,14 @@
     "728a480d-b722-48ab-a2ce-c1e942363456.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/728a480d-b722-48ab-a2ce-c1e942363456.jsonl",
       "source_mtime": 1751120299.7909935,
-      "cached_mtime": 1759586380.2260275,
+      "cached_mtime": 1761130072.2176929,
       "message_count": 7,
       "session_ids": []
     },
     "734ba872-eb15-4ae6-aeed-19aeb1214dee.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/734ba872-eb15-4ae6-aeed-19aeb1214dee.jsonl",
       "source_mtime": 1752782505.56843,
-      "cached_mtime": 1759586380.2696424,
+      "cached_mtime": 1761130072.2724822,
       "message_count": 345,
       "session_ids": [
         "734ba872-eb15-4ae6-aeed-19aeb1214dee"
@@ -384,7 +393,7 @@
     "8cf2b0df-1d30-453e-811f-ac42b000dc2b.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/8cf2b0df-1d30-453e-811f-ac42b000dc2b.jsonl",
       "source_mtime": 1752849792.494525,
-      "cached_mtime": 1759586380.2840555,
+      "cached_mtime": 1761130072.2888293,
       "message_count": 152,
       "session_ids": [
         "8cf2b0df-1d30-453e-811f-ac42b000dc2b"
@@ -393,16 +402,34 @@
     "568040d4-e2d0-4425-b52d-08878abb1346.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/568040d4-e2d0-4425-b52d-08878abb1346.jsonl",
       "source_mtime": 1752853731.6449354,
-      "cached_mtime": 1759586380.3042653,
+      "cached_mtime": 1761130072.3123152,
       "message_count": 58,
       "session_ids": [
         "568040d4-e2d0-4425-b52d-08878abb1346"
       ]
     },
+    "ad57855e-e582-41ec-af0c-2c3b626d2d13.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/ad57855e-e582-41ec-af0c-2c3b626d2d13.jsonl",
+      "source_mtime": 1760794833.7845562,
+      "cached_mtime": 1761130072.3140132,
+      "message_count": 10,
+      "session_ids": [
+        "ad57855e-e582-41ec-af0c-2c3b626d2d13"
+      ]
+    },
+    "4e062ed2-cbfa-4cb8-bc9a-1551bf168eaf.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/4e062ed2-cbfa-4cb8-bc9a-1551bf168eaf.jsonl",
+      "source_mtime": 1761129187.5396872,
+      "cached_mtime": 1761130072.3148556,
+      "message_count": 2,
+      "session_ids": [
+        "4e062ed2-cbfa-4cb8-bc9a-1551bf168eaf"
+      ]
+    },
     "6038c31a-e38c-4f4d-8cf4-82fe3038ba0c.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/6038c31a-e38c-4f4d-8cf4-82fe3038ba0c.jsonl",
       "source_mtime": 1752531155.3854442,
-      "cached_mtime": 1759586380.3393824,
+      "cached_mtime": 1761130072.351971,
       "message_count": 363,
       "session_ids": [
         "6038c31a-e38c-4f4d-8cf4-82fe3038ba0c"
@@ -411,31 +438,40 @@
     "8027006e-7ffa-453f-a332-33fed37a0abc.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/8027006e-7ffa-453f-a332-33fed37a0abc.jsonl",
       "source_mtime": 1750197939.7668402,
-      "cached_mtime": 1759586380.3402383,
+      "cached_mtime": 1761130072.353193,
       "message_count": 2,
       "session_ids": []
+    },
+    "1c6c5d32-e008-4bf0-a33c-27b8a1f31db0.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/1c6c5d32-e008-4bf0-a33c-27b8a1f31db0.jsonl",
+      "source_mtime": 1759588107.243292,
+      "cached_mtime": 1761130072.3570457,
+      "message_count": 10,
+      "session_ids": [
+        "1c6c5d32-e008-4bf0-a33c-27b8a1f31db0"
+      ]
     },
     "d54b93ef-f571-457a-9eb1-12fb982250d6.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/d54b93ef-f571-457a-9eb1-12fb982250d6.jsonl",
       "source_mtime": 1750065435.4041123,
-      "cached_mtime": 1759586380.4041193,
+      "cached_mtime": 1761130072.4496808,
       "message_count": 916,
       "session_ids": [
-        "99e74ceb-52c3-4917-bc56-648c78f5c0e8",
-        "833beedd-024b-48c6-afbd-318e3daaef4a",
         "f701f264-5ec2-4a71-b176-da81a31a80e9",
-        "d54b93ef-f571-457a-9eb1-12fb982250d6",
-        "3fb19c57-f854-4622-89e0-5f644ff20433",
         "0ec35b61-4e55-4b7c-95cf-7537b180fcdb",
-        "4089ec24-5170-4fa2-9a7a-6b285f807988",
+        "3fb19c57-f854-4622-89e0-5f644ff20433",
         "99746cff-1ce8-421a-9e06-8a78b00cad61",
-        "68963133-a096-4403-8b8d-921535a28985"
+        "833beedd-024b-48c6-afbd-318e3daaef4a",
+        "99e74ceb-52c3-4917-bc56-648c78f5c0e8",
+        "68963133-a096-4403-8b8d-921535a28985",
+        "4089ec24-5170-4fa2-9a7a-6b285f807988",
+        "d54b93ef-f571-457a-9eb1-12fb982250d6"
       ]
     },
     "e82d172c-fff9-4592-bd28-ef2afda1f135.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/e82d172c-fff9-4592-bd28-ef2afda1f135.jsonl",
       "source_mtime": 1752937050.1914363,
-      "cached_mtime": 1759586380.4061234,
+      "cached_mtime": 1761130072.4544778,
       "message_count": 15,
       "session_ids": [
         "e82d172c-fff9-4592-bd28-ef2afda1f135"
@@ -444,7 +480,7 @@
     "3c5fec79-f025-4e29-8551-97edcd59c469.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/3c5fec79-f025-4e29-8551-97edcd59c469.jsonl",
       "source_mtime": 1752750917.4047267,
-      "cached_mtime": 1759586380.4134495,
+      "cached_mtime": 1761130072.4633102,
       "message_count": 103,
       "session_ids": [
         "3c5fec79-f025-4e29-8551-97edcd59c469"
@@ -453,44 +489,44 @@
     "f1ab6df5-47cf-4863-aeea-13d600deae4f.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/f1ab6df5-47cf-4863-aeea-13d600deae4f.jsonl",
       "source_mtime": 1752794248.4773746,
-      "cached_mtime": 1759586380.4573386,
+      "cached_mtime": 1761130072.5132241,
       "message_count": 646,
       "session_ids": [
-        "734ba872-eb15-4ae6-aeed-19aeb1214dee",
         "f1ab6df5-47cf-4863-aeea-13d600deae4f",
-        "5a331fd6-ac1b-4c33-a018-cc9ed8a2086b"
+        "5a331fd6-ac1b-4c33-a018-cc9ed8a2086b",
+        "734ba872-eb15-4ae6-aeed-19aeb1214dee"
       ]
     },
     "1b6cf74c-6350-40c0-91c1-d75c257c0729.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/1b6cf74c-6350-40c0-91c1-d75c257c0729.jsonl",
       "source_mtime": 1749944135.930347,
-      "cached_mtime": 1759586380.576599,
+      "cached_mtime": 1761130072.6174634,
       "message_count": 1487,
       "session_ids": [
+        "6eea7c3d-687b-472f-9f21-57337d423d2a",
+        "1b6cf74c-6350-40c0-91c1-d75c257c0729",
         "9b1e9b37-40ab-4af2-b3aa-873b6813bfbc",
         "6a52c8bf-9cd1-47d2-8380-b8edfd5de0ae",
-        "6d8a1e12-5edd-4d49-8332-fca726c37521",
-        "6eea7c3d-687b-472f-9f21-57337d423d2a",
-        "a251827b-3255-476e-a239-9ad5c3620f30",
-        "4f600503-a7d7-4165-aa44-4ba4c937d5ce",
         "f1a464da-f2bb-4c9b-ad0a-b5ca330b621a",
-        "1b6cf74c-6350-40c0-91c1-d75c257c0729"
+        "4f600503-a7d7-4165-aa44-4ba4c937d5ce",
+        "a251827b-3255-476e-a239-9ad5c3620f30",
+        "6d8a1e12-5edd-4d49-8332-fca726c37521"
       ]
     },
     "1767af99-cb03-45a0-a56e-e53aefabc084.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/1767af99-cb03-45a0-a56e-e53aefabc084.jsonl",
       "source_mtime": 1751456029.4152212,
-      "cached_mtime": 1759586380.5805266,
+      "cached_mtime": 1761130072.6258392,
       "message_count": 45,
       "session_ids": [
-        "40f8af00-d071-46a6-8682-dd2aaf944ee3",
-        "1767af99-cb03-45a0-a56e-e53aefabc084"
+        "1767af99-cb03-45a0-a56e-e53aefabc084",
+        "40f8af00-d071-46a6-8682-dd2aaf944ee3"
       ]
     },
     "260b0374-913f-4477-86ea-a229a98be443.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/260b0374-913f-4477-86ea-a229a98be443.jsonl",
       "source_mtime": 1752691846.5136473,
-      "cached_mtime": 1759586380.60376,
+      "cached_mtime": 1761130072.6534784,
       "message_count": 365,
       "session_ids": [
         "260b0374-913f-4477-86ea-a229a98be443"
@@ -499,16 +535,25 @@
     "8ea93830-a99c-4837-bcb2-41c38711b547.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/8ea93830-a99c-4837-bcb2-41c38711b547.jsonl",
       "source_mtime": 1753045338.4529443,
-      "cached_mtime": 1759586380.6208613,
+      "cached_mtime": 1761130072.674964,
       "message_count": 282,
       "session_ids": [
         "8ea93830-a99c-4837-bcb2-41c38711b547"
       ]
     },
+    "2b25646e-0d29-4405-b672-4f45c71c1fb0.jsonl": {
+      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/2b25646e-0d29-4405-b672-4f45c71c1fb0.jsonl",
+      "source_mtime": 1759587825.4546363,
+      "cached_mtime": 1761130072.679086,
+      "message_count": 18,
+      "session_ids": [
+        "2b25646e-0d29-4405-b672-4f45c71c1fb0"
+      ]
+    },
     "ea0329e7-8566-4279-8594-36ff6ac4b782.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/ea0329e7-8566-4279-8594-36ff6ac4b782.jsonl",
       "source_mtime": 1752746681.6361115,
-      "cached_mtime": 1759586380.6315472,
+      "cached_mtime": 1761130072.690323,
       "message_count": 145,
       "session_ids": [
         "ea0329e7-8566-4279-8594-36ff6ac4b782"
@@ -517,7 +562,7 @@
     "52a7f485-b512-4a85-b9c0-0368fe82144d.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/52a7f485-b512-4a85-b9c0-0368fe82144d.jsonl",
       "source_mtime": 1752658869.7039428,
-      "cached_mtime": 1759586380.6691444,
+      "cached_mtime": 1761130072.734496,
       "message_count": 123,
       "session_ids": [
         "52a7f485-b512-4a85-b9c0-0368fe82144d"
@@ -526,7 +571,7 @@
     "11250327-31b5-42fd-94b1-84c91090e1fc.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/11250327-31b5-42fd-94b1-84c91090e1fc.jsonl",
       "source_mtime": 1749987843.5611892,
-      "cached_mtime": 1759586380.6912446,
+      "cached_mtime": 1761130072.764652,
       "message_count": 294,
       "session_ids": [
         "11250327-31b5-42fd-94b1-84c91090e1fc"
@@ -535,7 +580,7 @@
     "44d61ff3-1bcf-482b-890b-16111253c8b6.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/44d61ff3-1bcf-482b-890b-16111253c8b6.jsonl",
       "source_mtime": 1752695513.1643512,
-      "cached_mtime": 1759586380.6989205,
+      "cached_mtime": 1761130072.7739131,
       "message_count": 113,
       "session_ids": [
         "44d61ff3-1bcf-482b-890b-16111253c8b6"
@@ -544,7 +589,7 @@
     "057f45a2-5fa5-421f-a665-8ad7b66ba376.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/057f45a2-5fa5-421f-a665-8ad7b66ba376.jsonl",
       "source_mtime": 1749899399.4325323,
-      "cached_mtime": 1759586380.7062094,
+      "cached_mtime": 1761130072.8182337,
       "message_count": 114,
       "session_ids": [
         "057f45a2-5fa5-421f-a665-8ad7b66ba376"
@@ -553,18 +598,18 @@
     "df749439-8556-41bf-9965-9f49cf38bf2a.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/df749439-8556-41bf-9965-9f49cf38bf2a.jsonl",
       "source_mtime": 1751412012.3157387,
-      "cached_mtime": 1759586380.7593586,
+      "cached_mtime": 1761130072.8744152,
       "message_count": 831,
       "session_ids": [
-        "df749439-8556-41bf-9965-9f49cf38bf2a",
         "fd2d8ab2-1e49-4004-9e79-cb4c8819572f",
-        "66953f1b-124e-460e-8978-316d761ff7fb"
+        "66953f1b-124e-460e-8978-316d761ff7fb",
+        "df749439-8556-41bf-9965-9f49cf38bf2a"
       ]
     },
     "9bdeffc0-fb1b-44ad-ba46-864b724e3c02.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/9bdeffc0-fb1b-44ad-ba46-864b724e3c02.jsonl",
       "source_mtime": 1752973421.7759168,
-      "cached_mtime": 1759586380.7660408,
+      "cached_mtime": 1761130072.88307,
       "message_count": 41,
       "session_ids": [
         "9bdeffc0-fb1b-44ad-ba46-864b724e3c02"
@@ -573,7 +618,7 @@
     "0ca402b9-a179-4018-9e5c-ad6e974633d6.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/0ca402b9-a179-4018-9e5c-ad6e974633d6.jsonl",
       "source_mtime": 1752441190.0052843,
-      "cached_mtime": 1759586380.7727237,
+      "cached_mtime": 1761130072.8932207,
       "message_count": 115,
       "session_ids": [
         "0ca402b9-a179-4018-9e5c-ad6e974633d6"
@@ -582,7 +627,7 @@
     "e2c65962-5a95-489b-a6a7-6f7c6a044095.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/e2c65962-5a95-489b-a6a7-6f7c6a044095.jsonl",
       "source_mtime": 1756936220.5194044,
-      "cached_mtime": 1759586380.78847,
+      "cached_mtime": 1761130072.9078155,
       "message_count": 180,
       "session_ids": [
         "e2c65962-5a95-489b-a6a7-6f7c6a044095"
@@ -591,7 +636,7 @@
     "dd68cdec-d485-427d-b4da-9168f78a3f46.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/dd68cdec-d485-427d-b4da-9168f78a3f46.jsonl",
       "source_mtime": 1753039919.150177,
-      "cached_mtime": 1759586380.7935746,
+      "cached_mtime": 1761130072.913918,
       "message_count": 64,
       "session_ids": [
         "dd68cdec-d485-427d-b4da-9168f78a3f46"
@@ -600,7 +645,7 @@
     "a5c31a7e-861c-4337-ac78-1c9778dcca8a.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/a5c31a7e-861c-4337-ac78-1c9778dcca8a.jsonl",
       "source_mtime": 1753038518.5143497,
-      "cached_mtime": 1759586380.796856,
+      "cached_mtime": 1761130072.9171283,
       "message_count": 31,
       "session_ids": [
         "a5c31a7e-861c-4337-ac78-1c9778dcca8a"
@@ -609,7 +654,7 @@
     "b4977989-6753-4017-b703-af312e32c651.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/b4977989-6753-4017-b703-af312e32c651.jsonl",
       "source_mtime": 1753048365.1290326,
-      "cached_mtime": 1759586380.8066857,
+      "cached_mtime": 1761130072.9269404,
       "message_count": 134,
       "session_ids": [
         "b4977989-6753-4017-b703-af312e32c651"
@@ -618,7 +663,7 @@
     "2e2fc9fe-2c80-4902-8b66-f5aacb06205a.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/2e2fc9fe-2c80-4902-8b66-f5aacb06205a.jsonl",
       "source_mtime": 1752703967.443481,
-      "cached_mtime": 1759586380.8161848,
+      "cached_mtime": 1761130072.9371188,
       "message_count": 144,
       "session_ids": [
         "2e2fc9fe-2c80-4902-8b66-f5aacb06205a"
@@ -627,14 +672,14 @@
     "5d839c76-2936-4f55-afb7-ce0fe12dcfc7.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/5d839c76-2936-4f55-afb7-ce0fe12dcfc7.jsonl",
       "source_mtime": 1752691585.9759357,
-      "cached_mtime": 1759586380.817083,
+      "cached_mtime": 1761130072.9382873,
       "message_count": 4,
       "session_ids": []
     },
     "1e943400-6880-4db0-8a3c-c4cdeb3ecf7e.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/1e943400-6880-4db0-8a3c-c4cdeb3ecf7e.jsonl",
       "source_mtime": 1752790888.746613,
-      "cached_mtime": 1759586380.878783,
+      "cached_mtime": 1761130072.950756,
       "message_count": 147,
       "session_ids": [
         "1e943400-6880-4db0-8a3c-c4cdeb3ecf7e"
@@ -643,7 +688,7 @@
     "eb369ace-fd5b-47cc-ac3a-91723dc16950.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/eb369ace-fd5b-47cc-ac3a-91723dc16950.jsonl",
       "source_mtime": 1752449275.3756163,
-      "cached_mtime": 1759586380.9208143,
+      "cached_mtime": 1761130073.0016956,
       "message_count": 273,
       "session_ids": [
         "eb369ace-fd5b-47cc-ac3a-91723dc16950"
@@ -652,7 +697,7 @@
     "3a55cb70-2bd3-4b89-9c38-c15fb63c9c55.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/3a55cb70-2bd3-4b89-9c38-c15fb63c9c55.jsonl",
       "source_mtime": 1751456046.9552162,
-      "cached_mtime": 1759586380.921828,
+      "cached_mtime": 1761130073.003101,
       "message_count": 3,
       "session_ids": [
         "3a55cb70-2bd3-4b89-9c38-c15fb63c9c55"
@@ -661,7 +706,7 @@
     "af1cdaa0-72a3-4135-b370-bed47585fb13.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/af1cdaa0-72a3-4135-b370-bed47585fb13.jsonl",
       "source_mtime": 1752970157.1519113,
-      "cached_mtime": 1759586380.9229887,
+      "cached_mtime": 1761130073.0047684,
       "message_count": 13,
       "session_ids": [
         "af1cdaa0-72a3-4135-b370-bed47585fb13"
@@ -670,18 +715,18 @@
     "f4ca848b-13d3-4f4d-87aa-852d947525b8.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/f4ca848b-13d3-4f4d-87aa-852d947525b8.jsonl",
       "source_mtime": 1751456136.432266,
-      "cached_mtime": 1759586380.9268732,
+      "cached_mtime": 1761130073.0094717,
       "message_count": 54,
       "session_ids": [
         "40f8af00-d071-46a6-8682-dd2aaf944ee3",
-        "f4ca848b-13d3-4f4d-87aa-852d947525b8",
-        "1767af99-cb03-45a0-a56e-e53aefabc084"
+        "1767af99-cb03-45a0-a56e-e53aefabc084",
+        "f4ca848b-13d3-4f4d-87aa-852d947525b8"
       ]
     },
     "ccdf2062-78ee-4efb-aff7-9e0291cdf121.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/ccdf2062-78ee-4efb-aff7-9e0291cdf121.jsonl",
       "source_mtime": 1752533601.291501,
-      "cached_mtime": 1759586380.9465523,
+      "cached_mtime": 1761130073.034267,
       "message_count": 201,
       "session_ids": [
         "ccdf2062-78ee-4efb-aff7-9e0291cdf121"
@@ -690,7 +735,7 @@
     "20c93d4a-df96-4b03-9124-a1b9d476b29f.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/20c93d4a-df96-4b03-9124-a1b9d476b29f.jsonl",
       "source_mtime": 1751450549.9851637,
-      "cached_mtime": 1759586380.9666467,
+      "cached_mtime": 1761130073.0565906,
       "message_count": 289,
       "session_ids": [
         "4498c5fb-de7e-4a20-bbf0-5f29da27c848",
@@ -700,7 +745,7 @@
     "61bb8ec6-e1ed-4320-87c0-fa38427e6bff.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/61bb8ec6-e1ed-4320-87c0-fa38427e6bff.jsonl",
       "source_mtime": 1753034797.9764745,
-      "cached_mtime": 1759586380.997687,
+      "cached_mtime": 1761130073.0915182,
       "message_count": 546,
       "session_ids": [
         "61bb8ec6-e1ed-4320-87c0-fa38427e6bff"
@@ -709,7 +754,7 @@
     "eda8ce59-f6df-4865-a6a3-e6c97f97f26d.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/eda8ce59-f6df-4865-a6a3-e6c97f97f26d.jsonl",
       "source_mtime": 1758229336.2845588,
-      "cached_mtime": 1759586381.038728,
+      "cached_mtime": 1761130073.1481395,
       "message_count": 307,
       "session_ids": [
         "eda8ce59-f6df-4865-a6a3-e6c97f97f26d"
@@ -718,7 +763,7 @@
     "4464a89c-6585-4681-b4ce-7fe396cc9b45.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/4464a89c-6585-4681-b4ce-7fe396cc9b45.jsonl",
       "source_mtime": 1752694694.172562,
-      "cached_mtime": 1759586381.0541482,
+      "cached_mtime": 1761130073.1664002,
       "message_count": 133,
       "session_ids": [
         "4464a89c-6585-4681-b4ce-7fe396cc9b45"
@@ -727,7 +772,7 @@
     "d43ab512-3aca-42d1-8634-bb664b66df97.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/d43ab512-3aca-42d1-8634-bb664b66df97.jsonl",
       "source_mtime": 1753047291.1618707,
-      "cached_mtime": 1759586381.07895,
+      "cached_mtime": 1761130073.1942103,
       "message_count": 149,
       "session_ids": [
         "d43ab512-3aca-42d1-8634-bb664b66df97"
@@ -736,7 +781,7 @@
     "4d119ba9-0880-4b8b-a1bd-2ca2b7311553.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/4d119ba9-0880-4b8b-a1bd-2ca2b7311553.jsonl",
       "source_mtime": 1752487814.1824937,
-      "cached_mtime": 1759586381.0832627,
+      "cached_mtime": 1761130073.2008386,
       "message_count": 49,
       "session_ids": [
         "4d119ba9-0880-4b8b-a1bd-2ca2b7311553"
@@ -745,7 +790,7 @@
     "44dfe01a-c8c0-418f-b610-3d144dfbd84e.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/44dfe01a-c8c0-418f-b610-3d144dfbd84e.jsonl",
       "source_mtime": 1750287390.3004534,
-      "cached_mtime": 1759586381.1036804,
+      "cached_mtime": 1761130073.222795,
       "message_count": 276,
       "session_ids": [
         "64ec1799-bfc0-46ef-bada-acfc9f548543",
@@ -755,30 +800,30 @@
     "5a331fd6-ac1b-4c33-a018-cc9ed8a2086b.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/5a331fd6-ac1b-4c33-a018-cc9ed8a2086b.jsonl",
       "source_mtime": 1752790872.0270302,
-      "cached_mtime": 1759586381.1222005,
+      "cached_mtime": 1761130073.2448466,
       "message_count": 236,
       "session_ids": [
-        "734ba872-eb15-4ae6-aeed-19aeb1214dee",
-        "5a331fd6-ac1b-4c33-a018-cc9ed8a2086b"
+        "5a331fd6-ac1b-4c33-a018-cc9ed8a2086b",
+        "734ba872-eb15-4ae6-aeed-19aeb1214dee"
       ]
     },
     "a6c02863-096b-42a5-8c37-8978840971c7.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/a6c02863-096b-42a5-8c37-8978840971c7.jsonl",
       "source_mtime": 1751472506.4119601,
-      "cached_mtime": 1759586381.1265142,
+      "cached_mtime": 1761130073.2519033,
       "message_count": 62,
       "session_ids": [
-        "8e0444c5-50a8-4e7e-81a9-976fe38146b1",
-        "f4ca848b-13d3-4f4d-87aa-852d947525b8",
+        "1767af99-cb03-45a0-a56e-e53aefabc084",
         "a6c02863-096b-42a5-8c37-8978840971c7",
-        "40f8af00-d071-46a6-8682-dd2aaf944ee3",
-        "1767af99-cb03-45a0-a56e-e53aefabc084"
+        "f4ca848b-13d3-4f4d-87aa-852d947525b8",
+        "8e0444c5-50a8-4e7e-81a9-976fe38146b1",
+        "40f8af00-d071-46a6-8682-dd2aaf944ee3"
       ]
     },
     "204d2722-a981-4940-a666-52e695fb32e6.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/204d2722-a981-4940-a666-52e695fb32e6.jsonl",
       "source_mtime": 1753042336.5000541,
-      "cached_mtime": 1759586381.1315527,
+      "cached_mtime": 1761130073.2577047,
       "message_count": 68,
       "session_ids": [
         "204d2722-a981-4940-a666-52e695fb32e6"
@@ -787,7 +832,7 @@
     "7ce8b3c7-a128-4419-b316-c1071029441a.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/7ce8b3c7-a128-4419-b316-c1071029441a.jsonl",
       "source_mtime": 1759586835.8036647,
-      "cached_mtime": 1759588134.6253843,
+      "cached_mtime": 1761130073.335473,
       "message_count": 394,
       "session_ids": [
         "7ce8b3c7-a128-4419-b316-c1071029441a"
@@ -796,14 +841,14 @@
     "7eb73f0d-d61b-4192-b8c3-59a290acfdd2.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/7eb73f0d-d61b-4192-b8c3-59a290acfdd2.jsonl",
       "source_mtime": 1753394054.4793603,
-      "cached_mtime": 1759586381.159965,
+      "cached_mtime": 1761130073.3370116,
       "message_count": 4,
       "session_ids": []
     },
     "6edde77a-53a7-4df7-9b08-219fa7a84e39.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/6edde77a-53a7-4df7-9b08-219fa7a84e39.jsonl",
       "source_mtime": 1750104802.0800073,
-      "cached_mtime": 1759586381.1964564,
+      "cached_mtime": 1761130073.3815725,
       "message_count": 362,
       "session_ids": [
         "6edde77a-53a7-4df7-9b08-219fa7a84e39"
@@ -812,7 +857,7 @@
     "4466dd71-c710-4233-8bcd-81eb0e7dab7b.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/4466dd71-c710-4233-8bcd-81eb0e7dab7b.jsonl",
       "source_mtime": 1753026022.9054966,
-      "cached_mtime": 1759586381.240327,
+      "cached_mtime": 1761130073.432061,
       "message_count": 827,
       "session_ids": [
         "4466dd71-c710-4233-8bcd-81eb0e7dab7b"
@@ -821,7 +866,7 @@
     "b99de540-cc2d-47fd-814f-6d0f22538d7a.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/b99de540-cc2d-47fd-814f-6d0f22538d7a.jsonl",
       "source_mtime": 1752446305.97441,
-      "cached_mtime": 1759586381.3057482,
+      "cached_mtime": 1761130073.459765,
       "message_count": 398,
       "session_ids": [
         "b99de540-cc2d-47fd-814f-6d0f22538d7a"
@@ -830,26 +875,26 @@
     "a3ac7bf4-b62d-4289-ad59-10372831bfa7.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/a3ac7bf4-b62d-4289-ad59-10372831bfa7.jsonl",
       "source_mtime": 1752664214.9454014,
-      "cached_mtime": 1759586381.3068705,
+      "cached_mtime": 1761130073.4627554,
       "message_count": 1,
       "session_ids": []
     },
     "8e0444c5-50a8-4e7e-81a9-976fe38146b1.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/8e0444c5-50a8-4e7e-81a9-976fe38146b1.jsonl",
       "source_mtime": 1751456351.1712973,
-      "cached_mtime": 1759586381.311008,
+      "cached_mtime": 1761130073.4684224,
       "message_count": 53,
       "session_ids": [
+        "1767af99-cb03-45a0-a56e-e53aefabc084",
         "8e0444c5-50a8-4e7e-81a9-976fe38146b1",
-        "40f8af00-d071-46a6-8682-dd2aaf944ee3",
         "f4ca848b-13d3-4f4d-87aa-852d947525b8",
-        "1767af99-cb03-45a0-a56e-e53aefabc084"
+        "40f8af00-d071-46a6-8682-dd2aaf944ee3"
       ]
     },
     "0eba2db6-b66d-40b6-a5b1-30a3e6ffee56.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/0eba2db6-b66d-40b6-a5b1-30a3e6ffee56.jsonl",
       "source_mtime": 1752970740.0551438,
-      "cached_mtime": 1759586381.3125877,
+      "cached_mtime": 1761130073.4703982,
       "message_count": 25,
       "session_ids": [
         "0eba2db6-b66d-40b6-a5b1-30a3e6ffee56"
@@ -858,7 +903,7 @@
     "f0646f07-d556-4161-833a-3df1c79b5fdf.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/f0646f07-d556-4161-833a-3df1c79b5fdf.jsonl",
       "source_mtime": 1752538186.7344365,
-      "cached_mtime": 1759586381.3259485,
+      "cached_mtime": 1761130073.4850233,
       "message_count": 199,
       "session_ids": [
         "f0646f07-d556-4161-833a-3df1c79b5fdf"
@@ -867,7 +912,7 @@
     "bb419e0c-bc1c-4669-80d5-96473416014b.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/bb419e0c-bc1c-4669-80d5-96473416014b.jsonl",
       "source_mtime": 1755301619.4569662,
-      "cached_mtime": 1759586381.3271656,
+      "cached_mtime": 1761130073.4865067,
       "message_count": 8,
       "session_ids": [
         "bb419e0c-bc1c-4669-80d5-96473416014b"
@@ -876,7 +921,7 @@
     "078d4af7-499e-4c8b-b3e2-5d4c301d436a.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/078d4af7-499e-4c8b-b3e2-5d4c301d436a.jsonl",
       "source_mtime": 1751492249.524338,
-      "cached_mtime": 1759586381.3325415,
+      "cached_mtime": 1761130073.4926548,
       "message_count": 69,
       "session_ids": [
         "078d4af7-499e-4c8b-b3e2-5d4c301d436a"
@@ -885,7 +930,7 @@
     "f5f9ae73-40a9-4b36-a54d-659a25f37aed.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/f5f9ae73-40a9-4b36-a54d-659a25f37aed.jsonl",
       "source_mtime": 1753067611.3081172,
-      "cached_mtime": 1759586381.3659594,
+      "cached_mtime": 1761130073.5294704,
       "message_count": 563,
       "session_ids": [
         "f5f9ae73-40a9-4b36-a54d-659a25f37aed"
@@ -894,7 +939,7 @@
     "227c98ff-9a6f-4325-81e6-38616bf825dc.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/227c98ff-9a6f-4325-81e6-38616bf825dc.jsonl",
       "source_mtime": 1752440625.4518704,
-      "cached_mtime": 1759586381.3904622,
+      "cached_mtime": 1761130073.5555959,
       "message_count": 377,
       "session_ids": [
         "227c98ff-9a6f-4325-81e6-38616bf825dc"
@@ -903,7 +948,7 @@
     "55d6a4d9-04ba-466a-b26e-21fac6450b7f.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/55d6a4d9-04ba-466a-b26e-21fac6450b7f.jsonl",
       "source_mtime": 1752666226.2321477,
-      "cached_mtime": 1759586381.4055321,
+      "cached_mtime": 1761130073.571834,
       "message_count": 230,
       "session_ids": [
         "55d6a4d9-04ba-466a-b26e-21fac6450b7f"
@@ -912,7 +957,7 @@
     "1c90426b-1def-498c-8f42-58d90c644055.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/1c90426b-1def-498c-8f42-58d90c644055.jsonl",
       "source_mtime": 1753036030.6992266,
-      "cached_mtime": 1759586381.4278903,
+      "cached_mtime": 1761130073.5986097,
       "message_count": 344,
       "session_ids": [
         "1c90426b-1def-498c-8f42-58d90c644055"
@@ -921,14 +966,14 @@
     "585b1241-6399-4296-aa0f-0f28ccc63c42.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/585b1241-6399-4296-aa0f-0f28ccc63c42.jsonl",
       "source_mtime": 1752703157.9069262,
-      "cached_mtime": 1759586381.4289718,
+      "cached_mtime": 1761130073.5999625,
       "message_count": 0,
       "session_ids": []
     },
     "a6658227-44fb-439f-9d95-86a4795cef9b.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/a6658227-44fb-439f-9d95-86a4795cef9b.jsonl",
       "source_mtime": 1752694906.2784045,
-      "cached_mtime": 1759586381.4319675,
+      "cached_mtime": 1761130073.603727,
       "message_count": 43,
       "session_ids": [
         "a6658227-44fb-439f-9d95-86a4795cef9b"
@@ -937,7 +982,7 @@
     "2f5b4461-b1de-414e-ab21-5f96fd0db9d6.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/2f5b4461-b1de-414e-ab21-5f96fd0db9d6.jsonl",
       "source_mtime": 1750677754.017169,
-      "cached_mtime": 1759586381.46579,
+      "cached_mtime": 1761130073.6449442,
       "message_count": 363,
       "session_ids": [
         "2f5b4461-b1de-414e-ab21-5f96fd0db9d6"
@@ -946,14 +991,14 @@
     "7f7ba7e8-d8ca-42f6-9a30-57cbd8051e9f.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/7f7ba7e8-d8ca-42f6-9a30-57cbd8051e9f.jsonl",
       "source_mtime": 1750452673.891654,
-      "cached_mtime": 1759586381.4670076,
+      "cached_mtime": 1761130073.647998,
       "message_count": 1,
       "session_ids": []
     },
     "3d5f63c6-868d-4c25-8469-85b6d82e10d5.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/3d5f63c6-868d-4c25-8469-85b6d82e10d5.jsonl",
       "source_mtime": 1752786185.3349574,
-      "cached_mtime": 1759586381.4687846,
+      "cached_mtime": 1761130073.6507244,
       "message_count": 13,
       "session_ids": [
         "3d5f63c6-868d-4c25-8469-85b6d82e10d5"
@@ -962,75 +1007,48 @@
     "e6d88a68-3793-4d6c-bdf1-a4e70ad531d3.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/e6d88a68-3793-4d6c-bdf1-a4e70ad531d3.jsonl",
       "source_mtime": 1751491645.558422,
-      "cached_mtime": 1759586381.578829,
+      "cached_mtime": 1761130073.8396559,
       "message_count": 1023,
       "session_ids": [
-        "8e0444c5-50a8-4e7e-81a9-976fe38146b1",
-        "2f82cbc5-d9f1-462d-b8c4-3ebe5df7157c",
-        "e6d88a68-3793-4d6c-bdf1-a4e70ad531d3",
-        "f4ca848b-13d3-4f4d-87aa-852d947525b8",
-        "a6c02863-096b-42a5-8c37-8978840971c7",
-        "40f8af00-d071-46a6-8682-dd2aaf944ee3",
         "1767af99-cb03-45a0-a56e-e53aefabc084",
+        "0e8a1542-bb37-4ceb-ad31-2630ca9c6454",
+        "a6c02863-096b-42a5-8c37-8978840971c7",
+        "f4ca848b-13d3-4f4d-87aa-852d947525b8",
+        "e6d88a68-3793-4d6c-bdf1-a4e70ad531d3",
+        "2f82cbc5-d9f1-462d-b8c4-3ebe5df7157c",
         "97d59289-cbb2-4b20-8123-f7ba0f465dfe",
-        "0e8a1542-bb37-4ceb-ad31-2630ca9c6454"
+        "8e0444c5-50a8-4e7e-81a9-976fe38146b1",
+        "40f8af00-d071-46a6-8682-dd2aaf944ee3"
       ]
     },
     "2934a2ea-db67-4b2d-8991-a39057ef774a.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/2934a2ea-db67-4b2d-8991-a39057ef774a.jsonl",
       "source_mtime": 1751584284.8742318,
-      "cached_mtime": 1759586381.6146584,
+      "cached_mtime": 1761130073.885827,
       "message_count": 417,
       "session_ids": [
-        "2934a2ea-db67-4b2d-8991-a39057ef774a",
-        "078d4af7-499e-4c8b-b3e2-5d4c301d436a",
-        "2a8bdfa3-5440-4c56-9e8b-1a7509a27c96",
+        "8aa7b9fd-0e02-4353-95ef-3fef16f30524",
         "70d392d2-ef2b-4796-9df1-a3908e11bcdb",
-        "8aa7b9fd-0e02-4353-95ef-3fef16f30524"
+        "078d4af7-499e-4c8b-b3e2-5d4c301d436a",
+        "2934a2ea-db67-4b2d-8991-a39057ef774a",
+        "2a8bdfa3-5440-4c56-9e8b-1a7509a27c96"
       ]
     },
     "2130f986-d03a-49b4-a46b-d28f0f0f9909.jsonl": {
       "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/2130f986-d03a-49b4-a46b-d28f0f0f9909.jsonl",
       "source_mtime": 1753041951.6299582,
-      "cached_mtime": 1759586381.6374705,
+      "cached_mtime": 1761130073.9139953,
       "message_count": 384,
       "session_ids": [
         "2130f986-d03a-49b4-a46b-d28f0f0f9909"
       ]
-    },
-    "0a6f56b8-d18c-4fba-ab82-369e9b11b339.jsonl": {
-      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/0a6f56b8-d18c-4fba-ab82-369e9b11b339.jsonl",
-      "source_mtime": 1759587994.3791733,
-      "cached_mtime": 1759588134.1878707,
-      "message_count": 14,
-      "session_ids": [
-        "0a6f56b8-d18c-4fba-ab82-369e9b11b339"
-      ]
-    },
-    "1c6c5d32-e008-4bf0-a33c-27b8a1f31db0.jsonl": {
-      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/1c6c5d32-e008-4bf0-a33c-27b8a1f31db0.jsonl",
-      "source_mtime": 1759588107.243292,
-      "cached_mtime": 1759588134.3127615,
-      "message_count": 10,
-      "session_ids": [
-        "1c6c5d32-e008-4bf0-a33c-27b8a1f31db0"
-      ]
-    },
-    "2b25646e-0d29-4405-b672-4f45c71c1fb0.jsonl": {
-      "file_path": "/Users/dain/.claude/projects/-Users-dain-workspace-claude-code-log/2b25646e-0d29-4405-b672-4f45c71c1fb0.jsonl",
-      "source_mtime": 1759587825.4546363,
-      "cached_mtime": 1759588134.4362285,
-      "message_count": 18,
-      "session_ids": [
-        "2b25646e-0d29-4405-b672-4f45c71c1fb0"
-      ]
     }
   },
-  "total_message_count": 20850,
-  "total_input_tokens": 62240,
-  "total_output_tokens": 390558,
-  "total_cache_creation_tokens": 18704228,
-  "total_cache_read_tokens": 382880355,
+  "total_message_count": 20862,
+  "total_input_tokens": 69748,
+  "total_output_tokens": 391015,
+  "total_cache_creation_tokens": 18712559,
+  "total_cache_read_tokens": 382931305,
   "sessions": {
     "057f45a2-5fa5-421f-a665-8ad7b66ba376": {
       "session_id": "057f45a2-5fa5-421f-a665-8ad7b66ba376",
@@ -2682,6 +2700,32 @@
       "total_output_tokens": 30,
       "total_cache_creation_tokens": 28045,
       "total_cache_read_tokens": 117997
+    },
+    "ad57855e-e582-41ec-af0c-2c3b626d2d13": {
+      "session_id": "ad57855e-e582-41ec-af0c-2c3b626d2d13",
+      "summary": null,
+      "first_timestamp": "2025-10-18T13:38:18.048Z",
+      "last_timestamp": "2025-10-18T13:40:33.774Z",
+      "message_count": 10,
+      "first_user_message": "Warmup",
+      "cwd": "/Users/dain/workspace/claude-code-log",
+      "total_input_tokens": 3762,
+      "total_output_tokens": 204,
+      "total_cache_creation_tokens": 8331,
+      "total_cache_read_tokens": 50950
+    },
+    "4e062ed2-cbfa-4cb8-bc9a-1551bf168eaf": {
+      "session_id": "4e062ed2-cbfa-4cb8-bc9a-1551bf168eaf",
+      "summary": null,
+      "first_timestamp": "2025-10-22T10:33:03.773Z",
+      "last_timestamp": "2025-10-22T10:33:07.486Z",
+      "message_count": 2,
+      "first_user_message": "Warmup",
+      "cwd": "/Users/dain/workspace/claude-code-log",
+      "total_input_tokens": 3746,
+      "total_output_tokens": 253,
+      "total_cache_creation_tokens": 0,
+      "total_cache_read_tokens": 0
     }
   },
   "working_directories": [
@@ -2689,5 +2733,5 @@
     "/Users/dain/workspace/claude-logbook"
   ],
   "earliest_timestamp": "2025-06-13T23:34:17.628Z",
-  "latest_timestamp": "2025-10-04T14:28:27.218Z"
+  "latest_timestamp": "2025-10-22T10:33:07.486Z"
 }
