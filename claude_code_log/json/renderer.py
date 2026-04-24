@@ -189,6 +189,10 @@ class JsonRenderer(Renderer):
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
-                return data.get("version") != get_library_version()
+            # Non-object payloads (list/scalar) have no version field; treat
+            # as outdated so the next run regenerates cleanly.
+            if not isinstance(data, dict):
+                return True
+            return data.get("version") != get_library_version()
         except (OSError, json.JSONDecodeError, UnicodeDecodeError):
             return True
