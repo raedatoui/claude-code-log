@@ -361,6 +361,20 @@ def _clear_caches(input_path: Path, all_projects: bool) -> None:
         click.echo(f"Warning: Failed to clear cache: {e}")
 
 
+def _list_generated_outputs(directory: Path, file_ext: str) -> list[Path]:
+    """Return only files this tool generates, not every file with the extension.
+
+    Safe for JSON in particular, where the project directory may contain
+    unrelated user `.json` files that must not be deleted.
+    """
+    if file_ext == "json":
+        return [
+            *directory.glob("combined_transcripts*.json"),
+            *directory.glob("session-*.json"),
+        ]
+    return list(directory.glob(f"*.{file_ext}"))
+
+
 def _clear_output_files(
     input_path: Path, all_projects: bool, output_format: str
 ) -> None:
@@ -381,7 +395,7 @@ def _clear_output_files(
             for project_dir in project_dirs:
                 try:
                     # Remove output files in project directory
-                    output_files = list(project_dir.glob(f"*.{file_ext}"))
+                    output_files = _list_generated_outputs(project_dir, file_ext)
                     for output_file in output_files:
                         output_file.unlink()
                         total_removed += 1
@@ -412,7 +426,7 @@ def _clear_output_files(
         elif input_path.is_dir():
             # Clear output files for single directory
             click.echo(f"Clearing {ext_upper} files for {input_path}...")
-            output_files = list(input_path.glob(f"*.{file_ext}"))
+            output_files = _list_generated_outputs(input_path, file_ext)
             for output_file in output_files:
                 output_file.unlink()
 

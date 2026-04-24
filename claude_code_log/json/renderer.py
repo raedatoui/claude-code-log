@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import dataclasses
 import json
+from enum import Enum
 from pathlib import Path
 from typing import Any, Optional, TYPE_CHECKING
+
+from pydantic import BaseModel
 
 from ..cache import get_library_version
 from ..models import TranscriptEntry
@@ -14,6 +17,24 @@ from ..renderer import (
     TemplateMessage,
     generate_template_messages,
 )
+
+
+def _json_default(obj: Any) -> Any:
+    """Serialization fallback for types dataclasses.asdict doesn't unwrap.
+
+    Tool inputs/outputs on MessageContent are Pydantic models embedded inside
+    dataclasses, and dataclasses.asdict leaves them untouched. Without this
+    hook, json.dumps(default=str) would stringify them via __repr__ and lose
+    all structure.
+    """
+    if isinstance(obj, BaseModel):
+        return obj.model_dump(mode="json")
+    if isinstance(obj, Enum):
+        return obj.value
+    if isinstance(obj, Path):
+        return str(obj)
+    return str(obj)
+
 
 if TYPE_CHECKING:
     from ..cache import CacheManager
@@ -93,7 +114,7 @@ class JsonRenderer(Renderer):
         if combined_transcript_link:
             payload["combined_transcript_link"] = combined_transcript_link
 
-        return json.dumps(payload, indent=2, default=str, ensure_ascii=False)
+        return json.dumps(payload, indent=2, default=_json_default, ensure_ascii=False)
 
     def generate_session(
         self,
@@ -178,7 +199,7 @@ class JsonRenderer(Renderer):
                 "projects": projects,
             },
             indent=2,
-            default=str,
+            default=_json_default,
             ensure_ascii=False,
         )
 
