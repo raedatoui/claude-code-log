@@ -167,6 +167,90 @@ class TestJsonGenerate:
             assert "message_index" not in node["content"]
             assert isinstance(node["index"], int)
 
+    def test_triple_emits_pair_middle(self, tmp_path: Path):
+        """Slash-command triples (UserSlash → Slash → CommandOutput) must
+        emit `pair_middle` so downstream tools can reconstruct the full
+        triple. Forgetting this field broke the symmetry of the pair_first /
+        pair_middle / pair_last fields after PR #127's data-model lift."""
+        lines = [
+            {
+                "type": "user",
+                "uuid": "u1",
+                "timestamp": "2026-04-17T01:13:55Z",
+                "sessionId": "s1",
+                "version": "1",
+                "parentUuid": None,
+                "isSidechain": False,
+                "userType": "user",
+                "cwd": "/x",
+                "isMeta": True,
+                "message": {"role": "user", "content": "Caveat: ..."},
+            },
+            {
+                "type": "user",
+                "uuid": "u2",
+                "timestamp": "2026-04-17T01:13:55Z",
+                "sessionId": "s1",
+                "version": "1",
+                "parentUuid": "u1",
+                "isSidechain": False,
+                "userType": "user",
+                "cwd": "/x",
+                "message": {
+                    "role": "user",
+                    "content": (
+                        "<command-name>exit</command-name>"
+                        "<command-message>exit</command-message>"
+                        "<command-args></command-args>"
+                    ),
+                },
+            },
+            {
+                "type": "user",
+                "uuid": "u3",
+                "timestamp": "2026-04-17T01:13:55Z",
+                "sessionId": "s1",
+                "version": "1",
+                "parentUuid": "u2",
+                "isSidechain": False,
+                "userType": "user",
+                "cwd": "/x",
+                "message": {
+                    "role": "user",
+                    "content": "<local-command-stdout>See ya!</local-command-stdout>",
+                },
+            },
+        ]
+        fn = tmp_path / "t.jsonl"
+        fn.write_text("\n".join(json.dumps(line) for line in lines))
+        messages = load_transcript(fn)
+        data = json.loads(JsonRenderer().generate(messages, "Test"))
+
+        # Locate the three pair members by message_type.
+        nodes_by_type: dict[str, dict] = {}
+        for node in _walk(data["messages"]):
+            t = node["type"]
+            if t in ("user", "slash_command", "command_output"):
+                # User wraps the UserSlash caveat (pair_first); SlashCommand and
+                # CommandOutput are distinct types in the rendered tree.
+                nodes_by_type.setdefault(t, node)
+
+        # The pair_first (UserSlash caveat) carries pair_middle + pair_last.
+        first = next(n for n in _walk(data["messages"]) if "pair_middle" in n)
+        assert first["pair_middle"] != first.get("pair_last")
+        # Middle (Slash) carries pair_first + pair_last (no pair_middle on itself).
+        middle = next(
+            n for n in _walk(data["messages"]) if "pair_first" in n and "pair_last" in n
+        )
+        assert middle["pair_first"] == first["index"]
+        # Last (CommandOutput) carries only pair_first.
+        last = next(
+            n
+            for n in _walk(data["messages"])
+            if "pair_first" in n and "pair_last" not in n
+        )
+        assert last["pair_first"] == first["index"]
+
     def test_detail_minimal_filters_tool_messages(self, test_data_dir: Path):
         """--detail minimal should strip tool_use/tool_result nodes."""
         messages = load_transcript(test_data_dir / "representative_messages.jsonl")

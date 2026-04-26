@@ -82,6 +82,8 @@ class JsonRenderer(Renderer):
             node["token_usage"] = msg.token_usage
         if msg.pair_first is not None:
             node["pair_first"] = msg.pair_first
+        if msg.pair_middle is not None:
+            node["pair_middle"] = msg.pair_middle
         if msg.pair_last is not None:
             node["pair_last"] = msg.pair_last
         if msg.pair_duration:
