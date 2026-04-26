@@ -384,7 +384,10 @@ class TestJsonProjectsIndex:
         assert data["total_messages"] == 42 + 8
         assert data["date_range"] == {"from": "yesterday", "to": "today"}
         assert len(data["projects"]) == 2
-        assert data["projects"][0]["path"] == "/tmp/alpha"  # Path serialised as str
+        # Path serialised as str — match the platform's own representation
+        # so the test passes on Windows (where Path("/tmp/alpha") becomes
+        # `\tmp\alpha`) as well as POSIX.
+        assert data["projects"][0]["path"] == str(Path("/tmp/alpha"))
         assert data["projects"][1]["is_archived"] is True
 
     def test_empty_list(self) -> None:
@@ -440,7 +443,7 @@ class TestCliJsonFormat:
         combined = project_dir / "combined_transcripts.json"
         assert combined.exists()
 
-        data = json.loads(combined.read_text())
+        data = json.loads(combined.read_text(encoding="utf-8"))
         assert data["version"] == get_library_version()
         assert isinstance(data["messages"], list)
 
@@ -471,7 +474,7 @@ class TestCliJsonFormat:
         summary = projects_dir / "all-projects-summary.json"
         assert summary.exists()
 
-        data = json.loads(summary.read_text())
+        data = json.loads(summary.read_text(encoding="utf-8"))
         assert data["total_projects"] == 2
         assert {p["name"] for p in data["projects"]} == {"project-a", "project-b"}
 
@@ -501,7 +504,7 @@ class TestCliJsonFormat:
         assert not (project_dir / "combined_transcripts.json").exists()
         assert not list(project_dir.glob("session-*.json"))
         assert foreign.exists()
-        assert json.loads(foreign.read_text()) == {"keep": "me"}
+        assert json.loads(foreign.read_text(encoding="utf-8")) == {"keep": "me"}
 
     def test_clear_output_removes_top_level_summary(
         self, cli_projects_setup: _ProjectsSetup, sample_jsonl_content: list[dict]
