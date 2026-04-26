@@ -6,7 +6,7 @@ import dataclasses
 import json
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional, TYPE_CHECKING
+from typing import Any, Optional, TYPE_CHECKING, cast
 
 from pydantic import BaseModel
 
@@ -214,6 +214,7 @@ class JsonRenderer(Renderer):
             # as outdated so the next run regenerates cleanly.
             if not isinstance(data, dict):
                 return True
-            return data.get("version") != get_library_version()
+            payload = cast("dict[str, Any]", data)
+            return payload.get("version") != get_library_version()
         except (OSError, json.JSONDecodeError, UnicodeDecodeError):
             return True

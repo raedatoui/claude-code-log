@@ -171,7 +171,9 @@ class TestJsonGenerate:
         """--detail minimal should strip tool_use/tool_result nodes."""
         messages = load_transcript(test_data_dir / "representative_messages.jsonl")
         renderer = get_renderer("json", detail=DetailLevel.MINIMAL)
-        data = json.loads(renderer.generate(messages, "Test"))
+        out = renderer.generate(messages, "Test")
+        assert out is not None
+        data = json.loads(out)
         types = {node["type"] for node in _walk(data["messages"])}
         assert "tool_use" not in types
         assert "tool_result" not in types
